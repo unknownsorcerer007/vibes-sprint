@@ -50,7 +50,6 @@ body {
 .controller-left .logo-icon {
     width: 20px;
     height: 20px;
-    color: #6366f1;
 }
 
 .controller-left .logo-text h2 {
@@ -104,7 +103,7 @@ body {
 .slide-badge {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
-    color: #6366f1;
+    color: #ff007f;
     font-weight: 700;
 }
 
@@ -1079,6 +1078,377 @@ body {
     background: rgba(255,255,255,0.02);
 }
 
+
+/* ========================================================
+   INTERACTIVE WIDGETS STYLING
+   ======================================================== */
+
+/* 1. Interactive Poll Widget (ZenSpace) */
+.interactive-poll {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.poll-option {
+    position: relative;
+    background: #fff;
+    border: 1px solid rgba(43, 58, 48, 0.15);
+    padding: 18px 24px;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    color: #2b3a30;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    overflow: hidden;
+    transition: var(--transition-smooth);
+}
+
+.poll-option:hover {
+    transform: translateY(-2px);
+    border-color: #2b3a30;
+    box-shadow: 0 4px 12px rgba(43, 58, 48, 0.05);
+}
+
+.poll-option span {
+    position: relative;
+    z-index: 5;
+}
+
+.progress-bar-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    background: #e2ede0;
+    z-index: 1;
+    transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.poll-option.voted {
+    border-color: #7d9d85;
+}
+
+.poll-option.voted .progress-bar-fill {
+    background: #d4e8d1;
+}
+
+/* 2. Interactive Payout Calculator (AetherCrypt) */
+.interactive-calculator {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(0,240,255,0.15);
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 700px;
+    margin: 0 auto;
+    box-shadow: 0 0 20px rgba(0,240,255,0.05);
+}
+
+.calc-control {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 32px;
+}
+
+.calc-control label {
+    font-size: 15px;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+}
+
+.calc-control input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 6px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 3px;
+    outline: none;
+}
+
+.calc-control input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #00f0ff;
+    cursor: pointer;
+    box-shadow: 0 0 10px #00f0ff;
+}
+
+.calc-results {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.res-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.05);
+    padding: 16px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.res-card h4 {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+}
+
+.res-card p {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    color: #ff007f;
+    text-shadow: 0 0 8px rgba(255,0,127,0.3);
+}
+
+/* 3. Developer Stats Card (NovusSaaS) */
+.dev-stats-card {
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 16px;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 24px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    backdrop-filter: blur(10px);
+}
+
+.dev-stats-card .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    padding-bottom: 16px;
+    margin-bottom: 20px;
+}
+
+.dev-stats-card .avatar-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.dev-stats-card .mock-avatar {
+    width: 42px;
+    height: 42px;
+    background: #6366f1;
+    color: #fff;
+    font-weight: 800;
+    font-size: 14px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dev-stats-card .badge-status {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-top: 4px;
+    display: inline-block;
+}
+
+.dev-stats-card .badge-status.bronze {
+    background: rgba(205, 127, 50, 0.15);
+    color: #cd7f32;
+    border: 1px solid rgba(205, 127, 50, 0.3);
+}
+
+.dev-stats-card .rank-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.05);
+    padding: 4px 12px;
+    border-radius: 20px;
+    color: #818cf8;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.dev-stats-card .grid-stat {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.dev-stats-card .grid-stat .box {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.04);
+    padding: 12px 16px;
+    border-radius: 8px;
+}
+
+.dev-stats-card .grid-stat .box span {
+    font-size: 10px;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.dev-stats-card .grid-stat .box h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    margin-top: 4px;
+    color: #fff;
+}
+
+/* 4. Interactive Rating Sliders Widget (Nebula) */
+.interactive-sliders-widget {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(217, 70, 239, 0.2);
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.slider-row {
+    display: grid;
+    grid-template-columns: 150px 1fr 60px;
+    align-items: center;
+    gap: 16px;
+}
+
+.slider-row label {
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.8);
+}
+
+.slider-row input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 4px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 2px;
+    outline: none;
+}
+
+.slider-row input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #d946ef;
+    cursor: pointer;
+    box-shadow: 0 0 6px #d946ef;
+}
+
+.val-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    text-align: right;
+    color: rgba(255,255,255,0.6);
+}
+
+.score-display {
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.score-display span {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: rgba(255,255,255,0.5);
+}
+
+.score-display h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 28px;
+    font-weight: 700;
+    color: #d946ef;
+    text-shadow: 0 0 10px rgba(217, 70, 239, 0.4);
+}
+
+/* 5. Interactive Badge Stepper (Edumind) */
+.interactive-badge-stepper {
+    background: #f3f4f6;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 16px;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 32px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+}
+
+.stepper-buttons {
+    display: flex;
+    background: rgba(0,0,0,0.05);
+    padding: 4px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+}
+
+.step-btn {
+    flex-grow: 1;
+    border: none;
+    background: transparent;
+    padding: 10px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    color: #4b5563;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: var(--transition-smooth);
+}
+
+.step-btn.active {
+    background: #fff;
+    color: #1e1b4b;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.step-content {
+    display: none;
+}
+
+.step-content.active {
+    display: block;
+    animation: fadeIn 0.4s ease;
+}
+
+.step-content h3 {
+    font-size: 18px;
+    color: #1e1b4b;
+    margin-bottom: 12px;
+}
+
+.step-content p {
+    font-size: 14px;
+    color: #4b5563;
+    line-height: 1.6;
+    margin-bottom: 8px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 /* RESPONSIVENESS */
 @media (max-width: 768px) {
     .showcase-controller {
@@ -1098,6 +1468,14 @@ body {
 
     .lp-section h2 {
         font-size: 24px;
+    }
+
+    .calc-results {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .slider-row {
+        grid-template-columns: 120px 1fr 40px;
     }
 
     .lp-zenspace .feature-grid,

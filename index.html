@@ -17,32 +17,32 @@
     <!-- FLOATING DASHBOARD CONTROLLER -->
     <header class="showcase-controller">
         <div class="controller-left">
-            <i data-lucide="swords" class="logo-icon animate-pulse" style="color: #ff5e62;"></i>
+            <i data-lucide="swords" class="logo-icon animate-pulse" style="color: #ff007f; filter: drop-shadow(0 0 8px #ff007f);"></i>
             <div class="logo-text">
                 <h2>Vibe Coders</h2>
-                <p>10 Pitch Variations</p>
+                <p>Advanced Landing Designs</p>
             </div>
         </div>
         <div class="controller-center">
-            <button id="btn-prev" class="ctrl-btn" title="Previous Slide (Left Arrow)">
+            <button id="btn-prev" class="ctrl-btn" title="Previous Variation (Left Arrow)">
                 <i data-lucide="chevron-left"></i>
             </button>
             <div class="select-wrapper">
                 <span class="slide-badge" id="slide-badge">01 / 10</span>
                 <select id="design-select">
-                    <option value="0">1. ZenSpace — Minimalist Pitch</option>
-                    <option value="1">2. AetherCrypt — Cyberpunk Pitch</option>
-                    <option value="2">3. NovusSaaS — SaaS / Tech Pitch</option>
-                    <option value="3">4. VeloceFit — Bold Sport Pitch</option>
-                    <option value="4">5. CaffeineCo — Earthy / Cozy Pitch</option>
-                    <option value="5">6. NebulaAgency — Studio Pitch</option>
-                    <option value="6">7. SentriShield — Security Pitch</option>
-                    <option value="7">8. Edumind — Academic Pitch</option>
-                    <option value="8">9. TerraTravel — Eco-Sprints Pitch</option>
-                    <option value="9">10. AeroSpace — Space Tech Pitch</option>
+                    <option value="0">1. ZenSpace — Minimalist & Calming</option>
+                    <option value="1">2. AetherCrypt — High-Stakes Cyberpunk</option>
+                    <option value="2">3. NovusSaaS — Tech Dashboard Style</option>
+                    <option value="3">4. VeloceFit — Bold Tournament Style</option>
+                    <option value="4">5. CaffeineCo — Cozy Coffee & Code</option>
+                    <option value="5">6. NebulaAgency — Creative Studio Showcase</option>
+                    <option value="6">7. SentriShield — Hardened Security Arena</option>
+                    <option value="7">8. Edumind — Bright Gamified Learning</option>
+                    <option value="8">9. TerraTravel — Eco-Conscious Coding</option>
+                    <option value="9">10. AeroSpace — Space-Tech Frontiers</option>
                 </select>
             </div>
-            <button id="btn-next" class="ctrl-btn" title="Next Slide (Right Arrow)">
+            <button id="btn-next" class="ctrl-btn" title="Next Variation (Right Arrow)">
                 <i data-lucide="chevron-right"></i>
             </button>
         </div>
@@ -55,226 +55,241 @@
     <div class="slider-wrapper">
         <div class="slider-container" id="slider-container">
 
-            <!-- PAGE 1: ZENSPACE (WELLNESS / MINIMALIST PITCH) -->
+            <!-- PAGE 1: ZENSPACE (MINIMALIST / CALMING VIBES) -->
             <section class="slide lp-zenspace" id="slide-0">
                 <div class="lp-scrollable">
                     <nav class="lp-nav">
                         <span class="lp-logo">VibeCoders.</span>
                         <div class="lp-links">
-                            <a href="#how-it-works">Sprint Rules</a>
-                            <a href="#philosophy">The Philosophy</a>
+                            <a href="#how-it-works">The Arena Rules</a>
+                            <a href="#duration-vote">Dynamic Duration</a>
                             <a href="#arena" class="lp-btn-primary">Enter the Arena</a>
                         </div>
                     </nav>
                     
                     <header class="lp-hero">
-                        <span class="pill-tag">Dynamic Coding Matches</span>
-                        <h1>Code in peace.<br>Win in style.</h1>
-                        <p>A distraction-free tournament ground for creative developers. Set your own sprint duration by voting, participate anonymously, and win real cash without the 9-hour hackathon fatigue.</p>
+                        <span class="pill-tag">No Burnout. Zero Fatigue.</span>
+                        <h1>Ditch the 48-hour exhaustion.<br>Code on your own terms.</h1>
+                        <p>Traditional hackathons lock you in a room for 9 hours straight. Vibe Coders lets you vote on your own sprint duration, submit live links anonymously, and win cash prizes without sacrifice.</p>
                         <div class="hero-actions">
-                            <button class="btn-main" onclick="alert('Entering Zen Arena...')">Enter the Arena</button>
-                            <button class="btn-outline"><i data-lucide="play"></i> Watch Rituals</button>
+                            <button class="btn-main">Enter the Arena</button>
+                            <button class="btn-outline"><i data-lucide="play"></i> Watch Philosophy</button>
                         </div>
                     </header>
 
-                    <section class="lp-section z-features" id="how-it-works">
-                        <h2>Mindful Competition Features</h2>
-                        <div class="feature-grid">
-                            <div class="f-card">
-                                <i data-lucide="clock"></i>
-                                <h3>Community-Polled Duration</h3>
-                                <p>You choose how long you sit. Vote on the sprint length 1 hour before the start so you never face burnout.</p>
-                            </div>
-                            <div class="f-card">
-                                <i data-lucide="sliders"></i>
-                                <h3>Double-Blind Slider Ratings</h3>
-                                <p>Anonymous submissions rated across 5 clean sliders (UI/UX, Functionality, Bugs, Accessibility, and Quality). Simple, fair, and fast.</p>
-                            </div>
-                            <div class="f-card">
-                                <i data-lucide="shield-alert"></i>
-                                <h3>Underdog Safety Net</h3>
-                                <p>Losing streak? We've got you. Lose 10 times in a row, and your 11th arena entry is completely free.</p>
-                            </div>
+                    <!-- INTERACTIVE COMPONENT: DURATION VOTE -->
+                    <section class="lp-section z-features" id="duration-vote">
+                        <h2>You vote. We set the clock.</h2>
+                        <p style="text-align: center; margin-bottom: 32px; max-width: 600px; margin-left: auto; margin-right: auto; opacity: 0.8;">
+                            1 hour before every challenge, all registered developers vote on the sprint duration. We don't believe in locking developers to keyboards for 9 hours. Try it below:
+                        </p>
+                        <div class="interactive-poll" id="zen-duration-poll">
+                            <button class="poll-option" data-votes="120">
+                                <span>⏰ Short Sprint (1.5 Hours)</span>
+                                <div class="progress-bar-fill" style="width: 0%;"></div>
+                                <span class="percent-label">0%</span>
+                            </button>
+                            <button class="poll-option" data-votes="245">
+                                <span>⏰ Standard Sprint (3.0 Hours)</span>
+                                <div class="progress-bar-fill" style="width: 0%;"></div>
+                                <span class="percent-label">0%</span>
+                            </button>
+                            <button class="poll-option" data-votes="82">
+                                <span>⏰ Deep Work Sprint (5.0 Hours)</span>
+                                <div class="progress-bar-fill" style="width: 0%;"></div>
+                                <span class="percent-label">0%</span>
+                            </button>
                         </div>
                     </section>
 
-                    <section class="lp-section z-philosophy" id="philosophy">
-                        <div class="split-layout">
-                            <div class="split-text">
-                                <h2>A playground that respects your craft.</h2>
-                                <p>Vibe Coders is designed to celebrate aesthetic front-end layouts. Submit live links with zero paywalls. Win badges (Bronze, Silver, Gold) and unlock custom entry tickets.</p>
-                                <div class="quote-card">
-                                    <p>"Participate in 5 paid and 2 free challenges to unlock the Bronze Badge and get free entry to high-stakes cash pools."</p>
-                                    <span>— Vibe Coders Rulebook</span>
-                                </div>
+                    <section class="lp-section z-features" id="how-it-works">
+                        <h2>The Vibe Coder Architecture</h2>
+                        <div class="feature-grid">
+                            <div class="f-card">
+                                <i data-lucide="shield-check"></i>
+                                <h3>Double-Blind Peer Grading</h3>
+                                <p>No bias, no favor. Submit anonymously. Your project is reviewed by peers on 5 simple sliders, and you rate theirs.</p>
                             </div>
-                            <div class="split-graphic">
-                                <div class="circle-blob animate-float"></div>
+                            <div class="f-card">
+                                <i data-lucide="percent"></i>
+                                <h3>Anti-Gatekeeper Payouts</h3>
+                                <p>Instead of winner-take-all, we return entry fees to over 60% of active participants based on ranked score brackets.</p>
+                            </div>
+                            <div class="f-card">
+                                <i data-lucide="umbrella"></i>
+                                <h3>Underdog Safety Net</h3>
+                                <p>If you don't secure a prize for 10 consecutive matches, your 11th entry fee is completely free. We keep you in the game.</p>
                             </div>
                         </div>
                     </section>
 
                     <footer class="lp-footer">
-                        <p>© 2026 Vibe Coders. Mindful development tournaments.</p>
+                        <p>© 2026 Vibe Coders. Mindful competitive programming.</p>
                     </footer>
                 </div>
             </section>
 
-            <!-- PAGE 2: AETHERCRYPT (WEB3 / CYBERPUNK PITCH) -->
+            <!-- PAGE 2: AETHERCRYPT (CYBERPUNK HIGH-STAKES ARENA) -->
             <section class="slide lp-aethercrypt" id="slide-1">
                 <div class="lp-scrollable">
                     <nav class="lp-nav">
                         <span class="lp-logo"><i data-lucide="terminal"></i> VIBE_SYS.</span>
                         <div class="lp-links">
-                            <a href="#payouts">Payouts</a>
-                            <a href="#voting">Double-Blind</a>
+                            <a href="#payout-calc">Payout Matrix</a>
+                            <a href="#duels">Matchmaking</a>
                             <a href="#arena" class="lp-btn-cta">Enter the Arena</a>
                         </div>
                     </nav>
 
                     <header class="lp-hero">
-                        <span class="cyber-badge">TOURNAMENT PROTOCOL ACTIVE</span>
-                        <h1>HACK THE AESTHETIC.<br>CLAIM THE BOUNTY.</h1>
-                        <p>The ultimate high-stakes frontend arena. Compete anonymously, rate your peers using double-blind sliders, and earn instant cash in a system designed so hundreds win, not just the top 3.</p>
+                        <span class="cyber-badge">TOURNAMENT INSTANCE: RUNNING</span>
+                        <h1>THE HACKATHON IS DEAD.<br>THE ARENA IS ALIVE.</h1>
+                        <p>Stop coding for free enterprise boards. Compete in high-frequency, peer-reviewed frontend battles. Secure instant cash and hardware drops in a system designed so hundreds win, not just the elite top 3.</p>
                         <div class="hero-actions">
-                            <button class="btn-neon" onclick="alert('Entering Cyber Arena...')">Enter the Arena</button>
-                            <button class="btn-dark">System Specs</button>
+                            <button class="btn-neon">Enter the Arena</button>
+                            <button class="btn-dark">dApp Protocol</button>
                         </div>
                     </header>
 
-                    <section class="lp-section c-dashboard" id="payouts">
-                        <div class="glass-preview">
-                            <div class="prev-header">
-                                <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-                                <span class="title">vibe_terminal://graduated_payouts</span>
+                    <!-- INTERACTIVE COMPONENT: GRADUATED PAYOUT CALCULATOR -->
+                    <section class="lp-section c-dashboard" id="payout-calc">
+                        <h2 style="text-align: center; margin-bottom: 24px; color: #ff007f;">Aesthetic Payout Simulator</h2>
+                        <p style="text-align: center; margin-bottom: 32px; max-width: 600px; margin-left: auto; margin-right: auto; opacity: 0.8; font-size: 14px;">
+                            We return money to developers who craft. Use the slider below to see how a typical 1,000-person sprint distributes $9 entry fees directly back to the community:
+                        </p>
+                        <div class="interactive-calculator">
+                            <div class="calc-control">
+                                <label for="hacker-slider">Participating Hackers: <span id="hacker-count-label" style="font-family: 'JetBrains Mono'; color: #00f0ff;">1000</span></label>
+                                <input type="range" id="hacker-slider" min="100" max="2000" value="1000" step="100">
                             </div>
-                            <div class="prev-body">
-                                <div class="metrics-bar">
-                                    <div class="metric"><span>1st / 2nd / 3rd Prize</span><h3>$750 / $500 / $200 <span class="up">Cash</span></h3></div>
-                                    <div class="metric"><span>Next 600 Hackers</span><h3>$8 to $4 Refund <span class="up">Anti-Loss</span></h3></div>
-                                </div>
-                                <div class="mock-chart">
-                                    <div class="bar" style="height: 100%" title="1st Place: $750"></div>
-                                    <div class="bar" style="height: 70%" title="2nd Place: $500"></div>
-                                    <div class="bar" style="height: 45%" title="3rd Place: $200"></div>
-                                    <div class="bar" style="height: 25%" title="Top 100: $8 Back"></div>
-                                    <div class="bar" style="height: 15%" title="Top 300: $4 Back"></div>
-                                </div>
+                            <div class="calc-results">
+                                <div class="res-card"><h4>1st Place</h4><p id="p-first">$750</p></div>
+                                <div class="res-card"><h4>2nd Place</h4><p id="p-second">$500</p></div>
+                                <div class="res-card"><h4>3rd Place</h4><p id="p-third">$200</p></div>
+                                <div class="res-card"><h4>Refund Bracket</h4><p id="p-refund">600 Devs ($8-$4)</p></div>
                             </div>
                         </div>
                     </section>
 
-                    <section class="lp-section c-security" id="voting">
-                        <h2>Anonymity & Security</h2>
+                    <section class="lp-section c-security" id="duels">
+                        <h2>1v1 Matchmaking & Custom Pools</h2>
                         <div class="security-grid">
                             <div class="sec-card">
-                                <i data-lucide="eye-off"></i>
-                                <h3>Double-Blind Peer Review</h3>
-                                <p>Neither developers nor testers know each other's identity. Rated purely on layout, accessibility, and clean logic.</p>
+                                <i data-lucide="swords"></i>
+                                <h3>Direct Leaderboard Challenges</h3>
+                                <p>Target any high-ranked developer and challenge them to a 1v1 aesthetic duel with custom stakes and community voting.</p>
                             </div>
                             <div class="sec-card">
-                                <i data-lucide="coins"></i>
-                                <h3>XP & Free Entry Tickets</h3>
-                                <p>Collect XP coins for participating. Redeem coins to buy free tickets or spectator slots to review and earn.</p>
+                                <i data-lucide="globe"></i>
+                                <h3>Custom College Pools</h3>
+                                <p>Build private pools for your colleagues or university. Set your own entry fees, customize rules, and keep track of internal rankings.</p>
                             </div>
                         </div>
                     </section>
 
                     <footer class="lp-footer">
-                        <p>© 2026 Vibe Coders. Run clean, claim bounties.</p>
+                        <p>© 2026 Vibe Sys. Encryption validated. Payouts secure.</p>
                     </footer>
                 </div>
             </section>
 
-            <!-- PAGE 3: NOVUSSAAS (SaaS / DEV PLATFORM PITCH) -->
+            <!-- PAGE 3: NOVUSSAAS (CLEAN TECH & METRICS) -->
             <section class="slide lp-novussaas" id="slide-2">
                 <div class="lp-scrollable">
                     <nav class="lp-nav">
                         <span class="lp-logo">VibeCoders</span>
                         <div class="lp-links">
-                            <a href="#stats">Stats Card</a>
-                            <a href="#leaderboard">Duels</a>
+                            <a href="#stats-sec">Stats Card</a>
+                            <a href="#board-sec">Leaderboard</a>
                             <a href="#arena" class="lp-btn-solid">Enter the Arena</a>
                         </div>
                     </nav>
 
                     <header class="lp-hero">
-                        <span class="tag">Contest starts in: 1 Hour</span>
-                        <h1>Where Aesthetic Coding Meets Competition</h1>
-                        <p>Join a developer-first platform featuring custom prize pools, active global leaderboards, and a graduated fee system where 60% of participants win back their entry fees.</p>
+                        <span class="tag">Global Leaderboard Online</span>
+                        <h1>A Sandbox Built for Frontend Artisans</h1>
+                        <p>Write clean, semantic code, deploy instant live links without paywalls, and claim badges (Bronze, Silver, Gold) that earn you free entries into weekly cash pools.</p>
                         <div class="hero-actions">
-                            <button class="btn-primary" onclick="alert('Entering SaaS Arena...')">Enter the Arena</button>
-                            <button class="btn-secondary">View active pools</button>
+                            <button class="btn-primary">Enter the Arena</button>
+                            <button class="btn-secondary">Check active runs</button>
                         </div>
                     </header>
 
-                    <section class="lp-section n-features" id="stats">
-                        <h2>Personalized Developer Stats</h2>
-                        <div class="features-list">
-                            <div class="item">
-                                <i data-lucide="badge-check"></i>
-                                <div>
-                                    <h3>Aesthetic Stats Card</h3>
-                                    <p>Track your wins, losses, total prize money accumulated, and custom tournament badges (Bronze, Silver, Gold).</p>
+                    <!-- INTERACTIVE COMPONENT: THE DEVELOPER STATS CARD -->
+                    <section class="lp-section n-features" id="stats-sec">
+                        <h2>Your Aesthetic Identity Card</h2>
+                        <p style="text-align: center; margin-bottom: 40px; opacity: 0.8; max-width: 600px; margin-left: auto; margin-right: auto; font-size: 14px;">
+                            Every Vibe Coder gets a live public Stats Card. Challenge opponents directly or display your badge progression directly to recruiters:
+                        </p>
+                        <div class="dev-stats-card">
+                            <div class="card-header">
+                                <div class="avatar-area">
+                                    <div class="mock-avatar">VC</div>
+                                    <div>
+                                        <h4>@hacker_artist</h4>
+                                        <span class="badge-status bronze">Bronze Medalist</span>
+                                    </div>
                                 </div>
+                                <div class="rank-badge">Rank #42</div>
                             </div>
-                            <div class="item">
-                                <i data-lucide="zap"></i>
-                                <div>
-                                    <h3>1v1 Leaderboard Duels</h3>
-                                    <p>Ready for a match? Anyone on the public leaderboard can challenge another coder directly to a custom duration sprint.</p>
+                            <div class="card-body">
+                                <div class="grid-stat">
+                                    <div class="box"><span>Matches Played</span><h4>38</h4></div>
+                                    <div class="box"><span>Wins / Losses</span><h4>28 / 10</h4></div>
+                                    <div class="box"><span>Prize Pool Won</span><h4>$2,840</h4></div>
+                                    <div class="box"><span>XP Earned</span><h4>4,250 XP</h4></div>
                                 </div>
                             </div>
                         </div>
                     </section>
 
-                    <section class="lp-section n-pricing" id="leaderboard">
-                        <h2>Create Custom Pools</h2>
+                    <section class="lp-section n-pricing" id="board-sec">
+                        <h2>Top Competitors & Custom Arenas</h2>
                         <div class="pricing-card">
-                            <h3>Friend & College Pools</h3>
-                            <div class="price">$0 Setup<span>/pool</span></div>
-                            <p>Launch private challenges for your college, company, or friend circle with customized rules and durations.</p>
-                            <button class="btn-pricing-action">Create Custom Pool</button>
+                            <h3>Private Clan Pools</h3>
+                            <div class="price">0% fees<span>/runs</span></div>
+                            <p>Build custom challenge rooms for your college or group of friends. Define your own entry bounds, timeline, and rating criteria.</p>
+                            <button class="btn-pricing-action">Create Sandbox Pool</button>
                         </div>
                     </section>
 
                     <footer class="lp-footer">
-                        <p>© 2026 Vibe Coders. The modern developer arena.</p>
+                        <p>© 2026 Vibe Coders. Infrastructure for creative developers.</p>
                     </footer>
                 </div>
             </section>
 
-            <!-- PAGE 4: VELOCEFIT (HIGH-ENERGY TOURNAMENT PITCH) -->
+            <!-- PAGE 4: VELOCEFIT (BOLD TOURNAMENT GRID) -->
             <section class="slide lp-velocefit" id="slide-3">
                 <div class="lp-scrollable">
                     <nav class="lp-nav">
                         <span class="lp-logo">VIBE ARENA</span>
                         <div class="lp-links">
-                            <a href="#payouts-run">Payouts</a>
+                            <a href="#how-run">The Rules</a>
                             <a href="#arena" class="lp-btn-accent">Enter the Arena</a>
                         </div>
                     </nav>
 
                     <header class="lp-hero">
-                        <h1>CODE RAPID. WIN CASH.</h1>
-                        <p>No more 48-hour exhausting hackathons. Set challenge limits by polling, submit functional live links anonymously, and get graded instantly via 5 sliding rating metrics.</p>
+                        <h1>FINISH IN 3 HOURS.<br>PAID IN 30 MINUTES.</h1>
+                        <p>We designed the ultimate fast-paced coding sprint. Enter, vote on duration, code without identity bias, submit a working link, and review peers. Dopamine hits instantly.</p>
                         <div class="hero-actions">
-                            <button class="btn-orange" onclick="alert('Entering Veloce Arena...')">Enter the Arena</button>
-                            <button class="btn-outline-white">Live Tournament Stats</button>
+                            <button class="btn-orange">Enter the Arena</button>
+                            <button class="btn-outline-white">Active Tournaments</button>
                         </div>
                     </header>
 
-                    <section class="lp-section v-sensors" id="payouts-run">
+                    <section class="lp-section v-sensors" id="how-run">
                         <div class="sensors-grid">
                             <div class="sensor-item">
-                                <div class="value">600+ Winners</div>
-                                <h3>Graduated Refund System</h3>
-                                <p>Out of 1000 devs, the top 3 take major prize money, while the next 600 secure gradual entry fee refunds ($8, $6, $4). High success rate.</p>
+                                <div class="value">30 min</div>
+                                <h3>Testing & Results</h3>
+                                <p>Contests are tested and peer-evaluated within 30 minutes. Instant ratings, instant cash payouts, zero delay.</p>
                             </div>
                             <div class="sensor-item">
-                                <div class="value">30 Mins</div>
-                                <h3>Fast Testing Time</h3>
-                                <p>Contests are tested and peer-voted within 30 minutes. Instant dopamine hit, instant payout confirmation.</p>
+                                <div class="value">100%</div>
+                                <h3>Double-Blind Peer Sliders</h3>
+                                <p>Developers review submissions anonymously. Ratings are calculated via clean slider metrics, avoiding judging bias.</p>
                             </div>
                         </div>
                     </section>
@@ -285,116 +300,156 @@
                 </div>
             </section>
 
-            <!-- PAGE 5: CAFFEINECO (EARTHY / COZY CLUB PITCH) -->
+            <!-- PAGE 5: CAFFEINECO (EARTHY / COZY COMMUNITY PITCH) -->
             <section class="slide lp-caffeineco" id="slide-4">
                 <div class="lp-scrollable">
                     <nav class="lp-nav">
-                        <span class="lp-logo">Cozy Sprints.</span>
+                        <span class="lp-logo">Cozy Coder Club.</span>
                         <div class="lp-links">
-                            <a href="#perks">Club Perks</a>
+                            <a href="#challenges">Challenges</a>
                             <a href="#arena" class="lp-btn-earth">Enter the Arena</a>
                         </div>
                     </nav>
 
                     <header class="lp-hero">
-                        <h1>Aesthetic code over warm coffee.</h1>
-                        <p>Participate in friendly, low-stress coding sprints. Set the clock with community voting, review peer submissions using simple sliders, and win keycaps, coffee beans, and cash.</p>
-                        <button class="btn-coffee" onclick="alert('Entering Cozy Arena...')">Enter the Arena</button>
+                        <h1>Craft exquisite interfaces over warm coffee.</h1>
+                        <p>Write clean code in a cozy community. Join weekend sprints, vote on duration to avoid screen fatigue, rate anonymously, and win premium coffee beans, keycaps, and cash.</p>
+                        <button class="btn-coffee">Enter the Arena</button>
                     </header>
 
-                    <section class="lp-section c-roasts" id="perks">
-                        <h2>The Vibe Coder Perks</h2>
+                    <section class="lp-section c-roasts" id="challenges">
+                        <h2>The Vibe Coder Guarantee</h2>
                         <div class="roast-cards">
                             <div class="roast-card">
-                                <span class="tag">Loss Protection</span>
-                                <h3>11th Free Entry</h3>
-                                <p>If you don't place in the prize brackets for 10 consecutive sprints, your 11th entry is completely on us.</p>
+                                <span class="tag">Underdog Protection</span>
+                                <h3>11th Entry is Free</h3>
+                                <p>If you don't win any prize or refund for 10 consecutive matches, your 11th entry is completely free. We protect your coding budget.</p>
                             </div>
                             <div class="roast-card">
-                                <span class="tag">Double-Blind Voting</span>
-                                <h3>5-Metric Sliders</h3>
-                                <p>Rate peer submissions easily: UI/UX, Functionality, Bugs, Accessibility, and Quality. No essays, just slide and vote.</p>
+                                <span class="tag">XP Coins</span>
+                                <h3>Review and Earn</h3>
+                                <p>Earn XP coins by acting as a spectator and checking peer code. Spend coins to buy free tickets to paid cash pools.</p>
                             </div>
                         </div>
                     </section>
 
                     <footer class="lp-footer">
-                        <p>© 2026 Cozy Coder Club. Build with passion and warmth.</p>
+                        <p>© 2026 Cozy Coder Club. Write beautiful code over warm coffee.</p>
                     </footer>
                 </div>
             </section>
 
-            <!-- PAGE 6: NEBULAAGENCY (CREATIVE STUDIO / CATEGORIES PITCH) -->
+            <!-- PAGE 6: NEBULAAGENCY (STUDIO SHOWCASE & INTERACTIVE SLIDERS) -->
             <section class="slide lp-nebula" id="slide-5">
                 <div class="lp-scrollable">
                     <nav class="lp-nav">
-                        <span class="lp-logo">VIBE.SQUAD</span>
+                        <span class="lp-logo">VIBE.CRAFT</span>
                         <div class="lp-links">
+                            <a href="#sliders-sec">Rating Sliders</a>
                             <a href="#categories">Awards</a>
                             <a href="#arena" class="lp-btn-neon">Enter the Arena</a>
                         </div>
                     </nav>
 
                     <header class="lp-hero">
-                        <h1>A creative coding arena for front-end craft.</h1>
-                        <p>We host weekly aesthetic coding match-ups. Cast your votes on peer layouts, check live link submissions, and win prizes for coding the most creative layouts.</p>
-                        <button class="btn-gradient" onclick="alert('Entering Nebula Arena...')">Enter the Arena</button>
+                        <h1>Double-Blind Voting. Graded by peers, not bias.</h1>
+                        <p>We hide developer names and tester names during reviews. Projects are evaluated across 5 core sliders. Test the actual grading system interface below:</p>
+                        <button class="btn-gradient">Enter the Arena</button>
                     </header>
 
+                    <!-- INTERACTIVE COMPONENT: PEER REVIEW SLIDERS -->
+                    <section class="lp-section n-works" id="sliders-sec">
+                        <h2 style="text-align: center; margin-bottom: 24px;">Interactive Rating Mockup</h2>
+                        <p style="text-align: center; margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto; opacity: 0.8; font-size: 14px;">
+                            Drag the sliders below to see how peer reviews calculate a composite score instantly. No long forms, just slide and rate:
+                        </p>
+                        <div class="interactive-sliders-widget">
+                            <div class="slider-row">
+                                <label><i data-lucide="palette" style="color:#d946ef; width:16px; height:16px; vertical-align:middle;"></i> UI/UX Design</label>
+                                <input type="range" class="rating-input" data-weight="0.3" min="1" max="10" value="8">
+                                <span class="val-label">8/10</span>
+                            </div>
+                            <div class="slider-row">
+                                <label><i data-lucide="terminal-2" style="color:#00f0ff; width:16px; height:16px; vertical-align:middle;"></i> Functionality</label>
+                                <input type="range" class="rating-input" data-weight="0.3" min="1" max="10" value="7">
+                                <span class="val-label">7/10</span>
+                            </div>
+                            <div class="slider-row">
+                                <label><i data-lucide="bug" style="color:#ef4444; width:16px; height:16px; vertical-align:middle;"></i> Bug Free Code</label>
+                                <input type="range" class="rating-input" data-weight="0.15" min="1" max="10" value="9">
+                                <span class="val-label">9/10</span>
+                            </div>
+                            <div class="slider-row">
+                                <label><i data-lucide="accessibility" style="color:#10b981; width:16px; height:16px; vertical-align:middle;"></i> Accessibility</label>
+                                <input type="range" class="rating-input" data-weight="0.15" min="1" max="10" value="8">
+                                <span class="val-label">8/10</span>
+                            </div>
+                            <div class="slider-row">
+                                <label><i data-lucide="file-text" style="color:#fbbf24; width:16px; height:16px; vertical-align:middle;"></i> Content Quality</label>
+                                <input type="range" class="rating-input" data-weight="0.1" min="1" max="10" value="8">
+                                <span class="val-label">8/10</span>
+                            </div>
+                            <div class="score-display">
+                                <span>Calculated Score</span>
+                                <h3 id="calc-final-score">7.95 / 10</h3>
+                            </div>
+                        </div>
+                    </section>
+
                     <section class="lp-section n-works" id="categories">
-                        <h2>Special Category Awards</h2>
+                        <h2>Special Category Prizes</h2>
                         <div class="portfolio-grid">
                             <div class="work-card">
                                 <div class="card-img" style="background: linear-gradient(45deg, #a21caf, #6366f1)"></div>
                                 <h3>Most Creative Layout</h3>
-                                <p>Awarded to the developer who pushes CSS layout design to its limits. Separate from top 3 cash winners.</p>
+                                <p>Awarded to the developer who pushes CSS/styling to its aesthetic limit. Category winners are completely distinct from the 1st/2nd/3rd place cash winners!</p>
                             </div>
                             <div class="work-card">
                                 <div class="card-img" style="background: linear-gradient(45deg, #3b82f6, #10b981)"></div>
-                                <h3>Accessibility & Clean Code</h3>
-                                <p>Awarded for high-score accessibility layouts that load instantly on edge nodes.</p>
+                                <h3>Best Code Architecture</h3>
+                                <p>Awarded to the developer with the cleanest semantic file structure, high performance metrics, and zero validation issues.</p>
                             </div>
                         </div>
                     </section>
 
                     <footer class="lp-footer">
-                        <p>© 2026 Vibe Squad Sprints. Design, build, deploy.</p>
+                        <p>© 2026 Vibe Craft Sprints. Elevating frontend art.</p>
                     </footer>
                 </div>
             </section>
 
-            <!-- PAGE 7: SENTRISHIELD (SECURITY / BOUNTY PITCH) -->
+            <!-- PAGE 7: SENTRISHIELD (SECURITY BOUNTIES) -->
             <section class="slide lp-sentrishield" id="slide-6">
                 <div class="lp-scrollable">
                     <nav class="lp-nav">
                         <span class="lp-logo"><i data-lucide="shield"></i> SENTRI.DEV</span>
                         <div class="lp-links">
-                            <a href="#how-voting-works">Review Panel</a>
+                            <a href="#how-voting-works">Review Rules</a>
                             <a href="#arena" class="lp-btn-shield">Enter the Arena</a>
                         </div>
                     </nav>
 
                     <header class="lp-hero">
-                        <span class="alert-badge"><i data-lucide="shield-check"></i> Safe and Anonymous Peer Evaluation Pipeline</span>
-                        <h1>Write Bulletproof Code. Claim Bounties.</h1>
-                        <p>Join secure frontend matches. Submit live links with zero paywalls. Every submission is sandboxed and evaluated anonymously using five simple rating sliders.</p>
+                        <span class="alert-badge"><i data-lucide="shield-check"></i> Sandboxed Code Execution Verified</span>
+                        <h1>Write Secure Frontend Layouts. Claim Bounties.</h1>
+                        <p>Submit working live links directly without paywalls. Sprints are evaluated double-blind by peers, tested for scripts, and rewarded immediately on completion.</p>
                         <div class="hero-actions">
-                            <button class="btn-shield-primary" onclick="alert('Entering Sentri Arena...')">Enter the Arena</button>
+                            <button class="btn-shield-primary">Enter the Arena</button>
                         </div>
                     </header>
 
                     <section class="lp-section s-threats" id="how-voting-works">
-                        <h2>Peer Review Specs</h2>
+                        <h2>Security Protocol Details</h2>
                         <div class="threat-grid">
                             <div class="t-card">
                                 <i data-lucide="users"></i>
-                                <h3>Spectator Reviews</h3>
-                                <p>Opt-in as an active spectator to run manually checked security reviews and earn XP coins.</p>
+                                <h3>Active Spectator Reviews</h3>
+                                <p>Earn XP coins by inspecting and rating peer projects. Exchange your coins to buy free tickets for paid contests.</p>
                             </div>
                             <div class="t-card">
                                 <i data-lucide="sliders"></i>
-                                <h3>Zero Complex Forms</h3>
-                                <p>Review UI/UX, Functionality, Bugs, Accessibility, and Quality by sliding simple stars on our rating panel.</p>
+                                <h3>Frictionless Review Panel</h3>
+                                <p>Rate submissions across UI/UX, Functionality, Bugs, Accessibility, and Quality by sliding simple stars on our rating panel.</p>
                             </div>
                         </div>
                     </section>
@@ -417,23 +472,37 @@
                     </nav>
 
                     <header class="lp-hero">
-                        <h1>Complete Sprints. Earn Badges. Win Entry Tickets.</h1>
-                        <p>An educational coding tournament platform. Play paid and free challenges to unlock Bronze, Silver, and Gold badges, and secure free entries into high-stakes cash pools.</p>
-                        <button class="btn-yellow-main" onclick="alert('Entering Edu Arena...')">Enter the Arena</button>
+                        <h1>Level Up Your Badges. Get Free Contest Entries.</h1>
+                        <p>Complete challenges to unlock Bronze, Silver, and Gold badges. Every badge milestone grants you free entry tickets into weekly cash pools.</p>
+                        <button class="btn-yellow-main">Enter the Arena</button>
                     </header>
 
+                    <!-- INTERACTIVE COMPONENT: BADGE PROGRESS STEPPER -->
                     <section class="lp-section e-courses" id="badges">
-                        <h2>Badge Milestones</h2>
-                        <div class="course-grid">
-                            <div class="course-card">
-                                <i data-lucide="award"></i>
-                                <h3>Bronze Badge Challenge</h3>
-                                <p>Participate in 5 paid and 2 free sprints to earn your Bronze Badge and unlock a free entry in next week's tournament.</p>
+                        <h2>Badge Milestones & Perks</h2>
+                        <p style="text-align: center; margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto; opacity: 0.8; font-size: 14px;">
+                            Click each badge tier below to inspect requirements and custom perks:
+                        </p>
+                        <div class="interactive-badge-stepper">
+                            <div class="stepper-buttons">
+                                <button class="step-btn active" data-target="b-bronze">Bronze Badge</button>
+                                <button class="step-btn" data-target="b-silver">Silver Badge</button>
+                                <button class="step-btn" data-target="b-gold">Gold Badge</button>
                             </div>
-                            <div class="course-card">
-                                <i data-lucide="flame"></i>
-                                <h3>Custom Duel Pools</h3>
-                                <p>Badges unlock the ability to challenge leaderboard opponents directly or create custom friendly arenas.</p>
+                            <div class="step-content active" id="b-bronze">
+                                <h3>Bronze Badge Challenge</h3>
+                                <p><strong>Requirement:</strong> Participate in 5 paid challenges and 2 free challenges.</p>
+                                <p><strong>Perk:</strong> Get a permanent Bronze profile badge and 1 free entry ticket to any weekly cash contest.</p>
+                            </div>
+                            <div class="step-content" id="b-silver">
+                                <h3>Silver Badge Challenge</h3>
+                                <p><strong>Requirement:</strong> Win 3 top-10 refund slots and complete 10 matches.</p>
+                                <p><strong>Perk:</strong> Get a permanent Silver badge and unlock direct 1v1 duels with leaderboard peers.</p>
+                            </div>
+                            <div class="step-content" id="b-gold">
+                                <h3>Gold Badge Challenge</h3>
+                                <p><strong>Requirement:</strong> Win 1st, 2nd, or 3rd place in any weekly cash tournament.</p>
+                                <p><strong>Perk:</strong> Get a permanent Gold badge, 3 free entry tickets, and the ability to launch custom cash pools.</p>
                             </div>
                         </div>
                     </section>
@@ -448,7 +517,7 @@
             <section class="slide lp-terratravel" id="slide-8">
                 <div class="lp-scrollable">
                     <nav class="lp-nav">
-                        <span class="lp-logo">TERRA.SPRINT</span>
+                        <span class="lp-logo">TERRA.DEV</span>
                         <div class="lp-links">
                             <a href="#rules">Eco Rules</a>
                             <a href="#arena" class="lp-btn-terra">Enter the Arena</a>
@@ -457,26 +526,26 @@
 
                     <header class="lp-hero">
                         <h1>Green Coding Sprints. Cash Payouts.</h1>
-                        <p>Compete in sustainable software sprints. Build lightweight pages with custom duration settings voted by you, undergo anonymous peer reviews, and win prizes while promoting carbon-neutral code.</p>
-                        <button class="btn-terra-main" onclick="alert('Entering Terra Arena...')">Enter the Arena</button>
+                        <p>Compete in sustainable software sprints. Optimize code logic to reduce cloud computation footprints, undergo double-blind peer review, and win cash while promoting clean software.</p>
+                        <button class="btn-terra-main">Enter the Arena</button>
                     </header>
 
                     <section class="lp-section t-destinations" id="rules">
                         <h2>Sustainable Tournaments</h2>
                         <div class="dest-grid">
                             <div class="dest-card">
-                                <h3>Dynamic Voting</h3>
-                                <p>Prevent compute wastage. Sprints close registration 1 hour early so users can vote on the exact length needed.</p>
+                                <h3>Efficient Voting</h3>
+                                <p>Sprints close registration 1 hour early so users can vote on the exact length needed. No compute wastage.</p>
                             </div>
                             <div class="dest-card">
-                                <h3>Graduated Refund Bracket</h3>
-                                <p>Eco-friendly fee distribution. Top 3 win cash, and over 60% of participants win partial fee refunds.</p>
+                                <h3>Graduated Payouts</h3>
+                                <p>Fee returns. Top 3 win cash, and over 60% of participants win partial fee refunds.</p>
                             </div>
                         </div>
                     </section>
 
                     <footer class="lp-footer">
-                        <p>© 2026 Terra.Sprint Devs. Clean code for the biosphere.</p>
+                        <p>© 2026 Terra.Dev Sprints. Code with carbon consciousness.</p>
                     </footer>
                 </div>
             </section>
@@ -493,10 +562,10 @@
                     </nav>
 
                     <header class="lp-hero">
-                        <span class="orbit-badge">SQUAD TOURNAMENTS COMING SOON</span>
+                        <span class="orbit-badge">WebGL TOURNAMENTS LIVE</span>
                         <h1>High-Stakes Graphics Sprints.</h1>
                         <p>Compete anonymously in deep-tech and WebGL sprints. Build space-grade visualizers, rate peers using anonymous 5-metric sliders, and secure major cash prizes ($750/$500/$200).</p>
-                        <button class="btn-orbit-main" onclick="alert('Entering Aero Arena...')">Enter the Arena</button>
+                        <button class="btn-orbit-main">Enter the Arena</button>
                     </header>
 
                     <section class="lp-section a-flights" id="duels">

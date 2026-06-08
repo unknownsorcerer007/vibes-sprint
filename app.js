@@ -5,7 +5,7 @@ lucide.createIcons();
 let currentSlide = 0;
 const totalSlides = 10;
 
-// DOM ELEMENTS
+// DOM ELEMENTS (SLIDER)
 const sliderContainer = document.getElementById('slider-container');
 const btnPrev = document.getElementById('btn-prev');
 const btnNext = document.getElementById('btn-next');
@@ -74,5 +74,131 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
+
+// ========================================================
+// INTERACTIVE WIDGET LOGIC
+// ========================================================
+
+// 1. ZenSpace Duration Poll (Slide 0)
+const pollOptions = document.querySelectorAll('.poll-option');
+let hasVoted = false;
+
+pollOptions.forEach(option => {
+    option.addEventListener('click', () => {
+        if (hasVoted) return;
+        
+        hasVoted = true;
+        
+        // Increment votes for selected option
+        const selectedVotes = parseInt(option.getAttribute('data-votes')) + 1;
+        option.setAttribute('data-votes', selectedVotes);
+        option.classList.add('voted');
+
+        // Sum total votes
+        let totalVotes = 0;
+        pollOptions.forEach(opt => {
+            totalVotes += parseInt(opt.getAttribute('data-votes'));
+        });
+
+        // Calculate and render percentages
+        pollOptions.forEach(opt => {
+            const votes = parseInt(opt.getAttribute('data-votes'));
+            const percent = Math.round((votes / totalVotes) * 100);
+            
+            const fill = opt.querySelector('.progress-bar-fill');
+            const label = opt.querySelector('.percent-label');
+            
+            fill.style.width = `${percent}%`;
+            label.textContent = `${percent}%`;
+            opt.style.cursor = 'default';
+        });
+    });
+});
+
+// 2. AetherCrypt Payout Calculator (Slide 1)
+const hackerSlider = document.getElementById('hacker-slider');
+const hackerCountLabel = document.getElementById('hacker-count-label');
+const pFirst = document.getElementById('p-first');
+const pSecond = document.getElementById('p-second');
+const pThird = document.getElementById('p-third');
+const pRefund = document.getElementById('p-refund');
+
+if (hackerSlider) {
+    hackerSlider.addEventListener('input', (e) => {
+        const hackers = parseInt(e.target.value);
+        hackerCountLabel.textContent = hackers.toLocaleString();
+        
+        // Calculate based on user notebook parameters:
+        // 1st: $750 (for 1000 devs), scale linearly -> 0.75 * N
+        // 2nd: $500 (for 1000 devs) -> 0.5 * N
+        // 3rd: $200 (for 1000 devs) -> 0.2 * N
+        // Refund: 60% of devs split into $8, $6, $4 brackets
+        const prize1 = Math.round(0.75 * hackers);
+        const prize2 = Math.round(0.50 * hackers);
+        const prize3 = Math.round(0.20 * hackers);
+        
+        const refundDevs = Math.floor(0.60 * hackers);
+        const r100 = Math.floor(0.10 * hackers);
+        const r200 = Math.floor(0.20 * hackers);
+        const r300 = Math.floor(0.30 * hackers);
+
+        pFirst.textContent = `$${prize1.toLocaleString()}`;
+        pSecond.textContent = `$${prize2.toLocaleString()}`;
+        pThird.textContent = `$${prize3.toLocaleString()}`;
+        pRefund.textContent = `${refundDevs} Devs ($8-$4 back)`;
+    });
+}
+
+// 3. Nebula Double-Blind Rating Sliders (Slide 5)
+const ratingInputs = document.querySelectorAll('.rating-input');
+const calcFinalScore = document.getElementById('calc-final-score');
+
+function calculateRating() {
+    let finalScore = 0;
+    
+    ratingInputs.forEach(input => {
+        const val = parseInt(input.value);
+        const weight = parseFloat(input.getAttribute('data-weight'));
+        finalScore += val * weight;
+        
+        // Update individual label
+        const row = input.closest('.slider-row');
+        if (row) {
+            const label = row.querySelector('.val-label');
+            label.textContent = `${val}/10`;
+        }
+    });
+
+    if (calcFinalScore) {
+        calcFinalScore.textContent = `${finalScore.toFixed(2)} / 10`;
+    }
+}
+
+ratingInputs.forEach(input => {
+    input.addEventListener('input', calculateRating);
+});
+
+// 4. Edumind Badge Stepper (Slide 7)
+const stepBtns = document.querySelectorAll('.step-btn');
+const stepContents = document.querySelectorAll('.step-content');
+
+stepBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const target = btn.getAttribute('data-target');
+        
+        // Deactivate all
+        stepBtns.forEach(b => b.classList.remove('active'));
+        stepContents.forEach(c => c.classList.remove('active'));
+        
+        // Activate selected
+        btn.classList.add('active');
+        const content = document.getElementById(target);
+        if (content) {
+            content.classList.add('active');
+        }
+    });
+});
+
 // Initial Setup
 goToSlide(0);
+calculateRating();
