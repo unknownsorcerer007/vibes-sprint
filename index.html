@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vibes Sprint — Aesthetic Productivity Dashboard</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-lofi">
+    <div class="glow-bg"></div>
+    <div class="app-container">
+        <!-- HEADER -->
+        <header class="app-header">
+            <div class="header-logo">
+                <i data-lucide="sparkles" class="logo-icon animate-pulse"></i>
+                <div class="logo-text">
+                    <h1>Vibes Sprint</h1>
+                    <p class="tagline">Work in your own aesthetic space</p>
+                </div>
+            </div>
+            <div class="header-info">
+                <div class="date-display" id="date-display">June 8, 2026</div>
+                <div class="user-profile">
+                    <span class="user-badge"><i data-lucide="github" class="profile-icon"></i>unknownsorcerer007</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAIN WORKSPACE -->
+        <main class="app-workspace">
+            
+            <!-- LEFT PANEL: VIBE SELECTOR & SOUNDS -->
+            <section class="panel sidebar-panel">
+                <div class="panel-header">
+                    <i data-lucide="sliders"></i>
+                    <h2>Vibe Spaces</h2>
+                </div>
+                
+                <!-- Vibes list -->
+                <div class="vibe-selector-container">
+                    <button class="vibe-btn active" data-vibe="lofi" style="--vibe-color: #f7a8b8;">
+                        <span class="vibe-indicator"></span>
+                        <div class="vibe-info">
+                            <span class="vibe-name">Lofi Focus</span>
+                            <span class="vibe-desc">Warm pastel, soft beats</span>
+                        </div>
+                    </button>
+                    <button class="vibe-btn" data-vibe="cyberpunk" style="--vibe-color: #00f0ff;">
+                        <span class="vibe-indicator"></span>
+                        <div class="vibe-info">
+                            <span class="vibe-name">Midnight Cyberpunk</span>
+                            <span class="vibe-desc">Neon glow, synth rhythm</span>
+                        </div>
+                    </button>
+                    <button class="vibe-btn" data-vibe="sunset" style="--vibe-color: #ff5e62;">
+                        <span class="vibe-indicator"></span>
+                        <div class="vibe-info">
+                            <span class="vibe-name">Sunset Chill</span>
+                            <span class="vibe-desc">Golden hour, slow tempo</span>
+                        </div>
+                    </button>
+                    <button class="vibe-btn" data-vibe="forest" style="--vibe-color: #a8ff78;">
+                        <span class="vibe-indicator"></span>
+                        <div class="vibe-info">
+                            <span class="vibe-name">Forest Rain</span>
+                            <span class="vibe-desc">Deep greens, rain sounds</span>
+                        </div>
+                    </button>
+                    <button class="vibe-btn" data-vibe="synthwave" style="--vibe-color: #d946ef;">
+                        <span class="vibe-indicator"></span>
+                        <div class="vibe-info">
+                            <span class="vibe-name">Retro Synth</span>
+                            <span class="vibe-desc">Sunset grid, analog wave</span>
+                        </div>
+                    </button>
+                </div>
+
+                <!-- Sound Board -->
+                <div class="sound-board">
+                    <div class="sound-board-header">
+                        <h3>Ambient Mix</h3>
+                        <button id="toggle-ambient" class="icon-btn" title="Toggle Sound">
+                            <i data-lucide="volume-x" id="ambient-icon"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="sound-sliders">
+                        <div class="sound-control">
+                            <div class="sound-label">
+                                <i data-lucide="music"></i>
+                                <span>Lofi Beats</span>
+                            </div>
+                            <input type="range" class="sound-slider" id="vol-music" min="0" max="100" value="0">
+                        </div>
+                        <div class="sound-control">
+                            <div class="sound-label">
+                                <i data-lucide="cloud-rain"></i>
+                                <span>Rainfall</span>
+                            </div>
+                            <input type="range" class="sound-slider" id="vol-rain" min="0" max="100" value="0">
+                        </div>
+                        <div class="sound-control">
+                            <div class="sound-label">
+                                <i data-lucide="wind"></i>
+                                <span>Static Noise</span>
+                            </div>
+                            <input type="range" class="sound-slider" id="vol-noise" min="0" max="100" value="0">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CENTER/RIGHT AREA: TIMER & KANBAN SPRINT BOARD -->
+            <div class="main-content-flow">
+                
+                <!-- TOP WIDGETS: POMODORO & QUICK STATS -->
+                <section class="top-widgets">
+                    
+                    <!-- POMODORO TIMER -->
+                    <div class="panel timer-panel">
+                        <div class="timer-modes">
+                            <button class="timer-mode-btn active" data-mode="focus">Focus</button>
+                            <button class="timer-mode-btn" data-mode="short">Short Break</button>
+                            <button class="timer-mode-btn" data-mode="long">Long Break</button>
+                        </div>
+                        
+                        <div class="timer-display-container">
+                            <svg class="progress-ring" width="160" height="160">
+                                <circle class="progress-ring-circle-bg" stroke="rgba(255,255,255,0.05)" stroke-width="6" fill="transparent" r="72" cx="80" cy="80"/>
+                                <circle class="progress-ring-circle" id="timer-progress" stroke="var(--accent-color)" stroke-width="6" fill="transparent" r="72" cx="80" cy="80"/>
+                            </svg>
+                            <div class="timer-time" id="timer-time">25:00</div>
+                        </div>
+
+                        <div class="timer-controls">
+                            <button id="timer-play-pause" class="timer-btn main-btn">
+                                <i data-lucide="play" id="play-icon"></i>
+                                <span id="play-text">Start</span>
+                            </button>
+                            <button id="timer-reset" class="timer-btn icon-btn" title="Reset">
+                                <i data-lucide="rotate-ccw"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- STATS / QUOTE WIDGET -->
+                    <div class="panel stats-panel">
+                        <div class="panel-header">
+                            <i data-lucide="activity"></i>
+                            <h2>Sprint Progress</h2>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <span class="stat-value" id="stat-sprints">0</span>
+                                <span class="stat-label">Sprints Completed</span>
+                            </div>
+                            <div class="stat-card">
+                                <span class="stat-value" id="stat-tasks">0</span>
+                                <span class="stat-label">Completed Tasks</span>
+                            </div>
+                        </div>
+                        <div class="quote-area">
+                            <p id="quote-text">"The secret of getting ahead is getting started."</p>
+                            <span id="quote-author">— Mark Twain</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- KANBAN SPRINT BOARD -->
+                <section class="panel board-panel">
+                    <div class="board-header">
+                        <div class="board-title-area">
+                            <i data-lucide="kanban"></i>
+                            <h2>Sprint Board</h2>
+                        </div>
+                        <button class="add-task-trigger-btn" id="btn-new-task">
+                            <i data-lucide="plus"></i> New Task
+                        </button>
+                    </div>
+
+                    <div class="kanban-grid">
+                        <!-- TODO COLUMN -->
+                        <div class="kanban-column" data-status="todo">
+                            <div class="column-header">
+                                <span class="column-dot" style="background: var(--todo-color);"></span>
+                                <h3>To Do</h3>
+                                <span class="column-count" id="count-todo">0</span>
+                            </div>
+                            <div class="column-cards" id="cards-todo">
+                                <!-- Cards injected here -->
+                            </div>
+                        </div>
+
+                        <!-- IN PROGRESS COLUMN -->
+                        <div class="kanban-column" data-status="progress">
+                            <div class="column-header">
+                                <span class="column-dot" style="background: var(--progress-color);"></span>
+                                <h3>In Progress</h3>
+                                <span class="column-count" id="count-progress">0</span>
+                            </div>
+                            <div class="column-cards" id="cards-progress">
+                                <!-- Cards injected here -->
+                            </div>
+                        </div>
+
+                        <!-- REVIEW COLUMN -->
+                        <div class="kanban-column" data-status="review">
+                            <div class="column-header">
+                                <span class="column-dot" style="background: var(--review-color);"></span>
+                                <h3>Review</h3>
+                                <span class="column-count" id="count-review">0</span>
+                            </div>
+                            <div class="column-cards" id="cards-review">
+                                <!-- Cards injected here -->
+                            </div>
+                        </div>
+
+                        <!-- DONE COLUMN -->
+                        <div class="kanban-column" data-status="done">
+                            <div class="column-header">
+                                <span class="column-dot" style="background: var(--done-color);"></span>
+                                <h3>Done</h3>
+                                <span class="column-count" id="count-done">0</span>
+                            </div>
+                            <div class="column-cards" id="cards-done">
+                                <!-- Cards injected here -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- NEW TASK MODAL -->
+    <div class="modal-backdrop" id="task-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Create Sprint Task</h2>
+                <button class="icon-btn" id="modal-close"><i data-lucide="x"></i></button>
+            </div>
+            <form id="task-form">
+                <div class="form-group">
+                    <label for="task-title">Task Title</label>
+                    <input type="text" id="task-title" required placeholder="e.g. Design UI Mockups">
+                </div>
+                <div class="form-group">
+                    <label for="task-desc">Description</label>
+                    <textarea id="task-desc" rows="3" placeholder="Brief details about the task..."></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="task-priority">Priority</label>
+                        <select id="task-priority">
+                            <option value="low">Low Vibe (Chill)</option>
+                            <option value="medium" selected>Medium Vibe (Steady)</option>
+                            <option value="high">High Vibe (Rush)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-tag">Mood Tag</label>
+                        <input type="text" id="task-tag" placeholder="e.g. Coding, Creative, Research" value="General">
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" id="modal-cancel">Cancel</button>
+                    <button type="submit" class="btn-primary">Add Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
