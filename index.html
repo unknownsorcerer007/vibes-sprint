@@ -3,276 +3,522 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vibes Sprint — Aesthetic Productivity Dashboard</title>
+    <title>Landing Page Showcase — 10 Premium Designs</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="theme-lofi">
-    <div class="glow-bg"></div>
-    <div class="app-container">
-        <!-- HEADER -->
-        <header class="app-header">
-            <div class="header-logo">
-                <i data-lucide="sparkles" class="logo-icon animate-pulse"></i>
-                <div class="logo-text">
-                    <h1>Vibes Sprint</h1>
-                    <p class="tagline">Work in your own aesthetic space</p>
-                </div>
+<body>
+    
+    <!-- FLOATING DASHBOARD CONTROLLER -->
+    <header class="showcase-controller">
+        <div class="controller-left">
+            <i data-lucide="layout" class="logo-icon"></i>
+            <div class="logo-text">
+                <h2>Design Labs</h2>
+                <p>10 Premium Landing Pages</p>
             </div>
-            <div class="header-info">
-                <div class="date-display" id="date-display">June 8, 2026</div>
-                <div class="user-profile">
-                    <span class="user-badge"><i data-lucide="github" class="profile-icon"></i>unknownsorcerer007</span>
-                </div>
+        </div>
+        <div class="controller-center">
+            <button id="btn-prev" class="ctrl-btn" title="Previous Page (Left Arrow)">
+                <i data-lucide="chevron-left"></i>
+            </button>
+            <div class="select-wrapper">
+                <span class="slide-badge" id="slide-badge">01 / 10</span>
+                <select id="design-select">
+                    <option value="0">1. ZenSpace — Wellness & Calm</option>
+                    <option value="1">2. AetherCrypt — Web3 & Crypto</option>
+                    <option value="2">3. NovusSaaS — Tech & Analytics</option>
+                    <option value="3">4. VeloceFit — Health & Wearables</option>
+                    <option value="4">5. CaffeineCo — Earthy Coffee</option>
+                    <option value="5">6. NebulaAgency — Creative Studio</option>
+                    <option value="6">7. SentriShield — AI Cybersecurity</option>
+                    <option value="7">8. Edumind — Bright E-Learning</option>
+                    <option value="8">9. TerraTravel — Eco-Tourism</option>
+                    <option value="9">10. AeroSpace — Future Spaceflight</option>
+                </select>
             </div>
-        </header>
+            <button id="btn-next" class="ctrl-btn" title="Next Page (Right Arrow)">
+                <i data-lucide="chevron-right"></i>
+            </button>
+        </div>
+        <div class="controller-right">
+            <span class="nav-hint"><kbd>←</kbd> <kbd>→</kbd> keys to slide</span>
+        </div>
+    </header>
 
-        <!-- MAIN WORKSPACE -->
-        <main class="app-workspace">
-            
-            <!-- LEFT PANEL: VIBE SELECTOR & SOUNDS -->
-            <section class="panel sidebar-panel">
-                <div class="panel-header">
-                    <i data-lucide="sliders"></i>
-                    <h2>Vibe Spaces</h2>
-                </div>
-                
-                <!-- Vibes list -->
-                <div class="vibe-selector-container">
-                    <button class="vibe-btn active" data-vibe="lofi" style="--vibe-color: #f7a8b8;">
-                        <span class="vibe-indicator"></span>
-                        <div class="vibe-info">
-                            <span class="vibe-name">Lofi Focus</span>
-                            <span class="vibe-desc">Warm pastel, soft beats</span>
-                        </div>
-                    </button>
-                    <button class="vibe-btn" data-vibe="cyberpunk" style="--vibe-color: #00f0ff;">
-                        <span class="vibe-indicator"></span>
-                        <div class="vibe-info">
-                            <span class="vibe-name">Midnight Cyberpunk</span>
-                            <span class="vibe-desc">Neon glow, synth rhythm</span>
-                        </div>
-                    </button>
-                    <button class="vibe-btn" data-vibe="sunset" style="--vibe-color: #ff5e62;">
-                        <span class="vibe-indicator"></span>
-                        <div class="vibe-info">
-                            <span class="vibe-name">Sunset Chill</span>
-                            <span class="vibe-desc">Golden hour, slow tempo</span>
-                        </div>
-                    </button>
-                    <button class="vibe-btn" data-vibe="forest" style="--vibe-color: #a8ff78;">
-                        <span class="vibe-indicator"></span>
-                        <div class="vibe-info">
-                            <span class="vibe-name">Forest Rain</span>
-                            <span class="vibe-desc">Deep greens, rain sounds</span>
-                        </div>
-                    </button>
-                    <button class="vibe-btn" data-vibe="synthwave" style="--vibe-color: #d946ef;">
-                        <span class="vibe-indicator"></span>
-                        <div class="vibe-info">
-                            <span class="vibe-name">Retro Synth</span>
-                            <span class="vibe-desc">Sunset grid, analog wave</span>
-                        </div>
-                    </button>
-                </div>
+    <!-- HORIZONTAL SLIDER VIEWPORT -->
+    <div class="slider-wrapper">
+        <div class="slider-container" id="slider-container">
 
-                <!-- Sound Board -->
-                <div class="sound-board">
-                    <div class="sound-board-header">
-                        <h3>Ambient Mix</h3>
-                        <button id="toggle-ambient" class="icon-btn" title="Toggle Sound">
-                            <i data-lucide="volume-x" id="ambient-icon"></i>
-                        </button>
-                    </div>
+            <!-- PAGE 1: ZENSPACE (WELLNESS & MEDITATION) -->
+            <section class="slide lp-zenspace" id="slide-0">
+                <div class="lp-scrollable">
+                    <nav class="lp-nav">
+                        <span class="lp-logo">ZenSpace.</span>
+                        <div class="lp-links">
+                            <a href="#features">Features</a>
+                            <a href="#about">Philosophy</a>
+                            <a href="#pricing" class="lp-btn-primary">Get App</a>
+                        </div>
+                    </nav>
                     
-                    <div class="sound-sliders">
-                        <div class="sound-control">
-                            <div class="sound-label">
-                                <i data-lucide="music"></i>
-                                <span>Lofi Beats</span>
-                            </div>
-                            <input type="range" class="sound-slider" id="vol-music" min="0" max="100" value="0">
+                    <header class="lp-hero">
+                        <span class="pill-tag">Mindfulness App of the Year</span>
+                        <h1>Quiet your mind.<br>Restore your calm.</h1>
+                        <p>Discover personalized meditation paths, soothing ambient nature tracks, and scientific breathing exercises to reclaim your mental energy.</p>
+                        <div class="hero-actions">
+                            <button class="btn-main">Start Free Trial</button>
+                            <button class="btn-outline"><i data-lucide="play"></i> Watch Rituals</button>
                         </div>
-                        <div class="sound-control">
-                            <div class="sound-label">
-                                <i data-lucide="cloud-rain"></i>
-                                <span>Rainfall</span>
-                            </div>
-                            <input type="range" class="sound-slider" id="vol-rain" min="0" max="100" value="0">
-                        </div>
-                        <div class="sound-control">
-                            <div class="sound-label">
+                    </header>
+
+                    <section class="lp-section z-features" id="features">
+                        <h2>Crafted for complete peace</h2>
+                        <div class="feature-grid">
+                            <div class="f-card">
                                 <i data-lucide="wind"></i>
-                                <span>Static Noise</span>
+                                <h3>Guided Breathwork</h3>
+                                <p>Interactive, visually responsive breath pacing designed by clinical psychologists.</p>
                             </div>
-                            <input type="range" class="sound-slider" id="vol-noise" min="0" max="100" value="0">
+                            <div class="f-card">
+                                <i data-lucide="moon"></i>
+                                <h3>Deep Sleep Waves</h3>
+                                <p>Uniquely synthesized sleep soundscapes and calming audio bedtime stories.</p>
+                            </div>
+                            <div class="f-card">
+                                <i data-lucide="heart"></i>
+                                <h3>Mood Mapping</h3>
+                                <p>Log daily moods to receive custom-tailored meditation paths and focus exercises.</p>
+                            </div>
                         </div>
-                    </div>
+                    </section>
+
+                    <section class="lp-section z-philosophy" id="about">
+                        <div class="split-layout">
+                            <div class="split-text">
+                                <h2>Mental hygiene is health.</h2>
+                                <p>Just like we care for our bodies, our minds require daily pauses. ZenSpace was created to introduce moments of peace into busy digital lifestyles.</p>
+                                <div class="quote-card">
+                                    <p>"ZenSpace helped me manage daily burnout and sleep better within just one week."</p>
+                                    <span>— Sarah L., UX Researcher</span>
+                                </div>
+                            </div>
+                            <div class="split-graphic">
+                                <div class="circle-blob animate-float"></div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <footer class="lp-footer">
+                        <p>© 2026 ZenSpace Inc. Calm is yours.</p>
+                    </footer>
                 </div>
             </section>
 
-            <!-- CENTER/RIGHT AREA: TIMER & KANBAN SPRINT BOARD -->
-            <div class="main-content-flow">
-                
-                <!-- TOP WIDGETS: POMODORO & QUICK STATS -->
-                <section class="top-widgets">
-                    
-                    <!-- POMODORO TIMER -->
-                    <div class="panel timer-panel">
-                        <div class="timer-modes">
-                            <button class="timer-mode-btn active" data-mode="focus">Focus</button>
-                            <button class="timer-mode-btn" data-mode="short">Short Break</button>
-                            <button class="timer-mode-btn" data-mode="long">Long Break</button>
+            <!-- PAGE 2: AETHERCRYPT (WEB3 & CRYPTO ASSET MANAGER) -->
+            <section class="slide lp-aethercrypt" id="slide-1">
+                <div class="lp-scrollable">
+                    <nav class="lp-nav">
+                        <span class="lp-logo"><i data-lucide="terminal"></i> AETHER.</span>
+                        <div class="lp-links">
+                            <a href="#dashboard">Console</a>
+                            <a href="#security">Security</a>
+                            <a href="#trade" class="lp-btn-cta">Connect Wallet</a>
                         </div>
-                        
-                        <div class="timer-display-container">
-                            <svg class="progress-ring" width="160" height="160">
-                                <circle class="progress-ring-circle-bg" stroke="rgba(255,255,255,0.05)" stroke-width="6" fill="transparent" r="72" cx="80" cy="80"/>
-                                <circle class="progress-ring-circle" id="timer-progress" stroke="var(--accent-color)" stroke-width="6" fill="transparent" r="72" cx="80" cy="80"/>
-                            </svg>
-                            <div class="timer-time" id="timer-time">25:00</div>
-                        </div>
+                    </nav>
 
-                        <div class="timer-controls">
-                            <button id="timer-play-pause" class="timer-btn main-btn">
-                                <i data-lucide="play" id="play-icon"></i>
-                                <span id="play-text">Start</span>
-                            </button>
-                            <button id="timer-reset" class="timer-btn icon-btn" title="Reset">
-                                <i data-lucide="rotate-ccw"></i>
-                            </button>
+                    <header class="lp-hero">
+                        <span class="cyber-badge">SYSTEMS ACTIVE</span>
+                        <h1>The Next Generation of Web3 Asset Control</h1>
+                        <p>Automate yield collection, manage multi-chain tokens, and trade securely with institutional-grade cryptographic sandboxing.</p>
+                        <div class="hero-actions">
+                            <button class="btn-neon">Launch dApp</button>
+                            <button class="btn-dark">Read Whitepaper</button>
                         </div>
-                    </div>
+                    </header>
 
-                    <!-- STATS / QUOTE WIDGET -->
-                    <div class="panel stats-panel">
-                        <div class="panel-header">
-                            <i data-lucide="activity"></i>
-                            <h2>Sprint Progress</h2>
-                        </div>
-                        <div class="stats-grid">
-                            <div class="stat-card">
-                                <span class="stat-value" id="stat-sprints">0</span>
-                                <span class="stat-label">Sprints Completed</span>
+                    <section class="lp-section c-dashboard" id="dashboard">
+                        <div class="glass-preview">
+                            <div class="prev-header">
+                                <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                                <span class="title">Aether Console v4.2</span>
                             </div>
-                            <div class="stat-card">
-                                <span class="stat-value" id="stat-tasks">0</span>
-                                <span class="stat-label">Completed Tasks</span>
+                            <div class="prev-body">
+                                <div class="metrics-bar">
+                                    <div class="metric"><span>Net Asset Value</span><h3>$142,893.50 <span class="up">+12.4%</span></h3></div>
+                                    <div class="metric"><span>Gas Savings</span><h3>2.41 ETH <span class="up">Saved</span></h3></div>
+                                </div>
+                                <div class="mock-chart">
+                                    <div class="bar" style="height: 40%"></div>
+                                    <div class="bar" style="height: 60%"></div>
+                                    <div class="bar" style="height: 85%"></div>
+                                    <div class="bar" style="height: 70%"></div>
+                                    <div class="bar" style="height: 95%"></div>
+                                </div>
                             </div>
                         </div>
-                        <div class="quote-area">
-                            <p id="quote-text">"The secret of getting ahead is getting started."</p>
-                            <span id="quote-author">— Mark Twain</span>
-                        </div>
-                    </div>
-                </section>
+                    </section>
 
-                <!-- KANBAN SPRINT BOARD -->
-                <section class="panel board-panel">
-                    <div class="board-header">
-                        <div class="board-title-area">
-                            <i data-lucide="kanban"></i>
-                            <h2>Sprint Board</h2>
-                        </div>
-                        <button class="add-task-trigger-btn" id="btn-new-task">
-                            <i data-lucide="plus"></i> New Task
-                        </button>
-                    </div>
-
-                    <div class="kanban-grid">
-                        <!-- TODO COLUMN -->
-                        <div class="kanban-column" data-status="todo">
-                            <div class="column-header">
-                                <span class="column-dot" style="background: var(--todo-color);"></span>
-                                <h3>To Do</h3>
-                                <span class="column-count" id="count-todo">0</span>
+                    <section class="lp-section c-security" id="security">
+                        <h2>Zero-Trust Architecture</h2>
+                        <div class="security-grid">
+                            <div class="sec-card">
+                                <i data-lucide="shield-check"></i>
+                                <h3>MPC Wallet Security</h3>
+                                <p>Multi-party computation ensures your private key is never compiled in one place.</p>
                             </div>
-                            <div class="column-cards" id="cards-todo">
-                                <!-- Cards injected here -->
+                            <div class="sec-card">
+                                <i data-lucide="zap"></i>
+                                <h3>Flash-Loan Protection</h3>
+                                <p>Automatic MEV protection and slippage mitigation on all decentralized protocols.</p>
                             </div>
                         </div>
+                    </section>
 
-                        <!-- IN PROGRESS COLUMN -->
-                        <div class="kanban-column" data-status="progress">
-                            <div class="column-header">
-                                <span class="column-dot" style="background: var(--progress-color);"></span>
-                                <h3>In Progress</h3>
-                                <span class="column-count" id="count-progress">0</span>
-                            </div>
-                            <div class="column-cards" id="cards-progress">
-                                <!-- Cards injected here -->
-                            </div>
-                        </div>
-
-                        <!-- REVIEW COLUMN -->
-                        <div class="kanban-column" data-status="review">
-                            <div class="column-header">
-                                <span class="column-dot" style="background: var(--review-color);"></span>
-                                <h3>Review</h3>
-                                <span class="column-count" id="count-review">0</span>
-                            </div>
-                            <div class="column-cards" id="cards-review">
-                                <!-- Cards injected here -->
-                            </div>
-                        </div>
-
-                        <!-- DONE COLUMN -->
-                        <div class="kanban-column" data-status="done">
-                            <div class="column-header">
-                                <span class="column-dot" style="background: var(--done-color);"></span>
-                                <h3>Done</h3>
-                                <span class="column-count" id="count-done">0</span>
-                            </div>
-                            <div class="column-cards" id="cards-done">
-                                <!-- Cards injected here -->
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-        </main>
-    </div>
-
-    <!-- NEW TASK MODAL -->
-    <div class="modal-backdrop" id="task-modal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2>Create Sprint Task</h2>
-                <button class="icon-btn" id="modal-close"><i data-lucide="x"></i></button>
-            </div>
-            <form id="task-form">
-                <div class="form-group">
-                    <label for="task-title">Task Title</label>
-                    <input type="text" id="task-title" required placeholder="e.g. Design UI Mockups">
+                    <footer class="lp-footer">
+                        <p>© 2026 AetherCrypt. Decentralized and Autonomous.</p>
+                    </footer>
                 </div>
-                <div class="form-group">
-                    <label for="task-desc">Description</label>
-                    <textarea id="task-desc" rows="3" placeholder="Brief details about the task..."></textarea>
+            </section>
+
+            <!-- PAGE 3: NOVUSSAAS (TECH & DEVELOPER ANALYTICS) -->
+            <section class="slide lp-novussaas" id="slide-2">
+                <div class="lp-scrollable">
+                    <nav class="lp-nav">
+                        <span class="lp-logo">Novus</span>
+                        <div class="lp-links">
+                            <a href="#features">APIs</a>
+                            <a href="#pricing">Pricing</a>
+                            <a href="#get" class="lp-btn-solid">Start Free</a>
+                        </div>
+                    </nav>
+
+                    <header class="lp-hero">
+                        <span class="tag">Now in Public Beta</span>
+                        <h1>Real-Time Event Streaming for Scale</h1>
+                        <p>Deploy analytics pipelines in minutes. Query billions of server-side data points with sub-millisecond latency, directly in your dashboard.</p>
+                        <div class="hero-actions">
+                            <button class="btn-primary">npm install novus-sdk</button>
+                            <button class="btn-secondary">Request Demo</button>
+                        </div>
+                    </header>
+
+                    <section class="lp-section n-features" id="features">
+                        <h2>Built for Engineering Teams</h2>
+                        <div class="features-list">
+                            <div class="item">
+                                <i data-lucide="cpu"></i>
+                                <div>
+                                    <h3>Serverless Architecture</h3>
+                                    <p>Scale from 1 to 100M events per second without maintaining server clusters.</p>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <i data-lucide="code-2"></i>
+                                <div>
+                                    <h3>GraphQL & gRPC Native</h3>
+                                    <p>Query logs, trace metrics, and user interactions with type-safe APIs.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="lp-section n-pricing" id="pricing">
+                        <h2>Transparent Developer Pricing</h2>
+                        <div class="pricing-card">
+                            <h3>Developer Tier</h3>
+                            <div class="price">$0<span>/month</span></div>
+                            <p>Up to 1,000,000 events monthly. Community support included.</p>
+                            <button class="btn-pricing-action">Create Sandbox</button>
+                        </div>
+                    </section>
+
+                    <footer class="lp-footer">
+                        <p>© 2026 Novus Inc. Infrastructure of the future.</p>
+                    </footer>
                 </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="task-priority">Priority</label>
-                        <select id="task-priority">
-                            <option value="low">Low Vibe (Chill)</option>
-                            <option value="medium" selected>Medium Vibe (Steady)</option>
-                            <option value="high">High Vibe (Rush)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="task-tag">Mood Tag</label>
-                        <input type="text" id="task-tag" placeholder="e.g. Coding, Creative, Research" value="General">
-                    </div>
+            </section>
+
+            <!-- PAGE 4: VELOCEFIT (HEALTH & SMART WEARABLES) -->
+            <section class="slide lp-velocefit" id="slide-3">
+                <div class="lp-scrollable">
+                    <nav class="lp-nav">
+                        <span class="lp-logo">VELOCE</span>
+                        <div class="lp-links">
+                            <a href="#stats">Biosensors</a>
+                            <a href="#buy" class="lp-btn-accent">Buy Band</a>
+                        </div>
+                    </nav>
+
+                    <header class="lp-hero">
+                        <h1>Unlock Your Absolute Peak</h1>
+                        <p>The first health band that tracks real-time muscle oxygenation, neural recovery, and metabolic stress, powered by machine learning.</p>
+                        <div class="hero-actions">
+                            <button class="btn-orange">Pre-order Veloce 2</button>
+                            <button class="btn-outline-white">Watch Science</button>
+                        </div>
+                    </header>
+
+                    <section class="lp-section v-sensors" id="stats">
+                        <div class="sensors-grid">
+                            <div class="sensor-item">
+                                <div class="value">98.4%</div>
+                                <h3>Muscle Oxygenation</h3>
+                                <p>Identify the exact moment to end your set to maximize muscular hypertrophic gains.</p>
+                            </div>
+                            <div class="sensor-item">
+                                <div class="value">14ms</div>
+                                <h3>Heart Rate Variability</h3>
+                                <p>Track deep autonomous nervous system recovery for optimal training readiness.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <footer class="lp-footer">
+                        <p>© 2026 Veloce Technologies. Push the limits.</p>
+                    </footer>
                 </div>
-                <div class="modal-actions">
-                    <button type="button" class="btn-secondary" id="modal-cancel">Cancel</button>
-                    <button type="submit" class="btn-primary">Add Task</button>
+            </section>
+
+            <!-- PAGE 5: CAFFEINECO (EARTHY COFFEE SUBSCRIPTION) -->
+            <section class="slide lp-caffeineco" id="slide-4">
+                <div class="lp-scrollable">
+                    <nav class="lp-nav">
+                        <span class="lp-logo">Caffeine & Co.</span>
+                        <div class="lp-links">
+                            <a href="#roast">Our Roasts</a>
+                            <a href="#subscribe" class="lp-btn-earth">Join Club</a>
+                        </div>
+                    </nav>
+
+                    <header class="lp-hero">
+                        <h1>Freshly roasted, delivered weekly.</h1>
+                        <p>We source directly from sustainable micro-lot farms in Ethiopia, Colombia, and Sumatra. Freshness guaranteed within 48 hours of roasting.</p>
+                        <button class="btn-coffee">Customize Your Box</button>
+                    </header>
+
+                    <section class="lp-section c-roasts" id="roast">
+                        <h2>This Month's Roasters Choice</h2>
+                        <div class="roast-cards">
+                            <div class="roast-card">
+                                <span class="tag">Light Roast</span>
+                                <h3>Sidama Ethiopian</h3>
+                                <p>Bright floral acidity, hints of jasmine, peach, and citrus honey finish.</p>
+                            </div>
+                            <div class="roast-card">
+                                <span class="tag">Medium Roast</span>
+                                <h3>Volcano Tolima</h3>
+                                <p>Balanced body, rich caramel sweetness, toasted almond, and red apple notes.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <footer class="lp-footer">
+                        <p>© 2026 Caffeine & Co. Fair Trade, Direct Sourced Coffee.</p>
+                    </footer>
                 </div>
-            </form>
+            </section>
+
+            <!-- PAGE 6: NEBULAAGENCY (CREATIVE DESIGN STUDIO) -->
+            <section class="slide lp-nebula" id="slide-5">
+                <div class="lp-scrollable">
+                    <nav class="lp-nav">
+                        <span class="lp-logo">NEBULA.</span>
+                        <div class="lp-links">
+                            <a href="#works">Works</a>
+                            <a href="#contact" class="lp-btn-neon">Let's Talk</a>
+                        </div>
+                    </nav>
+
+                    <header class="lp-hero">
+                        <h1>We craft award winning digital experiences.</h1>
+                        <p>Nebula is a boutique design and engineering agency helping global brands build websites, mobile apps, and interactive products that define markets.</p>
+                        <button class="btn-gradient">View Selected Work</button>
+                    </header>
+
+                    <section class="lp-section n-works" id="works">
+                        <h2>Featured Projects</h2>
+                        <div class="portfolio-grid">
+                            <div class="work-card">
+                                <div class="card-img" style="background: linear-gradient(45deg, #a21caf, #6366f1)"></div>
+                                <h3>Solaria App</h3>
+                                <p>Fintech Dashboard & Brand System</p>
+                            </div>
+                            <div class="work-card">
+                                <div class="card-img" style="background: linear-gradient(45deg, #3b82f6, #10b981)"></div>
+                                <h3>Krypton Wallet</h3>
+                                <p>Decentralized iOS Application</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <footer class="lp-footer">
+                        <p>© 2026 Nebula Studio. Creative Excellence.</p>
+                    </footer>
+                </div>
+            </section>
+
+            <!-- PAGE 7: SENTRISHIELD (AI CYBERSECURITY) -->
+            <section class="slide lp-sentrishield" id="slide-6">
+                <div class="lp-scrollable">
+                    <nav class="lp-nav">
+                        <span class="lp-logo"><i data-lucide="shield"></i> SENTRI</span>
+                        <div class="lp-links">
+                            <a href="#threats">Threat Detection</a>
+                            <a href="#demo" class="lp-btn-shield">Get Scan</a>
+                        </div>
+                    </nav>
+
+                    <header class="lp-hero">
+                        <span class="alert-badge"><i data-lucide="shield-alert"></i> 0 Active Breaches Detected Today</span>
+                        <h1>Defend Your System Before the Threat Strikes</h1>
+                        <p>Autonomous AI security agents monitor network packages, block DDoS scripts, and patch zero-day vulnerabilities in real time.</p>
+                        <div class="hero-actions">
+                            <button class="btn-shield-primary">Start System Audit</button>
+                        </div>
+                    </header>
+
+                    <section class="lp-section s-threats" id="threats">
+                        <h2>Security Protocol Overview</h2>
+                        <div class="threat-grid">
+                            <div class="t-card">
+                                <i data-lucide="radar"></i>
+                                <h3>AI Package Scanning</h3>
+                                <p>Deep packet analysis scanning headers for automated bot signatures.</p>
+                            </div>
+                            <div class="t-card">
+                                <i data-lucide="lock"></i>
+                                <h3>E2E Encrypted Tunnels</h3>
+                                <p>Auto-generating WireGuard-based networks for remote engineering squads.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <footer class="lp-footer">
+                        <p>© 2026 SentriShield Security. Safe by Default.</p>
+                    </footer>
+                </div>
+            </section>
+
+            <!-- PAGE 8: EDUMIND (BRIGHT ONLINE LEARNING) -->
+            <section class="slide lp-edumind" id="slide-7">
+                <div class="lp-scrollable">
+                    <nav class="lp-nav">
+                        <span class="lp-logo">edumind</span>
+                        <div class="lp-links">
+                            <a href="#courses">Courses</a>
+                            <a href="#join" class="lp-btn-yellow">Join Free</a>
+                        </div>
+                    </nav>
+
+                    <header class="lp-hero">
+                        <h1>Learn anything,<br>on your schedule.</h1>
+                        <p>Get access to 2,000+ top courses taught by industry engineers, designers, and university professors. Interactive labs included.</p>
+                        <button class="btn-yellow-main">Explore Syllabus</button>
+                    </header>
+
+                    <section class="lp-section e-courses" id="courses">
+                        <h2>Trending Skill Paths</h2>
+                        <div class="course-grid">
+                            <div class="course-card">
+                                <i data-lucide="terminal"></i>
+                                <h3>Python for AI</h3>
+                                <p>Master machine learning and deep neural networks in python from scratch.</p>
+                            </div>
+                            <div class="course-card">
+                                <i data-lucide="palette"></i>
+                                <h3>Figma Design System</h3>
+                                <p>Create tokens, variants, and enterprise layouts inside Figma.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <footer class="lp-footer">
+                        <p>© 2026 EduMind Academy. Knowledge is Power.</p>
+                    </footer>
+                </div>
+            </section>
+
+            <!-- PAGE 9: TERRATRAVEL (ECO-TOURISM & TRAVELS) -->
+            <section class="slide lp-terratravel" id="slide-8">
+                <div class="lp-scrollable">
+                    <nav class="lp-nav">
+                        <span class="lp-logo">TERRA.</span>
+                        <div class="lp-links">
+                            <a href="#destinations">Eco-Trips</a>
+                            <a href="#book" class="lp-btn-terra">Book Now</a>
+                        </div>
+                    </nav>
+
+                    <header class="lp-hero">
+                        <h1>Travel far. Leave no trace.</h1>
+                        <p>Curated luxury eco-resorts, organic culinary journeys, and carbon-neutral adventure packages designed for conscious travelers.</p>
+                        <button class="btn-terra-main">Find Your Getaway</button>
+                    </header>
+
+                    <section class="lp-section t-destinations" id="destinations">
+                        <h2>Carbon-Negative Stays</h2>
+                        <div class="dest-grid">
+                            <div class="dest-card">
+                                <h3>Costa Rica Canopy</h3>
+                                <p>Stay in solar-powered treehouse villas in the heart of the rainforest.</p>
+                            </div>
+                            <div class="dest-card">
+                                <h3>Icelandic geothermal</h3>
+                                <p>Soak in thermal springs with zero-emission boutique dome structures.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <footer class="lp-footer">
+                        <p>© 2026 TerraTravel. Restoring the Planet while Exploring.</p>
+                    </footer>
+                </div>
+            </section>
+
+            <!-- PAGE 10: AEROSPACE (FUTURE SPACE TOURISM) -->
+            <section class="slide lp-aerospace" id="slide-9">
+                <div class="lp-scrollable">
+                    <nav class="lp-nav">
+                        <span class="lp-logo">AERO.</span>
+                        <div class="lp-links">
+                            <a href="#flights">Flights</a>
+                            <a href="#reserve" class="lp-btn-orbit">Reserve Seat</a>
+                        </div>
+                    </nav>
+
+                    <header class="lp-hero">
+                        <span class="orbit-badge">T-MINUS 12 DAYS TO LAUNCH</span>
+                        <h1>Join the Orbital Generation</h1>
+                        <p>Secure your ticket for low-Earth orbit luxury cruises and Lunar orbital transfers. Realize the dream of weightlessness.</p>
+                        <button class="btn-orbit-main">Book Orbital Flight</button>
+                    </header>
+
+                    <section class="lp-section a-flights" id="flights">
+                        <h2>Orbital Fleet Class</h2>
+                        <div class="fleet-grid">
+                            <div class="fleet-card">
+                                <h3>Vanguard Orbit</h3>
+                                <p>3-day low-earth orbit experience. Panoramic cupola viewing, zero-G dining.</p>
+                            </div>
+                            <div class="fleet-card">
+                                <h3>Lunar Cruise</h3>
+                                <p>10-day loop around the lunar surface. Incredible views of the far side of the moon.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <footer class="lp-footer">
+                        <p>© 2026 AeroSpace Flight Corp. The Stars await.</p>
+                    </footer>
+                </div>
+            </section>
+
         </div>
     </div>
 

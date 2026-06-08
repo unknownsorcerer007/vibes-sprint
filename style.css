@@ -1,94 +1,9 @@
-/* Core Design System & CSS Variables */
+/* ROOT VARIABLES & RESET */
 :root {
-    /* Base Fonts */
-    --font-main: 'Outfit', sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
-
-    /* Common Transitions */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-slow: all 0.5s ease;
-
-    /* Kanban Colors */
-    --todo-color: #60a5fa;
-    --progress-color: #f59e0b;
-    --review-color: #a78bfa;
-    --done-color: #10b981;
+    --transition-slide: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-smooth: all 0.3s ease;
 }
 
-/* THEMES */
-
-/* 1. Lofi Focus (default) */
-.theme-lofi {
-    --bg-gradient: linear-gradient(135deg, #1f1b24 0%, #2c2033 100%);
-    --panel-bg: rgba(255, 255, 255, 0.03);
-    --panel-border: rgba(255, 255, 255, 0.07);
-    --text-primary: #f3f4f6;
-    --text-secondary: #9ca3af;
-    --accent-color: #f7a8b8;
-    --accent-glow: rgba(247, 168, 184, 0.3);
-    --glow-spot-1: rgba(247, 168, 184, 0.15);
-    --glow-spot-2: rgba(167, 139, 250, 0.1);
-}
-
-/* 2. Cyberpunk */
-.theme-cyberpunk {
-    --bg-gradient: linear-gradient(135deg, #050515 0%, #0c0926 100%);
-    --panel-bg: rgba(0, 0, 0, 0.6);
-    --panel-border: rgba(0, 240, 255, 0.2);
-    --text-primary: #00f0ff;
-    --text-secondary: #ff007f;
-    --accent-color: #ff007f;
-    --accent-glow: rgba(255, 0, 127, 0.5);
-    --glow-spot-1: rgba(0, 240, 255, 0.2);
-    --glow-spot-2: rgba(255, 0, 127, 0.15);
-    
-    /* Kanban specific override for cyberpunk styling */
-    --todo-color: #00f0ff;
-    --progress-color: #ffde00;
-    --review-color: #ff007f;
-    --done-color: #39ff14;
-}
-
-/* 3. Sunset Chill */
-.theme-sunset {
-    --bg-gradient: linear-gradient(135deg, #1c1017 0%, #301824 100%);
-    --panel-bg: rgba(255, 255, 255, 0.02);
-    --panel-border: rgba(255, 94, 98, 0.15);
-    --text-primary: #fff0f5;
-    --text-secondary: #fbb670;
-    --accent-color: #ff5e62;
-    --accent-glow: rgba(255, 94, 98, 0.4);
-    --glow-spot-1: rgba(255, 94, 98, 0.18);
-    --glow-spot-2: rgba(251, 182, 112, 0.1);
-}
-
-/* 4. Forest Rain */
-.theme-forest {
-    --bg-gradient: linear-gradient(135deg, #0a140f 0%, #12241b 100%);
-    --panel-bg: rgba(255, 255, 255, 0.03);
-    --panel-border: rgba(168, 255, 120, 0.15);
-    --text-primary: #e6f9e6;
-    --text-secondary: #90b890;
-    --accent-color: #a8ff78;
-    --accent-glow: rgba(168, 255, 120, 0.35);
-    --glow-spot-1: rgba(168, 255, 120, 0.15);
-    --glow-spot-2: rgba(120, 255, 214, 0.1);
-}
-
-/* 5. Retro Synth */
-.theme-synthwave {
-    --bg-gradient: linear-gradient(135deg, #0c081e 0%, #1a0b36 100%);
-    --panel-bg: rgba(20, 15, 45, 0.5);
-    --panel-border: rgba(217, 70, 239, 0.25);
-    --text-primary: #fdf2ff;
-    --text-secondary: #9ca3af;
-    --accent-color: #d946ef;
-    --accent-glow: rgba(217, 70, 239, 0.45);
-    --glow-spot-1: rgba(217, 70, 239, 0.2);
-    --glow-spot-2: rgba(6, 182, 212, 0.15);
-}
-
-/* GLOBAL RESET */
 * {
     margin: 0;
     padding: 0;
@@ -96,653 +11,820 @@
 }
 
 body {
-    font-family: var(--font-main);
-    background: var(--bg-gradient);
-    color: var(--text-primary);
-    min-height: 100vh;
-    overflow-x: hidden;
-    position: relative;
-    transition: var(--transition-slow);
+    font-family: 'Outfit', sans-serif;
+    background: #000;
+    color: #fff;
+    overflow: hidden; /* Prevent body scroll, scroll happens inside slides */
+    width: 100vw;
+    height: 100vh;
 }
 
-/* Ambient glow blobs */
-.glow-bg {
+/* --- SHOWCASE FLOATING CONTROLLER --- */
+.showcase-controller {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    overflow: hidden;
-    pointer-events: none;
-}
-.glow-bg::before,
-.glow-bg::after {
-    content: '';
-    position: absolute;
-    width: 40vmax;
-    height: 40vmax;
-    border-radius: 50%;
-    filter: blur(120px);
-    opacity: 0.8;
-    mix-blend-mode: screen;
-    animation: float 25s infinite alternate ease-in-out;
-}
-.glow-bg::before {
-    background: var(--glow-spot-1);
-    top: -10%;
-    left: 10%;
-}
-.glow-bg::after {
-    background: var(--glow-spot-2);
-    bottom: -10%;
-    right: 10%;
-    animation-delay: -10s;
-}
-
-@keyframes float {
-    0% { transform: translate(0, 0) scale(1); }
-    50% { transform: translate(5vw, 5vh) scale(1.1); }
-    100% { transform: translate(-5vw, -5vh) scale(0.9); }
-}
-
-/* LAYOUT CONTAINER */
-.app-container {
-    max-width: 1440px;
-    margin: 0 auto;
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    min-height: 100vh;
-}
-
-/* HEADER */
-.app-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 24px;
-    background: var(--panel-bg);
-    border: 1px solid var(--panel-border);
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 800px;
+    height: 64px;
+    background: rgba(15, 15, 20, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(20px);
-    border-radius: 16px;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
-    transition: var(--transition-slow);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 32px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
-.header-logo {
+.controller-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.controller-left .logo-icon {
+    width: 20px;
+    height: 20px;
+    color: #6366f1;
+}
+
+.controller-left .logo-text h2 {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.controller-left .logo-text p {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.controller-center {
     display: flex;
     align-items: center;
     gap: 16px;
 }
 
-.logo-icon {
-    width: 32px;
-    height: 32px;
-    color: var(--accent-color);
-    filter: drop-shadow(0 0 8px var(--accent-color));
+.ctrl-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    color: #fff;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition-smooth);
 }
 
-.logo-text h1 {
-    font-size: 24px;
+.ctrl-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: scale(1.05);
+}
+
+.select-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 6px 12px;
+    border-radius: 20px;
+}
+
+.slide-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #6366f1;
+    font-weight: 700;
+}
+
+#design-select {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    outline: none;
+    cursor: pointer;
+    padding-right: 4px;
+}
+
+#design-select option {
+    background: #0f0f14;
+    color: #fff;
+    font-weight: 500;
+}
+
+.controller-right {
+    display: block;
+}
+
+.nav-hint {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.4);
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.nav-hint kbd {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: inherit;
+}
+
+/* --- SLIDER STRUCTURE --- */
+.slider-wrapper {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+
+.slider-container {
+    display: flex;
+    height: 100%;
+    /* Width will be set dynamically or defaults to 1000vw */
+    width: 1000vw;
+    transition: var(--transition-slide);
+}
+
+.slide {
+    width: 100vw;
+    height: 100%;
+    position: relative;
+}
+
+.lp-scrollable {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-top: 96px; /* Offset for floating header */
+    scroll-behavior: smooth;
+}
+
+/* Custom scrollbar for landing page bodies */
+.lp-scrollable::-webkit-scrollbar {
+    width: 8px;
+}
+.lp-scrollable::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+}
+.lp-scrollable::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+}
+.lp-scrollable::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+/* --- COMMON LANDING PAGE ELEMENTS --- */
+.lp-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto 32px auto;
+    padding: 16px 0;
+}
+
+.lp-logo {
+    font-size: 20px;
     font-weight: 800;
     letter-spacing: -0.5px;
-    background: linear-gradient(to right, #ffffff, var(--accent-color));
+}
+
+.lp-links {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.lp-links a {
+    text-decoration: none;
+    color: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    opacity: 0.8;
+    transition: var(--transition-smooth);
+}
+
+.lp-links a:hover {
+    opacity: 1;
+}
+
+.lp-hero {
+    width: 90%;
+    max-width: 800px;
+    margin: 0 auto 80px auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 40px 0;
+}
+
+.lp-hero h1 {
+    font-size: 48px;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -1px;
+}
+
+.lp-hero p {
+    font-size: 18px;
+    line-height: 1.6;
+    opacity: 0.7;
+    max-width: 600px;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 16px;
+    margin-top: 12px;
+}
+
+.lp-section {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto 96px auto;
+    padding: 40px 0;
+}
+
+.lp-section h2 {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.lp-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 32px 0;
+    text-align: center;
+    font-size: 12px;
+    opacity: 0.5;
+}
+
+/* ========================================================
+   LANDING PAGE 1: ZENSPACE (WELLNESS / MINIMAL)
+   ======================================================== */
+.lp-zenspace {
+    background: #f7f4f0;
+    color: #2b3a30;
+}
+
+.lp-zenspace .lp-logo {
+    color: #2b3a30;
+}
+
+.lp-zenspace .lp-links a {
+    color: #2b3a30;
+}
+
+.lp-zenspace .lp-btn-primary {
+    background: #2b3a30;
+    color: #fff !important;
+    padding: 8px 16px;
+    border-radius: 20px;
+}
+
+.lp-zenspace .pill-tag {
+    background: rgba(43, 58, 48, 0.06);
+    color: #2b3a30;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 4px 12px;
+    border-radius: 12px;
+}
+
+.lp-zenspace .lp-hero h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    color: #2b3a30;
+    font-weight: 500;
+    font-style: italic;
+}
+
+.lp-zenspace .btn-main {
+    background: #2b3a30;
+    color: #fff;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 30px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.lp-zenspace .btn-main:hover {
+    background: #3c5243;
+    transform: translateY(-2px);
+}
+
+.lp-zenspace .btn-outline {
+    background: transparent;
+    border: 1px solid rgba(43, 58, 48, 0.2);
+    color: #2b3a30;
+    padding: 12px 28px;
+    border-radius: 30px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.lp-zenspace .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.lp-zenspace .f-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+    border: 1px solid rgba(0,0,0,0.01);
+}
+
+.lp-zenspace .f-card i {
+    width: 32px;
+    height: 32px;
+    color: #7d9d85;
+    margin-bottom: 20px;
+}
+
+.lp-zenspace .f-card h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.lp-zenspace .f-card p {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #5c685f;
+}
+
+.lp-zenspace .split-layout {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.lp-zenspace .quote-card {
+    margin-top: 24px;
+    border-left: 2px solid #7d9d85;
+    padding-left: 20px;
+}
+
+.lp-zenspace .quote-card p {
+    font-style: italic;
+    font-size: 16px;
+    color: #5c685f;
+    margin-bottom: 8px;
+}
+
+.lp-zenspace .quote-card span {
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.lp-zenspace .circle-blob {
+    width: 250px;
+    height: 250px;
+    background: linear-gradient(135deg, #d3e4cd 0%, #adc2a9 100%);
+    border-radius: 50% 40% 60% 50% / 40% 50% 50% 60%;
+}
+
+.animate-float {
+    animation: blobFloat 8s infinite alternate ease-in-out;
+}
+
+@keyframes blobFloat {
+    0% { border-radius: 50% 40% 60% 50% / 40% 50% 50% 60%; transform: rotate(0deg); }
+    100% { border-radius: 40% 60% 40% 50% / 50% 40% 60% 50%; transform: rotate(10deg) translate(10px, 10px); }
+}
+
+/* ========================================================
+   LANDING PAGE 2: AETHERCRYPT (WEB3 / CYBERPUNK GLOW)
+   ======================================================== */
+.lp-aethercrypt {
+    background: radial-gradient(circle at top, #110e2e 0%, #050414 100%);
+    color: #fff;
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+.lp-aethercrypt .cyber-badge {
+    background: rgba(0, 240, 255, 0.1);
+    color: #00f0ff;
+    border: 1px solid rgba(0, 240, 255, 0.3);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 6px 14px;
+    border-radius: 4px;
+}
+
+.lp-aethercrypt .lp-hero h1 {
+    font-weight: 700;
+    background: linear-gradient(to right, #fff 30%, #ff007f);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
-.logo-text p {
-    font-size: 12px;
-    color: var(--text-secondary);
+.lp-aethercrypt .lp-btn-cta {
+    background: #00f0ff;
+    color: #000 !important;
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-weight: 700;
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
 }
 
-.header-info {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-.date-display {
-    font-family: var(--font-mono);
-    font-size: 14px;
-    color: var(--text-secondary);
-}
-
-.user-badge {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(255, 255, 255, 0.05);
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: 500;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.profile-icon {
-    width: 14px;
-    height: 14px;
-}
-
-/* MAIN WORKSPACE */
-.app-workspace {
-    display: grid;
-    grid-template-columns: 300px 1fr;
-    gap: 24px;
-}
-
-/* PANELS */
-.panel {
-    background: var(--panel-bg);
-    border: 1px solid var(--panel-border);
-    backdrop-filter: blur(20px);
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
-    transition: var(--transition-slow);
-}
-
-.panel-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid var(--panel-border);
-    padding-bottom: 12px;
-}
-
-.panel-header i {
-    width: 20px;
-    height: 20px;
-    color: var(--accent-color);
-}
-
-.panel-header h2 {
-    font-size: 18px;
-    font-weight: 600;
-}
-
-/* SIDEBAR - VIBES SELECTOR */
-.vibe-selector-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 24px;
-}
-
-.vibe-btn {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 12px 16px;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    color: var(--text-primary);
+.lp-aethercrypt .btn-neon {
+    background: #ff007f;
+    color: #fff;
+    border: none;
+    padding: 12px 30px;
+    font-weight: 700;
+    border-radius: 6px;
     cursor: pointer;
-    text-align: left;
+    box-shadow: 0 0 20px rgba(255, 0, 127, 0.4);
     transition: var(--transition-smooth);
 }
 
-.vibe-btn:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.1);
+.lp-aethercrypt .btn-neon:hover {
     transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba(255, 0, 127, 0.6);
 }
 
-.vibe-btn.active {
-    background: rgba(255, 255, 255, 0.07);
-    border-color: var(--vibe-color);
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.05), inset 0 0 10px rgba(255, 255, 255, 0.02);
+.lp-aethercrypt .btn-dark {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #fff;
+    padding: 12px 30px;
+    font-weight: 700;
+    border-radius: 6px;
 }
 
-.vibe-indicator {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: var(--vibe-color);
-    box-shadow: 0 0 8px var(--vibe-color);
-}
-
-.vibe-info {
-    display: flex;
-    flex-direction: column;
-}
-
-.vibe-name {
-    font-size: 14px;
-    font-weight: 600;
-}
-
-.vibe-desc {
-    font-size: 11px;
-    color: var(--text-secondary);
-}
-
-/* SOUND BOARD */
-.sound-board {
+.lp-aethercrypt .glass-preview {
     background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 12px;
-    padding: 16px;
+    padding: 24px;
+    backdrop-filter: blur(10px);
+    max-width: 600px;
+    margin: 0 auto;
 }
 
-.sound-board-header {
+.lp-aethercrypt .prev-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 6px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    padding-bottom: 12px;
     margin-bottom: 16px;
 }
 
-.sound-board-header h3 {
-    font-size: 14px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--text-secondary);
-}
-
-.sound-sliders {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-.sound-control {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.sound-label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    color: var(--text-primary);
-}
-
-.sound-label i {
-    width: 14px;
-    height: 14px;
-    color: var(--accent-color);
-}
-
-.sound-slider {
-    -webkit-appearance: none;
-    width: 100%;
-    height: 4px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 2px;
-    outline: none;
-}
-
-.sound-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: var(--accent-color);
-    cursor: pointer;
-    box-shadow: 0 0 6px var(--accent-color);
-    transition: var(--transition-smooth);
-}
-
-.sound-slider::-webkit-slider-thumb:hover {
-    transform: scale(1.3);
-}
-
-/* MAIN CONTENT FLOW */
-.main-content-flow {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-}
-
-/* TOP WIDGETS: POMODORO & STATS */
-.top-widgets {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-}
-
-/* POMODORO TIMER */
-.timer-panel {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-}
-
-.timer-modes {
-    display: flex;
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 30px;
-    padding: 4px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.timer-mode-btn {
-    border: none;
-    background: transparent;
-    color: var(--text-secondary);
-    padding: 6px 16px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-family: var(--font-main);
-    font-size: 13px;
-    font-weight: 500;
-    transition: var(--transition-smooth);
-}
-
-.timer-mode-btn:hover {
-    color: var(--text-primary);
-}
-
-.timer-mode-btn.active {
-    background: var(--accent-color);
-    color: #000000;
-    font-weight: 600;
-    box-shadow: 0 4px 12px var(--accent-glow);
-}
-
-.timer-display-container {
-    position: relative;
-    width: 160px;
-    height: 160px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.progress-ring {
-    transform: rotate(-90deg);
-}
-
-.progress-ring-circle {
-    transition: stroke-dashoffset 0.35s;
-    transform-origin: 50% 50%;
-}
-
-.timer-time {
-    position: absolute;
-    font-family: var(--font-mono);
-    font-size: 32px;
-    font-weight: 700;
-    letter-spacing: -1px;
-}
-
-.timer-controls {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
-/* STATS PANEL */
-.stats-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 16px;
-}
-
-.stat-card {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    padding: 12px;
-    text-align: center;
-}
-
-.stat-value {
-    display: block;
-    font-family: var(--font-mono);
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--accent-color);
-    margin-bottom: 4px;
-}
-
-.stat-label {
-    font-size: 11px;
-    color: var(--text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.quote-area {
-    background: rgba(255, 255, 255, 0.01);
-    border-left: 2px solid var(--accent-color);
-    padding: 10px 16px;
-    border-radius: 0 8px 8px 0;
-}
-
-.quote-area p {
-    font-size: 12px;
-    font-style: italic;
-    color: var(--text-primary);
-    line-height: 1.5;
-    margin-bottom: 4px;
-}
-
-.quote-area span {
-    font-size: 11px;
-    color: var(--text-secondary);
-}
-
-/* BUTTONS */
-.main-btn {
-    background: var(--accent-color);
-    color: #000000;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-family: var(--font-main);
-    font-weight: 600;
-    font-size: 14px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    box-shadow: 0 4px 12px var(--accent-glow);
-    transition: var(--transition-smooth);
-}
-
-.main-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px var(--accent-glow);
-}
-
-.icon-btn {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    color: var(--text-primary);
-    width: 38px;
-    height: 38px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: var(--transition-smooth);
-}
-
-.icon-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.15);
-}
-
-.icon-btn i {
-    width: 18px;
-    height: 18px;
-}
-
-/* KANBAN BOARD */
-.board-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    border-bottom: 1px solid var(--panel-border);
-    padding-bottom: 12px;
-}
-
-.board-title-area {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.board-title-area i {
-    width: 20px;
-    height: 20px;
-    color: var(--accent-color);
-}
-
-.board-title-area h2 {
-    font-size: 18px;
-    font-weight: 600;
-}
-
-.add-task-trigger-btn {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    color: var(--text-primary);
-    padding: 8px 16px;
-    border-radius: 8px;
-    font-family: var(--font-main);
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: var(--transition-smooth);
-}
-
-.add-task-trigger-btn:hover {
-    background: var(--accent-color);
-    color: #000000;
-    box-shadow: 0 4px 12px var(--accent-glow);
-}
-
-.kanban-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-}
-
-.kanban-column {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    background: rgba(0, 0, 0, 0.15);
-    border-radius: 12px;
-    padding: 12px;
-    min-height: 400px;
-    border: 1px solid rgba(255, 255, 255, 0.02);
-}
-
-.column-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.column-dot {
+.lp-aethercrypt .prev-header .dot {
     width: 8px;
     height: 8px;
     border-radius: 50%;
+    background: rgba(255,255,255,0.2);
 }
 
-.column-header h3 {
-    font-size: 14px;
-    font-weight: 600;
-    flex-grow: 1;
-}
-
-.column-count {
-    font-family: var(--font-mono);
+.lp-aethercrypt .prev-header .title {
+    font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
-    background: rgba(255, 255, 255, 0.05);
-    padding: 2px 8px;
-    border-radius: 10px;
-    color: var(--text-secondary);
+    color: rgba(255,255,255,0.4);
+    margin-left: 10px;
 }
 
-.column-cards {
+.lp-aethercrypt .metrics-bar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.lp-aethercrypt .metric span {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+}
+
+.lp-aethercrypt .metric h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-top: 4px;
+}
+
+.lp-aethercrypt .metric .up {
+    font-size: 10px;
+    background: rgba(57, 255, 20, 0.1);
+    color: #39ff14;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.lp-aethercrypt .mock-chart {
     display: flex;
-    flex-direction: column;
-    gap: 12px;
-    flex-grow: 1;
-    overflow-y: auto;
-    max-height: 480px;
-    padding-right: 2px;
-}
-
-/* Custom Scrollbar for columns */
-.column-cards::-webkit-scrollbar {
-    width: 4px;
-}
-.column-cards::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 2px;
-}
-
-/* TASK CARDS */
-.task-card {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-    padding: 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    cursor: grab;
-    transition: var(--transition-smooth);
-}
-
-.task-card:hover {
-    transform: translateY(-2px);
-    background: rgba(255, 255, 255, 0.04);
-    border-color: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.task-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
+    align-items: flex-end;
     gap: 8px;
+    height: 100px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
-.task-card h4 {
+.lp-aethercrypt .mock-chart .bar {
+    flex-grow: 1;
+    background: linear-gradient(to top, #ff007f, #00f0ff);
+    border-radius: 4px 4px 0 0;
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+}
+
+.lp-aethercrypt .security-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.lp-aethercrypt .sec-card {
+    background: rgba(0, 240, 255, 0.02);
+    border: 1px solid rgba(0, 240, 255, 0.1);
+    border-radius: 10px;
+    padding: 24px;
+    text-align: left;
+}
+
+.lp-aethercrypt .sec-card i {
+    width: 28px;
+    height: 28px;
+    color: #00f0ff;
+    margin-bottom: 16px;
+}
+
+.lp-aethercrypt .sec-card h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.lp-aethercrypt .sec-card p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.5;
+}
+
+/* ========================================================
+   LANDING PAGE 3: NOVUSSAAS (TECH / DEVELOPMENT)
+   ======================================================== */
+.lp-novussaas {
+    background: #0f172a;
+    color: #f8fafc;
+}
+
+.lp-novussaas .tag {
+    background: rgba(99, 102, 241, 0.15);
+    color: #818cf8;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+
+.lp-novussaas .lp-btn-solid {
+    background: #6366f1;
+    color: #fff !important;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+.lp-novussaas .btn-primary {
+    background: #6366f1;
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.lp-novussaas .btn-secondary {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 6px;
     font-size: 14px;
     font-weight: 600;
-    line-height: 1.3;
 }
 
-.task-card p {
-    font-size: 12px;
-    color: var(--text-secondary);
-    line-height: 1.4;
-    word-break: break-word;
-}
-
-.task-meta {
+.lp-novussaas .features-list {
     display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    align-items: center;
+    flex-direction: column;
+    gap: 32px;
+    max-width: 600px;
+    margin: 0 auto;
 }
 
-.priority-badge {
+.lp-novussaas .features-list .item {
+    display: flex;
+    gap: 20px;
+}
+
+.lp-novussaas .features-list i {
+    width: 28px;
+    height: 28px;
+    color: #6366f1;
+    flex-shrink: 0;
+}
+
+.lp-novussaas .features-list h3 {
+    font-size: 18px;
+    margin-bottom: 6px;
+}
+
+.lp-novussaas .features-list p {
+    font-size: 14px;
+    color: #94a3b8;
+    line-height: 1.5;
+}
+
+.lp-novussaas .pricing-card {
+    background: #1e293b;
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 12px;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 32px;
+    text-align: center;
+}
+
+.lp-novussaas .pricing-card .price {
+    font-size: 40px;
+    font-weight: 800;
+    margin: 16px 0;
+}
+
+.lp-novussaas .pricing-card .price span {
+    font-size: 14px;
+    color: #94a3b8;
+}
+
+.lp-novussaas .btn-pricing-action {
+    background: #fff;
+    color: #0f172a;
+    border: none;
+    padding: 12px 24px;
+    width: 100%;
+    margin-top: 24px;
+    border-radius: 6px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* ========================================================
+   LANDING PAGE 4: VELOCEFIT (FITNESS SPORT)
+   ======================================================== */
+.lp-velocefit {
+    background: #111;
+    color: #fff;
+}
+
+.lp-velocefit .lp-btn-accent {
+    background: #ff4500;
+    color: #fff !important;
+    padding: 8px 16px;
+    border-radius: 0;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.lp-velocefit .lp-hero h1 {
+    text-transform: uppercase;
+    font-style: italic;
+    font-weight: 900;
+    letter-spacing: -2px;
+    font-size: 60px;
+}
+
+.lp-velocefit .btn-orange {
+    background: #ff4500;
+    color: #fff;
+    border: none;
+    padding: 14px 32px;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.lp-velocefit .btn-outline-white {
+    background: transparent;
+    border: 2px solid #fff;
+    color: #fff;
+    padding: 14px 32px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.lp-velocefit .sensors-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.lp-velocefit .sensor-item {
+    border-left: 4px solid #ff4500;
+    padding-left: 24px;
+}
+
+.lp-velocefit .sensor-item .value {
+    font-size: 48px;
+    font-weight: 900;
+    font-style: italic;
+    color: #ff4500;
+    margin-bottom: 8px;
+}
+
+/* ========================================================
+   LANDING PAGE 5: CAFFEINECO (COFFEE EARTHY)
+   ======================================================== */
+.lp-caffeineco {
+    background: #faf6f0;
+    color: #3e2723;
+}
+
+.lp-caffeineco .lp-nav .lp-logo {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 700;
+}
+
+.lp-caffeineco .lp-btn-earth {
+    background: #3e2723;
+    color: #faf6f0 !important;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.lp-caffeineco .lp-hero h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 400;
+}
+
+.lp-caffeineco .btn-coffee {
+    background: #8d6e63;
+    color: #fff;
+    border: none;
+    padding: 14px 28px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.lp-caffeineco .roast-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.lp-caffeineco .roast-card {
+    background: #efebe9;
+    border-radius: 8px;
+    padding: 32px;
+    border: 1px solid rgba(62, 39, 35, 0.05);
+}
+
+.lp-caffeineco .roast-card .tag {
+    background: rgba(141, 110, 99, 0.15);
+    color: #5d4037;
     font-size: 10px;
     font-weight: 700;
     text-transform: uppercase;
@@ -750,230 +832,283 @@ body {
     border-radius: 4px;
 }
 
-.priority-badge.low {
-    background: rgba(96, 165, 250, 0.15);
-    color: #60a5fa;
-}
-
-.priority-badge.medium {
-    background: rgba(245, 158, 11, 0.15);
-    color: #f59e0b;
-}
-
-.priority-badge.high {
-    background: rgba(239, 68, 68, 0.15);
-    color: #ef4444;
-}
-
-.task-tag {
-    font-size: 10px;
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--text-secondary);
-    padding: 2px 6px;
-    border-radius: 4px;
-}
-
-.task-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 4px;
-    border-top: 1px solid rgba(255, 255, 255, 0.03);
-    padding-top: 8px;
-}
-
-.move-buttons {
-    display: flex;
-    gap: 4px;
-}
-
-.btn-move, .btn-delete {
-    background: transparent;
-    border: none;
-    color: var(--text-secondary);
-    width: 24px;
-    height: 24px;
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: var(--transition-smooth);
-}
-
-.btn-move:hover {
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--text-primary);
-}
-
-.btn-delete:hover {
-    background: rgba(239, 68, 68, 0.15);
-    color: #ef4444;
-}
-
-.btn-move i, .btn-delete i {
-    width: 14px;
-    height: 14px;
-}
-
-/* MODAL BACKGROUND */
-.modal-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(5px);
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-}
-
-.modal-backdrop.open {
-    opacity: 1;
-    pointer-events: auto;
-}
-
-.modal {
-    background: #18151f;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
-    border-radius: 16px;
-    width: 100%;
-    max-width: 480px;
-    padding: 24px;
-    transform: scale(0.9);
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.modal-backdrop.open .modal {
-    transform: scale(1);
-}
-
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.modal-header h2 {
+.lp-caffeineco .roast-card h3 {
+    margin-top: 12px;
+    font-family: 'Playfair Display', Georgia, serif;
     font-size: 20px;
-    font-weight: 700;
 }
 
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+.lp-caffeineco .roast-card p {
+    margin-top: 8px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #4e342e;
+}
+
+/* ========================================================
+   LANDING PAGE 6: NEBULA AGENCY (CREATIVE STUDIO)
+   ======================================================== */
+.lp-nebula {
+    background: #050508;
+    color: #fff;
+}
+
+.lp-nebula .lp-btn-neon {
+    background: transparent;
+    border: 1px solid #d946ef;
+    color: #d946ef !important;
+    padding: 6px 14px;
+    border-radius: 20px;
+}
+
+.lp-nebula .lp-hero h1 {
+    font-size: 56px;
+    background: linear-gradient(135deg, #f43f5e, #a855f7, #6366f1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.lp-nebula .btn-gradient {
+    background: linear-gradient(to right, #f43f5e, #a855f7);
+    color: #fff;
+    border: none;
+    padding: 14px 32px;
+    border-radius: 30px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.lp-nebula .portfolio-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+}
+
+.lp-nebula .work-card .card-img {
+    height: 260px;
+    border-radius: 12px;
     margin-bottom: 16px;
 }
 
-.form-row {
+/* ========================================================
+   LANDING PAGE 7: SENTRISHIELD (CYBERSECURITY)
+   ======================================================== */
+.lp-sentrishield {
+    background: #030712;
+    color: #fff;
+}
+
+.lp-sentrishield .alert-badge {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: #10b981;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.lp-sentrishield .lp-btn-shield {
+    background: #3b82f6;
+    color: #fff !important;
+    padding: 8px 16px;
+    border-radius: 4px;
+}
+
+.lp-sentrishield .btn-shield-primary {
+    background: #3b82f6;
+    color: #fff;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 4px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.lp-sentrishield .threat-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    gap: 24px;
 }
 
-.form-group label {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text-secondary);
-}
-
-.form-group input,
-.form-group textarea,
-.form-group select {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+.lp-sentrishield .t-card {
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px solid rgba(255,255,255,0.05);
     border-radius: 8px;
-    color: var(--text-primary);
-    padding: 10px 12px;
-    font-family: var(--font-main);
-    font-size: 14px;
-    outline: none;
-    transition: var(--transition-smooth);
+    padding: 24px;
 }
 
-.form-group input:focus,
-.form-group textarea:focus,
-.form-group select:focus {
-    border-color: var(--accent-color);
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.05);
+.lp-sentrishield .t-card i {
+    width: 24px;
+    height: 24px;
+    color: #3b82f6;
+    margin-bottom: 16px;
 }
 
-.modal-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
-    margin-top: 24px;
+/* ========================================================
+   LANDING PAGE 8: EDUMIND (E-LEARNING)
+   ======================================================== */
+.lp-edumind {
+    background: #fdfeff;
+    color: #1e1b4b;
 }
 
-.btn-secondary {
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    color: var(--text-primary);
-    padding: 10px 18px;
+.lp-edumind .lp-btn-yellow {
+    background: #fbbf24;
+    color: #1e1b4b !important;
+    padding: 8px 16px;
     border-radius: 8px;
-    font-family: var(--font-main);
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--transition-smooth);
+    font-weight: 700;
 }
 
-.btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.05);
-}
-
-.btn-primary {
-    background: var(--accent-color);
-    color: #000000;
+.lp-edumind .btn-yellow-main {
+    background: #fbbf24;
+    color: #1e1b4b;
     border: none;
-    padding: 10px 20px;
+    padding: 14px 28px;
     border-radius: 8px;
-    font-family: var(--font-main);
-    font-size: 14px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 4px 12px var(--accent-glow);
-    transition: var(--transition-smooth);
 }
 
-.btn-primary:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 16px var(--accent-glow);
+.lp-edumind .course-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.lp-edumind .course-card {
+    background: #f3f4f6;
+    border-radius: 12px;
+    padding: 32px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.lp-edumind .course-card i {
+    width: 32px;
+    height: 32px;
+    color: #6366f1;
+    margin-bottom: 16px;
+}
+
+/* ========================================================
+   LANDING PAGE 9: TERRATRAVEL (ECO TOURISM)
+   ======================================================== */
+.lp-terratravel {
+    background: #f0fdf4;
+    color: #14532d;
+}
+
+.lp-terratravel .lp-btn-terra {
+    background: #166534;
+    color: #fff !important;
+    padding: 8px 16px;
+    border-radius: 4px;
+}
+
+.lp-terratravel .btn-terra-main {
+    background: #166534;
+    color: #fff;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.lp-terratravel .dest-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.lp-terratravel .dest-card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(22, 101, 52, 0.05);
+}
+
+/* ========================================================
+   LANDING PAGE 10: AEROSPACE (SPACE TRAVEL)
+   ======================================================== */
+.lp-aerospace {
+    background: #000;
+    color: #fff;
+}
+
+.lp-aerospace .orbit-badge {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    font-size: 11px;
+    letter-spacing: 2px;
+    padding: 4px 12px;
+    border-radius: 20px;
+}
+
+.lp-aerospace .lp-btn-orbit {
+    background: #fff;
+    color: #000 !important;
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-weight: 700;
+}
+
+.lp-aerospace .btn-orbit-main {
+    background: #fff;
+    color: #000;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 30px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.lp-aerospace .fleet-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.lp-aerospace .fleet-card {
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 32px;
+    background: rgba(255,255,255,0.02);
 }
 
 /* RESPONSIVENESS */
-@media (max-width: 1024px) {
-    .app-workspace {
-        grid-template-columns: 1fr;
-    }
-    .kanban-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 640px) {
-    .top-widgets {
-        grid-template-columns: 1fr;
-    }
-    .kanban-grid {
-        grid-template-columns: 1fr;
-    }
-    .app-header {
+@media (max-width: 768px) {
+    .showcase-controller {
         flex-direction: column;
-        align-items: flex-start;
+        height: auto;
+        padding: 12px;
         gap: 12px;
     }
-    .header-info {
-        width: 100%;
-        justify-content: space-between;
+    
+    .controller-right {
+        display: none;
+    }
+
+    .lp-hero h1 {
+        font-size: 32px;
+    }
+
+    .lp-section h2 {
+        font-size: 24px;
+    }
+
+    .lp-zenspace .feature-grid,
+    .lp-aethercrypt .security-grid,
+    .lp-velocefit .sensors-grid,
+    .lp-caffeineco .roast-cards,
+    .lp-nebula .portfolio-grid,
+    .lp-sentrishield .threat-grid,
+    .lp-edumind .course-grid,
+    .lp-terratravel .dest-grid,
+    .lp-aerospace .fleet-grid {
+        grid-template-columns: 1fr;
     }
 }
