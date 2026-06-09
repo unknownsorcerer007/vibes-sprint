@@ -10,13 +10,20 @@
     box-sizing: border-box;
 }
 
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    max-width: 100vw;
+    height: 100%;
+    overflow: hidden; /* Prevent body scroll, scroll happens inside slides */
+    position: relative;
+}
+
 body {
     font-family: 'Outfit', sans-serif;
     background: #000;
     color: #fff;
-    overflow: hidden; /* Prevent body scroll, scroll happens inside slides */
-    width: 100vw;
-    height: 100vh;
 }
 
 /* --- SHOWCASE FLOATING CONTROLLER --- */
@@ -147,7 +154,8 @@ body {
 
 /* --- SLIDER STRUCTURE --- */
 .slider-wrapper {
-    width: 100vw;
+    width: 100%;
+    max-width: 100vw;
     height: 100vh;
     overflow: hidden;
     position: relative;
