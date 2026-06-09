@@ -71,6 +71,36 @@ document.addEventListener('keydown', (e) => {
         goToSlide(currentSlide - 1);
     } else if (e.key === 'ArrowRight') {
         goToSlide(currentSlide + 1);
+    } else if (e.key === 'ArrowUp') {
+        if (scrollableContainers[currentSlide]) {
+            scrollableContainers[currentSlide].scrollBy({ top: -120, behavior: 'smooth' });
+            e.preventDefault();
+        }
+    } else if (e.key === 'ArrowDown') {
+        if (scrollableContainers[currentSlide]) {
+            scrollableContainers[currentSlide].scrollBy({ top: 120, behavior: 'smooth' });
+            e.preventDefault();
+        }
+    } else if (e.key === ' ' || e.key === 'Spacebar' || e.key === 'PageDown') {
+        if (scrollableContainers[currentSlide]) {
+            scrollableContainers[currentSlide].scrollBy({ top: window.innerHeight * 0.8, behavior: 'smooth' });
+            e.preventDefault();
+        }
+    } else if (e.key === 'PageUp') {
+        if (scrollableContainers[currentSlide]) {
+            scrollableContainers[currentSlide].scrollBy({ top: -window.innerHeight * 0.8, behavior: 'smooth' });
+            e.preventDefault();
+        }
+    } else if (e.key === 'Home') {
+        if (scrollableContainers[currentSlide]) {
+            scrollableContainers[currentSlide].scrollTo({ top: 0, behavior: 'smooth' });
+            e.preventDefault();
+        }
+    } else if (e.key === 'End') {
+        if (scrollableContainers[currentSlide]) {
+            scrollableContainers[currentSlide].scrollTo({ top: scrollableContainers[currentSlide].scrollHeight, behavior: 'smooth' });
+            e.preventDefault();
+        }
     }
 });
 
