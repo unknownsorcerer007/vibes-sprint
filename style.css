@@ -287,6 +287,10 @@ body {
 .lp-zenspace {
     background: #f7f4f0;
     color: #2b3a30;
+    font-family: 'Outfit', sans-serif;
+}
+.lp-zenspace h1, .lp-zenspace h2, .lp-zenspace h3 {
+    font-family: 'Playfair Display', Georgia, serif;
 }
 
 .lp-zenspace .lp-logo {
@@ -433,6 +437,9 @@ body {
 .lp-aethercrypt {
     background: radial-gradient(circle at top, #110e2e 0%, #050414 100%);
     color: #fff;
+    font-family: 'Outfit', sans-serif;
+}
+.lp-aethercrypt h1, .lp-aethercrypt h2, .lp-aethercrypt h3 {
     font-family: 'Space Grotesk', sans-serif;
 }
 
@@ -602,6 +609,10 @@ body {
 .lp-novussaas {
     background: #0f172a;
     color: #f8fafc;
+    font-family: 'Outfit', sans-serif;
+}
+.lp-novussaas h1, .lp-novussaas h2, .lp-novussaas h3 {
+    font-family: 'Space Grotesk', sans-serif;
 }
 
 .lp-novussaas .tag {
@@ -712,6 +723,13 @@ body {
 .lp-velocefit {
     background: #111;
     color: #fff;
+    font-family: 'Outfit', sans-serif;
+}
+.lp-velocefit h1, .lp-velocefit h2, .lp-velocefit h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    text-transform: uppercase;
+    font-style: italic;
+    font-weight: 800;
 }
 
 .lp-velocefit .lp-btn-accent {
@@ -777,6 +795,10 @@ body {
 .lp-caffeineco {
     background: #faf6f0;
     color: #3e2723;
+    font-family: 'Outfit', sans-serif;
+}
+.lp-caffeineco h1, .lp-caffeineco h2, .lp-caffeineco h3 {
+    font-family: 'Playfair Display', Georgia, serif;
 }
 
 .lp-caffeineco .lp-nav .lp-logo {
@@ -850,6 +872,10 @@ body {
 .lp-nebula {
     background: #050508;
     color: #fff;
+    font-family: 'Outfit', sans-serif;
+}
+.lp-nebula h1, .lp-nebula h2, .lp-nebula h3 {
+    font-family: 'Space Grotesk', sans-serif;
 }
 
 .lp-nebula .lp-btn-neon {
@@ -895,6 +921,10 @@ body {
 .lp-sentrishield {
     background: #030712;
     color: #fff;
+    font-family: 'Outfit', sans-serif;
+}
+.lp-sentrishield h1, .lp-sentrishield h2, .lp-sentrishield h3 {
+    font-family: 'Space Grotesk', sans-serif;
 }
 
 .lp-sentrishield .alert-badge {
@@ -952,6 +982,11 @@ body {
 .lp-edumind {
     background: #fdfeff;
     color: #1e1b4b;
+    font-family: 'Outfit', sans-serif;
+}
+.lp-edumind h1, .lp-edumind h2, .lp-edumind h3 {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
 }
 
 .lp-edumind .lp-btn-yellow {
@@ -998,6 +1033,10 @@ body {
 .lp-terratravel {
     background: #f0fdf4;
     color: #14532d;
+    font-family: 'Outfit', sans-serif;
+}
+.lp-terratravel h1, .lp-terratravel h2, .lp-terratravel h3 {
+    font-family: 'Playfair Display', Georgia, serif;
 }
 
 .lp-terratravel .lp-btn-terra {
@@ -1036,6 +1075,10 @@ body {
 .lp-aerospace {
     background: #000;
     color: #fff;
+    font-family: 'Outfit', sans-serif;
+}
+.lp-aerospace h1, .lp-aerospace h2, .lp-aerospace h3 {
+    font-family: 'Space Grotesk', sans-serif;
 }
 
 .lp-aerospace .orbit-badge {
@@ -1940,6 +1983,175 @@ body {
     font-size: 13px;
     line-height: 1.6;
     color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Share & Earn Input Widgets */
+.share-box-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    width: 100%;
+    max-width: 440px;
+}
+
+.share-input {
+    flex-grow: 1;
+    height: 42px;
+    padding: 0 16px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 13px;
+    outline: none;
+    transition: var(--transition-smooth);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff;
+}
+
+.share-input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.share-input:focus {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #6366f1;
+    box-shadow: 0 0 10px rgba(99, 102, 241, 0.2);
+}
+
+.share-submit-btn {
+    height: 42px;
+    padding: 0 20px;
+    border-radius: 8px;
+    border: none;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    background: #6366f1;
+    color: #fff;
+    transition: var(--transition-smooth);
+}
+
+.share-submit-btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+/* Light Mode Overrides for Inputs */
+.lp-zenspace .share-input {
+    background: #ffffff;
+    border: 1px solid rgba(43, 58, 48, 0.2);
+    color: #2b3a30;
+}
+.lp-zenspace .share-input::placeholder {
+    color: rgba(43, 58, 48, 0.5);
+}
+.lp-zenspace .share-input:focus {
+    border-color: #2b3a30;
+    box-shadow: 0 0 10px rgba(43, 58, 48, 0.1);
+}
+.lp-zenspace .share-submit-btn {
+    background: #2b3a30;
+    color: #fff;
+}
+
+.lp-caffeineco .share-input {
+    background: #ffffff;
+    border: 1px solid rgba(62, 39, 35, 0.2);
+    color: #3e2723;
+}
+.lp-caffeineco .share-input::placeholder {
+    color: rgba(62, 39, 35, 0.5);
+}
+.lp-caffeineco .share-input:focus {
+    border-color: #3e2723;
+    box-shadow: 0 0 10px rgba(62, 39, 35, 0.1);
+}
+.lp-caffeineco .share-submit-btn {
+    background: #3e2723;
+    color: #faf6f0;
+}
+
+.lp-edumind .share-input {
+    background: #ffffff;
+    border: 1px solid rgba(30, 27, 75, 0.15);
+    color: #1e1b4b;
+}
+.lp-edumind .share-input::placeholder {
+    color: rgba(30, 27, 75, 0.5);
+}
+.lp-edumind .share-input:focus {
+    border-color: #fbbf24;
+    box-shadow: 0 0 10px rgba(251, 191, 36, 0.2);
+}
+.lp-edumind .share-submit-btn {
+    background: #fbbf24;
+    color: #1e1b4b;
+}
+
+.lp-terratravel .share-input {
+    background: #ffffff;
+    border: 1px solid rgba(20, 83, 45, 0.2);
+    color: #14532d;
+}
+.lp-terratravel .share-input::placeholder {
+    color: rgba(20, 83, 45, 0.5);
+}
+.lp-terratravel .share-input:focus {
+    border-color: #166534;
+    box-shadow: 0 0 10px rgba(22, 101, 52, 0.1);
+}
+.lp-terratravel .share-submit-btn {
+    background: #166534;
+    color: #fff;
+}
+
+/* Cyberpunk specific submit button */
+.lp-aethercrypt .share-submit-btn {
+    background: #ff007f;
+    color: #fff;
+    box-shadow: 0 0 10px rgba(255, 0, 127, 0.3);
+}
+.lp-aethercrypt .share-submit-btn:hover {
+    box-shadow: 0 0 15px rgba(255, 0, 127, 0.6);
+}
+
+.lp-velocefit .share-submit-btn {
+    background: #ff4500;
+    color: #fff;
+}
+
+.lp-aerospace .share-submit-btn {
+    background: #fff;
+    color: #000;
+}
+
+/* Success Messages Styling */
+.share-success-msg {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: #10b981;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: 8px;
+    width: 100%;
+    max-width: 440px;
+    margin-top: 16px;
+    animation: fadeIn 0.4s ease;
+}
+
+.lp-zenspace .share-success-msg,
+.lp-caffeineco .share-success-msg,
+.lp-edumind .share-success-msg,
+.lp-terratravel .share-success-msg {
+    color: #15803d;
+    background: rgba(22, 163, 74, 0.08);
+    border-color: rgba(22, 163, 74, 0.15);
 }
 
 /* RESPONSIVENESS */

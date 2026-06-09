@@ -246,3 +246,40 @@ if (btnGenerateBrief && briefOutput) {
 // Initial Setup
 goToSlide(0);
 calculateRating();
+
+// 6. Share & Earn Link Submission Handler
+const shareButtons = document.querySelectorAll('.share-submit-btn');
+
+shareButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const container = btn.closest('.share-box-container');
+        if (!container) return;
+        
+        const input = container.querySelector('.share-input');
+        if (!input) return;
+        
+        const urlValue = input.value.trim();
+        if (!urlValue) {
+            alert("Please paste a valid social post URL first.");
+            return;
+        }
+        
+        // Basic URL validation
+        try {
+            new URL(urlValue);
+        } catch (_) {
+            alert("Please enter a fully qualified URL (e.g. https://twitter.com/user/status/...)");
+            return;
+        }
+        
+        // Replace form with success message styled by CSS
+        const parent = container.parentElement;
+        if (parent) {
+            container.style.display = 'none';
+            const msg = document.createElement('div');
+            msg.className = 'share-success-msg';
+            msg.innerHTML = `<span>✓</span> Link submitted! Views verification begins now. Payout scheduled in 24 hours.`;
+            parent.appendChild(msg);
+        }
+    });
+});
