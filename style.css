@@ -2369,6 +2369,42 @@ body {
     animation: fadeIn 0.4s ease;
 }
 
+/* Tagline & Rating Group Styles */
+.hero-creativity-tagline {
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #fbbf24;
+    margin: 16px auto 24px auto;
+    max-width: 650px;
+    line-height: 1.4;
+    text-shadow: 0 0 10px rgba(251, 191, 36, 0.2);
+}
+
+.lp-zenspace .hero-creativity-tagline {
+    color: #1b4332;
+    text-shadow: none;
+}
+.lp-caffeineco .hero-creativity-tagline {
+    color: #3e2723;
+    text-shadow: none;
+}
+.lp-edumind .hero-creativity-tagline {
+    color: #1e1b4b;
+    text-shadow: none;
+}
+.lp-terratravel .hero-creativity-tagline {
+    color: #14532d;
+    text-shadow: none;
+}
+
+.rating-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
 /* RESPONSIVENESS */
 @media (max-width: 768px) {
     .showcase-controller {
@@ -2384,6 +2420,24 @@ body {
 
     .lp-hero h1 {
         font-size: 32px;
+    }
+
+    .hero-creativity-tagline {
+        font-size: 13px;
+        margin: 12px auto 16px auto;
+        letter-spacing: 1px;
+    }
+
+    .slide-rating-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        margin-top: 40px;
+        text-align: center;
+    }
+
+    .rating-header {
+        justify-content: center;
     }
 
     .lp-section h2 {
