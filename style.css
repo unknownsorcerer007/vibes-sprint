@@ -1539,6 +1539,409 @@ body {
     color: #3b82f6;
 }
 
+/* VISUAL MOCKUP CARDS STYLING */
+
+.visual-mock-card {
+    transition: var(--transition-smooth);
+    position: relative;
+    overflow: hidden;
+}
+
+.visual-mock-card:hover {
+    transform: translateY(-4px) scale(1.02);
+}
+
+/* 1. Calm Music Card (Slide 0 - ZenSpace) */
+.calm-music-card {
+    background: #ffffff;
+    border: 1px solid rgba(43, 58, 48, 0.12);
+    border-radius: 16px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 10px 30px rgba(43, 58, 48, 0.04);
+    max-width: 320px;
+    margin: 0 auto;
+}
+
+.calm-music-card .play-indicator {
+    color: #7d9d85;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.calm-music-card .play-indicator i {
+    width: 36px;
+    height: 36px;
+}
+
+.calm-music-card .play-indicator:hover {
+    color: #2b3a30;
+    transform: scale(1.1);
+}
+
+.calm-music-card .music-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.calm-music-card .music-info h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #2b3a30;
+}
+
+.calm-music-card .music-info span {
+    font-size: 11px;
+    color: #7d9d85;
+    font-weight: 500;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+.calm-music-card .audio-waves {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 24px;
+    width: 28px;
+}
+
+.calm-music-card .audio-waves .bar {
+    width: 3px;
+    height: 4px;
+    background: #7d9d85;
+    border-radius: 2px;
+    animation: soundWave 1s infinite alternate ease-in-out;
+}
+
+.calm-music-card .audio-waves .bar:nth-child(1) { animation-delay: 0.1s; }
+.calm-music-card .audio-waves .bar:nth-child(2) { animation-delay: 0.4s; }
+.calm-music-card .audio-waves .bar:nth-child(3) { animation-delay: 0.2s; }
+.calm-music-card .audio-waves .bar:nth-child(4) { animation-delay: 0.5s; }
+
+@keyframes soundWave {
+    0% { height: 4px; }
+    100% { height: 20px; }
+}
+
+/* 2. Cyberpunk Cyber Card (Slide 1 - AetherCrypt) */
+.cyberpunk-cyber-card {
+    background: rgba(10, 8, 25, 0.7) !important;
+    border: 1px solid rgba(0, 240, 255, 0.2) !important;
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    transition: var(--transition-smooth);
+}
+
+.cyberpunk-cyber-card:hover {
+    border-color: rgba(0, 240, 255, 0.5) !important;
+    box-shadow: 0 0 30px rgba(0, 240, 255, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.cyberpunk-cyber-card .card-glow {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(0, 240, 255, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.cyberpunk-cyber-card .sys-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #00f0ff;
+    letter-spacing: 1px;
+    background: rgba(0, 240, 255, 0.1);
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(0, 240, 255, 0.2);
+    display: inline-block;
+}
+
+/* 3. Duel Ticket Card (Slide 2 - NovusSaaS) */
+.duel-ticket-card {
+    background: rgba(30, 41, 59, 0.65);
+    border: 1px solid rgba(99, 102, 241, 0.25);
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    max-width: 340px;
+    margin: 0 auto;
+}
+
+.duel-ticket-card .player {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: #f8fafc;
+    background: rgba(255, 255, 255, 0.04);
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    width: 100%;
+    text-align: center;
+}
+
+.duel-ticket-card .versus-badge {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    color: #ff007f;
+    border: 2px solid #ff007f;
+    background: #0f172a;
+    padding: 6px 12px;
+    border-radius: 50%;
+    text-shadow: 0 0 8px rgba(255, 0, 127, 0.6);
+    box-shadow: 0 0 12px rgba(255, 0, 127, 0.4);
+    z-index: 2;
+}
+
+.duel-ticket-card .pool-detail {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* 4. Speed Timer Card (Slide 3 - VeloceFit) */
+.speed-timer-card {
+    background: #151515;
+    border: 1px solid rgba(255, 69, 0, 0.25);
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    max-width: 280px;
+    margin: 0 auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.speed-timer-card .radial-progress {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 24px;
+    font-weight: 800;
+    color: #ff4500;
+    text-shadow: 0 0 10px rgba(255, 69, 0, 0.4);
+    border: 2px dashed rgba(255, 69, 0, 0.3);
+    padding: 14px 22px;
+    border-radius: 30px;
+    animation: pulseBorder 2s infinite alternate ease-in-out;
+}
+
+@keyframes pulseBorder {
+    0% { border-color: rgba(255, 69, 0, 0.2); transform: scale(1); }
+    100% { border-color: rgba(255, 69, 0, 0.8); transform: scale(1.03); }
+}
+
+.speed-timer-card .sub-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.6);
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+/* 5. Coffee Pack Card (Slide 4 - CaffeineCo) */
+.coffee-pack-card {
+    background: #efebe9;
+    border: 1px solid rgba(62, 39, 35, 0.15);
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    max-width: 280px;
+    margin: 0 auto;
+    color: #3e2723;
+    box-shadow: 0 10px 25px rgba(62, 39, 35, 0.05);
+}
+
+.coffee-pack-card .bag-graphic {
+    background: #8d6e63;
+    color: #faf6f0;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(141, 110, 99, 0.2);
+}
+
+.coffee-pack-card h4 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.coffee-pack-card span {
+    font-size: 11px;
+    color: #8d6e63;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* 6. Code Terminal Card (Slide 6 - SentriShield) */
+.code-terminal-card {
+    background: #0d1117;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 16px 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    max-width: 420px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.code-terminal-card .term-header {
+    display: flex;
+    gap: 6px;
+}
+
+.code-terminal-card .term-header .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.code-terminal-card .term-header .dot:nth-child(1) { background: #ff5f56; }
+.code-terminal-card .term-header .dot:nth-child(2) { background: #ffbd2e; }
+.code-terminal-card .term-header .dot:nth-child(3) { background: #27c93f; }
+
+.code-terminal-card .term-body {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #c9d1d9 !important;
+}
+
+/* 7. Medal Card (Slide 7 - Edumind) */
+.medal-card {
+    background: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.06) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03) !important;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    transition: var(--transition-smooth) !important;
+}
+
+.medal-card:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06) !important;
+}
+
+.medal-card .medal-icon {
+    font-size: 44px;
+    margin-bottom: 8px;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+}
+
+.medal-card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1e1b4b;
+}
+
+.medal-card p {
+    font-size: 13px;
+    color: #4b5563 !important;
+}
+
+.bronze-medal {
+    border-top: 4px solid #cd7f32 !important;
+}
+
+.silver-medal {
+    border-top: 4px solid #c0c0c0 !important;
+}
+
+/* Eco Travel Cards (Slide 8 - TerraTravel) */
+.dest-card {
+    background: #ffffff !important;
+    border: 1px solid rgba(22, 101, 52, 0.1) !important;
+    border-radius: 12px !important;
+    padding: 28px !important;
+    box-shadow: 0 4px 20px rgba(22, 101, 52, 0.03) !important;
+    color: #14532d !important;
+    transition: var(--transition-smooth);
+}
+
+.dest-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(22, 101, 52, 0.25) !important;
+    box-shadow: 0 8px 30px rgba(22, 101, 52, 0.06) !important;
+}
+
+.dest-card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.dest-card p {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #166534 !important;
+    opacity: 0.85;
+}
+
+/* Sci-fi Space Cards (Slide 9 - Aerospace) */
+.fleet-card {
+    background: rgba(255, 255, 255, 0.02) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 16px !important;
+    padding: 32px !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6) !important;
+    transition: var(--transition-smooth);
+}
+
+.fleet-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(255, 255, 255, 0.18) !important;
+    box-shadow: 0 20px 50px rgba(255, 255, 255, 0.03) !important;
+}
+
+.fleet-card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    letter-spacing: 0.5px;
+}
+
+.fleet-card p {
+    font-size: 13px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
 /* RESPONSIVENESS */
 @media (max-width: 768px) {
     .showcase-controller {

@@ -116,12 +116,12 @@ pollOptions.forEach(option => {
 });
 
 // 2. AetherCrypt Payout Calculator (Slide 1)
-const hackerSlider = document.getElementById('hacker-slider');
-const hackerCountLabel = document.getElementById('hacker-count-label');
-const pFirst = document.getElementById('p-first');
-const pSecond = document.getElementById('p-second');
-const pThird = document.getElementById('p-third');
-const pRefund = document.getElementById('p-refund');
+const hackerSlider = document.getElementById('hacker-slider-1');
+const hackerCountLabel = document.getElementById('hacker-count-label-1');
+const pFirst = document.getElementById('p-first-1');
+const pSecond = document.getElementById('p-second-1');
+const pThird = document.getElementById('p-third-1');
+const pRefund = document.getElementById('p-refund-1');
 
 if (hackerSlider) {
     hackerSlider.addEventListener('input', (e) => {
