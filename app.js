@@ -3,7 +3,7 @@ lucide.createIcons();
 
 // STATE & CONFIG
 let currentSlide = 0;
-const totalSlides = 10;
+const totalSlides = 11;
 
 // DOM ELEMENTS (SLIDER)
 const sliderContainer = document.getElementById('slider-container');
@@ -12,6 +12,88 @@ const btnNext = document.getElementById('btn-next');
 const designSelect = document.getElementById('design-select');
 const slideBadge = document.getElementById('slide-badge');
 const scrollableContainers = document.querySelectorAll('.lp-scrollable');
+
+// --- LOGO STATE, DIALOGUES & CRYING CONFIG ---
+const preOpenMessages = [
+    "Hello Vibe Coder! 👋",
+    "I have a message for you! 🥺",
+    "Please click me! 👉👈",
+    "Can you open this? 🌸",
+    "I made some mistakes... read here! 💔",
+    "Hey! Check this out! ✨",
+    "Please hear me out... 🥺"
+];
+
+const postOpenMessages = [
+    "Thank you so much! ❤️",
+    "You are the best! 🌟",
+    "I know you relate with it! 🤝",
+    "Let's vibe code together! 💻",
+    "Thanks for your feedback! 😊",
+    "Follow us on X! 🐦",
+    "Join our Discord! 💬",
+    "Agent X will be epic! 🚀",
+    "Your opinion means everything! 🙌",
+    "Vibe build forever! ⚔️"
+];
+
+const cryingMessages = [
+    "I don't want to let you go! 🥺😭",
+    "Please stay! 💔",
+    "Did you like the designs? 🌸",
+    "Don't leave me... 🥺"
+];
+
+let currentMessageIdx = 0;
+let bubbleInterval = null;
+let hasReadCreatorMessage = false;
+
+// Physics logic for smooth spring follow
+let logoX = window.innerWidth / 2;
+let logoY = window.innerHeight - 80;
+let targetX = logoX;
+let targetY = logoY;
+let isLogoInteractive = false;
+let isHovered = false;
+let cryingInterval = null;
+
+// Function to start speech bubble message rotation
+function startBubbleRotation(messagesArray) {
+    if (bubbleInterval) clearInterval(bubbleInterval);
+    const bubbleElement = document.getElementById('vibes-gravity-bubble');
+    const bubbleText = bubbleElement ? bubbleElement.querySelector('.bubble-text') : null;
+    if (!bubbleText) return;
+    
+    currentMessageIdx = 0;
+    bubbleText.textContent = messagesArray[currentMessageIdx];
+    
+    bubbleInterval = setInterval(() => {
+        currentMessageIdx = (currentMessageIdx + 1) % messagesArray.length;
+        bubbleText.textContent = messagesArray[currentMessageIdx];
+    }, 3500);
+}
+
+// Crying functions
+function startCrying() {
+    if (cryingInterval) return;
+    cryingInterval = setInterval(() => {
+        const tear = document.createElement('div');
+        tear.className = 'logo-tear';
+        const offsetLeft = 15 + Math.random() * 30;
+        const offsetTop = 50;
+        tear.style.left = `${logoX + offsetLeft}px`;
+        tear.style.top = `${logoY + offsetTop}px`;
+        document.body.appendChild(tear);
+        setTimeout(() => tear.remove(), 800);
+    }, 150);
+}
+
+function stopCrying() {
+    if (cryingInterval) {
+        clearInterval(cryingInterval);
+        cryingInterval = null;
+    }
+}
 
 // --- SLIDER NAVIGATION LOGIC ---
 
@@ -43,6 +125,26 @@ function goToSlide(index) {
     btnPrev.style.pointerEvents = (currentSlide === 0) ? 'none' : 'auto';
     btnNext.style.opacity = (currentSlide === totalSlides - 1) ? '0.4' : '1';
     btnNext.style.pointerEvents = (currentSlide === totalSlides - 1) ? 'none' : 'auto';
+
+    // Slide 10 (Review Page) specific logo interaction & crying effect
+    if (currentSlide === 10) {
+        isLogoInteractive = false;
+        targetX = 20;
+        targetY = 20;
+        startCrying();
+        startBubbleRotation(cryingMessages);
+    } else {
+        stopCrying();
+        // Only return to follow mode if it's no longer falling
+        if (gravityContainer && !gravityContainer.classList.contains('falling')) {
+            isLogoInteractive = true;
+        }
+        if (hasReadCreatorMessage) {
+            startBubbleRotation(postOpenMessages);
+        } else {
+            startBubbleRotation(preOpenMessages);
+        }
+    }
 }
 
 // Button Events
@@ -652,29 +754,6 @@ const gravityLogo = document.getElementById('vibes-gravity-logo');
 const creatorModal = document.getElementById('vibes-creator-modal');
 const modalClose = document.getElementById('vibes-creator-modal-close');
 const modalThanks = document.getElementById('vibes-creator-modal-thanks');
-const bubbleElement = document.getElementById('vibes-gravity-bubble');
-const bubbleText = bubbleElement ? bubbleElement.querySelector('.bubble-text') : null;
-
-// Speech bubble messages rotation after reading the message
-const bubbleMessages = [
-    "Thanks for reading! ⚔️",
-    "Thanks for sharing! 🚀",
-    "Please follow us on X! 🐦",
-    "Join our Discord community! 💬",
-    "Agent X will be amazing! 🤖",
-    "Your opinion helps a lot! 🙌",
-    "Let's build in public!"
-];
-let currentMessageIdx = 0;
-let bubbleInterval = null;
-let hasReadCreatorMessage = false;
-
-// Physics logic for smooth spring follow
-let logoX = window.innerWidth / 2;
-let logoY = window.innerHeight - 80;
-let targetX = logoX;
-let targetY = logoY;
-let isLogoInteractive = false;
 
 // Initialize Lucide Icons for injected modal buttons
 lucide.createIcons();
@@ -687,50 +766,90 @@ if (gravityContainer) {
             // Position it at the bottom left initially
             logoX = window.innerWidth * 0.05;
             logoY = window.innerHeight - 80;
-            targetX = logoX;
-            targetY = logoY;
+            
+            if (currentSlide === 10) {
+                targetX = 20;
+                targetY = 20;
+                isLogoInteractive = false;
+                startCrying();
+                startBubbleRotation(cryingMessages);
+            } else {
+                targetX = logoX;
+                targetY = logoY;
+                isLogoInteractive = true;
+                if (hasReadCreatorMessage) {
+                    startBubbleRotation(postOpenMessages);
+                } else {
+                    startBubbleRotation(preOpenMessages);
+                }
+            }
             gravityContainer.style.left = `${logoX}px`;
             gravityContainer.style.top = `${logoY}px`;
-            isLogoInteractive = true;
         }
     });
 
-    // Handle mouse movement for physics spring follow
-    document.addEventListener('mousemove', (e) => {
-        if (isLogoInteractive) {
-            // Offset the target coordinates so the logo sits next to the cursor instead of directly under it
-            targetX = e.clientX + 20;
-            targetY = e.clientY + 20;
-        }
+    // Handle hover states for click convenience (Hover Freeze)
+    gravityContainer.addEventListener('mouseenter', () => {
+        isHovered = true;
     });
-
-    // Handle touch movement for mobile devices
-    document.addEventListener('touchmove', (e) => {
-        if (isLogoInteractive && e.touches.length > 0) {
-            targetX = e.touches[0].clientX + 20;
-            targetY = e.touches[0].clientY + 20;
-        }
+    
+    gravityContainer.addEventListener('mouseleave', () => {
+        isHovered = false;
     });
 
     // Handle clicks to open the modal
     gravityContainer.addEventListener('click', () => {
         if (creatorModal) {
             creatorModal.classList.add('active');
+            if (currentSlide !== 10 && !hasReadCreatorMessage) {
+                hasReadCreatorMessage = true;
+                startBubbleRotation(postOpenMessages);
+            }
         }
     });
 }
 
+// Handle mouse movement for physics spring follow
+document.addEventListener('mousemove', (e) => {
+    const isModalActive = creatorModal && creatorModal.classList.contains('active');
+    if (isLogoInteractive && !isHovered && !isModalActive) {
+        // Offset the target coordinates so the logo sits next to the cursor instead of directly under it
+        targetX = e.clientX + 20;
+        targetY = e.clientY + 20;
+    }
+});
+
+// Handle touch movement for mobile devices
+document.addEventListener('touchmove', (e) => {
+    const isModalActive = creatorModal && creatorModal.classList.contains('active');
+    if (isLogoInteractive && !isHovered && !isModalActive && e.touches.length > 0) {
+        targetX = e.touches[0].clientX + 20;
+        targetY = e.touches[0].clientY + 20;
+    }
+});
+
 // Tick loop for smooth CSS updates
 function tickLogoPhysics() {
-    if (isLogoInteractive && gravityContainer) {
-        // Interpolate current position to target (smooth lag follow)
-        logoX += (targetX - logoX) * 0.08;
-        logoY += (targetY - logoY) * 0.08;
-        
-        // Boundaries restriction
-        const size = 60;
-        logoX = Math.max(10, Math.min(window.innerWidth - size - 10, logoX));
-        logoY = Math.max(10, Math.min(window.innerHeight - size - 10, logoY));
+    if (gravityContainer) {
+        const isModalActive = creatorModal && creatorModal.classList.contains('active');
+        if (isLogoInteractive) {
+            if (isHovered || isModalActive) {
+                targetX = logoX;
+                targetY = logoY;
+            }
+            // Interpolate current position to target (smooth lag follow)
+            logoX += (targetX - logoX) * 0.08;
+            logoY += (targetY - logoY) * 0.08;
+            
+            // Boundaries restriction
+            const size = 60;
+            logoX = Math.max(10, Math.min(window.innerWidth - size - 10, logoX));
+            logoY = Math.max(10, Math.min(window.innerHeight - size - 10, logoY));
+        } else {
+            // Non-interactive flight home (Slide 10 flight)
+            logoX += (targetX - logoX) * 0.08;
+            logoY += (targetY - logoY) * 0.08;
+        }
         
         gravityContainer.style.left = `${logoX}px`;
         gravityContainer.style.top = `${logoY}px`;
@@ -743,9 +862,9 @@ requestAnimationFrame(tickLogoPhysics);
 function closeCreatorModal() {
     if (creatorModal) {
         creatorModal.classList.remove('active');
-        if (!hasReadCreatorMessage) {
+        if (currentSlide !== 10 && !hasReadCreatorMessage) {
             hasReadCreatorMessage = true;
-            startMessageRotation();
+            startBubbleRotation(postOpenMessages);
         }
     }
 }
@@ -766,17 +885,15 @@ if (creatorModal) {
     });
 }
 
-// Function to start speech bubble message rotation
-function startMessageRotation() {
-    if (bubbleText) {
-        // Immediately change to the first thank you message
-        bubbleText.textContent = bubbleMessages[currentMessageIdx];
-        
-        // Set up interval to rotate messages
-        bubbleInterval = setInterval(() => {
-            currentMessageIdx = (currentMessageIdx + 1) % bubbleMessages.length;
-            bubbleText.textContent = bubbleMessages[currentMessageIdx];
-        }, 4000); // Change message every 4 seconds
-    }
+// Initial bubble text setup on load
+if (currentSlide === 10) {
+    isLogoInteractive = false;
+    targetX = 20;
+    targetY = 20;
+    startCrying();
+    startBubbleRotation(cryingMessages);
+} else {
+    // Start standard cute request bubble rotation
+    startBubbleRotation(preOpenMessages);
 }
 

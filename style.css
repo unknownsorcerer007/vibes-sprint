@@ -164,8 +164,8 @@ body {
 .slider-container {
     display: flex;
     height: 100%;
-    /* Width will be set dynamically or defaults to 1000vw */
-    width: 1000vw;
+    /* Width will be set dynamically or defaults to 1100vw */
+    width: 1100vw;
     transition: var(--transition-slide);
 }
 
@@ -2813,5 +2813,28 @@ body {
     }
     .modal-action-btn {
         width: 100%;
+    }
+}
+
+/* LOGO TEARS FOR CRYING EFFECT */
+.logo-tear {
+    position: fixed;
+    width: 6px;
+    height: 10px;
+    background: #38bdf8; /* sky blue */
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    pointer-events: none;
+    z-index: 9998; /* just below logo */
+    animation: tear-fall 0.8s linear forwards;
+}
+
+@keyframes tear-fall {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(60px) scale(0.5);
+        opacity: 0;
     }
 }
