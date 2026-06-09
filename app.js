@@ -199,6 +199,50 @@ stepBtns.forEach(btn => {
     });
 });
 
+// 5. Constraint Page Random Brief Generator (Slide 6)
+const targetUsers = [
+    "Freelancer building a portfolio",
+    "E-commerce customer checking out",
+    "Content creator sharing a post",
+    "Non-developer using AI to ship",
+    "Student looking for scholarship runs",
+    "Indie hacker launching a SaaS",
+    "Remote team lead tracking sprints"
+];
+
+const requirements = [
+    "A clean dark mode dashboard with interactive charts",
+    "A responsive slider interface for peer reviews",
+    "A timeline stepper showing badge milestones",
+    "A payout simulator with range input scales",
+    "A zero-paywall live link landing page layout",
+    "A collaborative dynamic voting poll module"
+];
+
+const specialRules = [
+    "Must limit build execution time to 3.0 hours max",
+    "Must write clean semantic code with no external JS dependencies",
+    "Must support the 11th free entry streak protection",
+    "Must implement double-blind anonymity (no names allowed)"
+];
+
+const btnGenerateBrief = document.getElementById('btn-generate-brief');
+const briefOutput = document.getElementById('brief-output');
+
+if (btnGenerateBrief && briefOutput) {
+    btnGenerateBrief.addEventListener('click', () => {
+        const user = targetUsers[Math.floor(Math.random() * targetUsers.length)];
+        const req = requirements[Math.floor(Math.random() * requirements.length)];
+        const rule = specialRules[Math.floor(Math.random() * specialRules.length)];
+
+        briefOutput.innerHTML = `
+            <p style="margin-bottom: 8px;"><strong>🎯 Target User:</strong> ${user}</p>
+            <p style="margin-bottom: 8px;"><strong>⚙️ Core Requirement:</strong> ${req}</p>
+            <p><strong>⚠️ Special Rule:</strong> ${rule}</p>
+        `;
+    });
+}
+
 // Initial Setup
 goToSlide(0);
 calculateRating();

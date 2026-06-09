@@ -1449,6 +1449,96 @@ body {
     to { opacity: 1; transform: translateY(0); }
 }
 
+/* Payout Table Styling */
+.payout-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    margin: 24px 0;
+    border-radius: 8px;
+    border: 1px solid rgba(0,0,0,0.08);
+}
+
+.payout-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    background: #fff;
+    color: #2b3a30;
+    font-family: var(--font-mono);
+    font-size: 13px;
+}
+
+.payout-table th, .payout-table td {
+    padding: 12px 16px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.payout-table th {
+    background: rgba(0,0,0,0.02);
+    font-weight: 700;
+}
+
+.dark-table {
+    background: rgba(255,255,255,0.01) !important;
+    color: #fff !important;
+    border: 1px solid rgba(255,255,255,0.08) !important;
+}
+
+.dark-table th, .dark-table td {
+    border-color: rgba(255,255,255,0.05) !important;
+}
+
+.dark-table th {
+    background: rgba(255,255,255,0.03) !important;
+}
+
+/* FAQ List Styling */
+.faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    text-align: left;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.faq-item {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255,255,255,0.05);
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.lp-zenspace .faq-item {
+    background: #fff;
+    border-color: rgba(0,0,0,0.02);
+    color: #2b3a30;
+}
+
+.faq-item p {
+    margin-top: 8px;
+    opacity: 0.8;
+}
+
+/* Interactive Brief Generator Widget */
+.interactive-brief-widget {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 500px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+#brief-output {
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #3b82f6;
+}
+
 /* RESPONSIVENESS */
 @media (max-width: 768px) {
     .showcase-controller {
