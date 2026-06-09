@@ -3,7 +3,7 @@ lucide.createIcons();
 
 // STATE & CONFIG
 let currentSlide = 0;
-const totalSlides = 11;
+const totalSlides = 10;
 
 // DOM ELEMENTS (SLIDER)
 const sliderContainer = document.getElementById('slider-container');
@@ -360,6 +360,16 @@ starsWrappers.forEach(wrapper => {
             if (ratingValueLabel) {
                 ratingValueLabel.textContent = `${val}/10`;
             }
+
+            // Save to localStorage
+            const slideIndex = parseInt(wrapper.getAttribute('data-slide-index'));
+            const type = wrapper.classList.contains('design-stars') ? 'design' : 'content';
+            const localRatings = JSON.parse(localStorage.getItem('vibebuild_ratings') || '{}');
+            if (!localRatings[slideIndex]) {
+                localRatings[slideIndex] = { design: 0, content: 0 };
+            }
+            localRatings[slideIndex][type] = val;
+            localStorage.setItem('vibebuild_ratings', JSON.stringify(localRatings));
         });
     });
 });
