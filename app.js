@@ -324,6 +324,71 @@ nextSlideBtns.forEach(btn => {
     });
 });
 
+// Session management
+let sessionId = localStorage.getItem('vibebuild_session_id');
+if (!sessionId) {
+    sessionId = 'live_' + Math.random().toString(36).substring(2, 11);
+    localStorage.setItem('vibebuild_session_id', sessionId);
+}
+
+// Sync ratings to KVdb database
+let syncTimeout = null;
+function syncRatingsToDatabase() {
+    if (syncTimeout) clearTimeout(syncTimeout);
+    syncTimeout = setTimeout(async () => {
+        try {
+            const localRatings = JSON.parse(localStorage.getItem('vibebuild_ratings') || '{}');
+            const ratingsArray = [];
+            Object.keys(localRatings).forEach(slideIdx => {
+                ratingsArray.push({
+                    slideIndex: parseInt(slideIdx),
+                    designRating: localRatings[slideIdx].design || 0,
+                    contentRating: localRatings[slideIdx].content || 0
+                });
+            });
+
+            if (ratingsArray.length === 0) return;
+
+            // Fetch existing feedbacks from KVdb
+            const response = await fetch('https://kvdb.io/9JMToPARQ6WrW4wFKbZ743/feedbacks');
+            let feedbacks = [];
+            if (response.ok) {
+                feedbacks = await response.json();
+            }
+
+            // Find existing session review
+            const existingIndex = feedbacks.findIndex(fb => fb.id === 'session_' + sessionId);
+            const reviewObj = {
+                id: 'session_' + sessionId,
+                timestamp: new Date().toISOString(),
+                favoritePage: ratingsArray[0].slideIndex,
+                suggestions: "Live ratings from showcase visitor.",
+                questions: "Anonymous live visitor session ratings.",
+                socialLink: "",
+                status: "Pending",
+                ratings: ratingsArray
+            };
+
+            if (existingIndex >= 0) {
+                feedbacks[existingIndex].ratings = ratingsArray;
+                feedbacks[existingIndex].timestamp = new Date().toISOString();
+            } else {
+                feedbacks.unshift(reviewObj);
+            }
+
+            // Save back to KVdb
+            await fetch('https://kvdb.io/9JMToPARQ6WrW4wFKbZ743/feedbacks', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(feedbacks)
+            });
+            console.log('Live ratings synced to KVdb.');
+        } catch (err) {
+            console.error('Error syncing ratings:', err);
+        }
+    }, 1000);
+}
+
 // Star Rating Interactive Logic
 const starsWrappers = document.querySelectorAll('.stars-wrapper');
 starsWrappers.forEach(wrapper => {
@@ -370,6 +435,9 @@ starsWrappers.forEach(wrapper => {
             }
             localRatings[slideIndex][type] = val;
             localStorage.setItem('vibebuild_ratings', JSON.stringify(localRatings));
+            
+            // Sync to remote database
+            syncRatingsToDatabase();
         });
     });
 });
