@@ -366,6 +366,7 @@ function syncRatingsToDatabase() {
                 questions: "Anonymous live visitor session ratings.",
                 socialLink: "",
                 status: "Pending",
+                email: localStorage.getItem('vibebuild_user_email') || '',
                 ratings: ratingsArray
             };
 
@@ -445,7 +446,7 @@ starsWrappers.forEach(wrapper => {
 // Slide 10 Feedback Form Submission
 const btnSubmitFeedback = document.getElementById('btn-submit-feedback');
 if (btnSubmitFeedback) {
-    btnSubmitFeedback.addEventListener('click', () => {
+    btnSubmitFeedback.addEventListener('click', async () => {
         const bestPageSelect = document.getElementById('best-page-select');
         const upgradeSuggestions = document.getElementById('upgrade-suggestions');
         const userQuestions = document.getElementById('user-questions');
@@ -479,6 +480,59 @@ if (btnSubmitFeedback) {
             }
         }
         
+        // Build ratings array from localStorage
+        const localRatings = JSON.parse(localStorage.getItem('vibebuild_ratings') || '{}');
+        const ratingsArray = [];
+        Object.keys(localRatings).forEach(slideIdx => {
+            ratingsArray.push({
+                slideIndex: parseInt(slideIdx),
+                designRating: localRatings[slideIdx].design || 0,
+                contentRating: localRatings[slideIdx].content || 0
+            });
+        });
+
+        // Get user email if captured
+        const userEmail = localStorage.getItem('vibebuild_user_email') || '';
+
+        // Create full review object matching admin dashboard schema
+        const reviewObj = {
+            id: 'session_' + sessionId,
+            timestamp: new Date().toISOString(),
+            favoritePage: parseInt(bestPage),
+            suggestions: suggestions,
+            questions: doubts,
+            socialLink: urlValue,
+            status: "Pending",
+            email: userEmail,
+            ratings: ratingsArray
+        };
+
+        // Save to KVdb
+        try {
+            const response = await fetch('https://kvdb.io/9JMToPARQ6WrW4wFKbZ743/feedbacks');
+            let feedbacks = [];
+            if (response.ok) {
+                feedbacks = await response.json();
+            }
+
+            // Replace existing session entry or add new
+            const existingIndex = feedbacks.findIndex(fb => fb.id === reviewObj.id);
+            if (existingIndex >= 0) {
+                feedbacks[existingIndex] = reviewObj;
+            } else {
+                feedbacks.unshift(reviewObj);
+            }
+
+            await fetch('https://kvdb.io/9JMToPARQ6WrW4wFKbZ743/feedbacks', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(feedbacks)
+            });
+            console.log('Feedback saved to KVdb successfully!');
+        } catch (err) {
+            console.error('Error saving feedback to KVdb:', err);
+        }
+        
         const formCard = document.querySelector('.feedback-form-card');
         if (formCard) {
             // Hide all input fields and submit button
@@ -506,3 +560,223 @@ if (btnSubmitFeedback) {
         }
     });
 }
+
+// ========================================================
+// EMAIL CAPTURE MODAL (Fix 2)
+// ========================================================
+const emailModal = document.getElementById('email-capture-modal');
+const emailForm = document.getElementById('email-capture-form');
+const emailInput = document.getElementById('email-capture-input');
+const emailSkipBtn = document.getElementById('email-skip-btn');
+
+if (emailModal) {
+    // Show modal only if user hasn't submitted email yet
+    const savedEmail = localStorage.getItem('vibebuild_user_email');
+    if (!savedEmail) {
+        // Show modal after a short delay for better UX
+        setTimeout(() => {
+            emailModal.classList.add('visible');
+        }, 1500);
+    }
+
+    // Handle email submit
+    if (emailForm) {
+        emailForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = emailInput.value.trim();
+            if (email) {
+                localStorage.setItem('vibebuild_user_email', email);
+                emailModal.classList.remove('visible');
+                // Sync email with existing ratings
+                syncRatingsToDatabase();
+            }
+        });
+    }
+
+    // Handle skip
+    if (emailSkipBtn) {
+        emailSkipBtn.addEventListener('click', () => {
+            localStorage.setItem('vibebuild_user_email', 'skipped');
+            emailModal.classList.remove('visible');
+        });
+    }
+}
+
+// ========================================================
+// CTA BUTTONS → DISCORD LINK (Fix 3)
+// ========================================================
+const DISCORD_LINK = 'https://discord.gg/vibebuild'; // Replace with actual Discord invite
+
+const ctaButtons = document.querySelectorAll('.btn-main, .btn-neon, .btn-primary, .btn-orbit-main, .btn-gradient-action, .btn-glass, .btn-warm-cta, .btn-solid');
+ctaButtons.forEach(btn => {
+    // Don't override buttons that already have specific handlers
+    if (btn.classList.contains('btn-slide-next') || 
+        btn.classList.contains('btn-submit-form') ||
+        btn.id === 'btn-submit-feedback' ||
+        btn.id === 'btn-generate-brief') return;
+    
+    btn.addEventListener('click', (e) => {
+        // Check if user has provided email
+        const email = localStorage.getItem('vibebuild_user_email');
+        if (!email || email === 'skipped') {
+            // Show email modal first
+            if (emailModal) {
+                emailModal.classList.add('visible');
+            }
+        } else {
+            // Open Discord
+            window.open(DISCORD_LINK, '_blank');
+        }
+    });
+});
+
+// Nav CTA links
+const navCtaLinks = document.querySelectorAll('.lp-btn-primary, .lp-btn-cta, .lp-btn-solid');
+navCtaLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const email = localStorage.getItem('vibebuild_user_email');
+        if (!email || email === 'skipped') {
+            if (emailModal) emailModal.classList.add('visible');
+        } else {
+            window.open(DISCORD_LINK, '_blank');
+        }
+    });
+});
+
+// ========================================================
+// FLOATING GRAVITY LOGO & CREATOR MODAL INTERACTIVITY
+// ========================================================
+const gravityContainer = document.getElementById('vibes-gravity-logo-container');
+const gravityLogo = document.getElementById('vibes-gravity-logo');
+const creatorModal = document.getElementById('vibes-creator-modal');
+const modalClose = document.getElementById('vibes-creator-modal-close');
+const modalThanks = document.getElementById('vibes-creator-modal-thanks');
+const bubbleElement = document.getElementById('vibes-gravity-bubble');
+const bubbleText = bubbleElement ? bubbleElement.querySelector('.bubble-text') : null;
+
+// Speech bubble messages rotation after reading the message
+const bubbleMessages = [
+    "Thanks for reading! ⚔️",
+    "Thanks for sharing! 🚀",
+    "Please follow us on X! 🐦",
+    "Join our Discord community! 💬",
+    "Agent X will be amazing! 🤖",
+    "Your opinion helps a lot! 🙌",
+    "Let's build in public!"
+];
+let currentMessageIdx = 0;
+let bubbleInterval = null;
+let hasReadCreatorMessage = false;
+
+// Physics logic for smooth spring follow
+let logoX = window.innerWidth / 2;
+let logoY = window.innerHeight - 80;
+let targetX = logoX;
+let targetY = logoY;
+let isLogoInteractive = false;
+
+// Initialize Lucide Icons for injected modal buttons
+lucide.createIcons();
+
+// AnimationEnd Listener for Gravity Fall
+if (gravityContainer) {
+    gravityContainer.addEventListener('animationend', (e) => {
+        if (e.animationName === 'gravity-fall') {
+            gravityContainer.classList.remove('falling');
+            // Position it at the bottom left initially
+            logoX = window.innerWidth * 0.05;
+            logoY = window.innerHeight - 80;
+            targetX = logoX;
+            targetY = logoY;
+            gravityContainer.style.left = `${logoX}px`;
+            gravityContainer.style.top = `${logoY}px`;
+            isLogoInteractive = true;
+        }
+    });
+
+    // Handle mouse movement for physics spring follow
+    document.addEventListener('mousemove', (e) => {
+        if (isLogoInteractive) {
+            // Offset the target coordinates so the logo sits next to the cursor instead of directly under it
+            targetX = e.clientX + 20;
+            targetY = e.clientY + 20;
+        }
+    });
+
+    // Handle touch movement for mobile devices
+    document.addEventListener('touchmove', (e) => {
+        if (isLogoInteractive && e.touches.length > 0) {
+            targetX = e.touches[0].clientX + 20;
+            targetY = e.touches[0].clientY + 20;
+        }
+    });
+
+    // Handle clicks to open the modal
+    gravityContainer.addEventListener('click', () => {
+        if (creatorModal) {
+            creatorModal.classList.add('active');
+        }
+    });
+}
+
+// Tick loop for smooth CSS updates
+function tickLogoPhysics() {
+    if (isLogoInteractive && gravityContainer) {
+        // Interpolate current position to target (smooth lag follow)
+        logoX += (targetX - logoX) * 0.08;
+        logoY += (targetY - logoY) * 0.08;
+        
+        // Boundaries restriction
+        const size = 60;
+        logoX = Math.max(10, Math.min(window.innerWidth - size - 10, logoX));
+        logoY = Math.max(10, Math.min(window.innerHeight - size - 10, logoY));
+        
+        gravityContainer.style.left = `${logoX}px`;
+        gravityContainer.style.top = `${logoY}px`;
+    }
+    requestAnimationFrame(tickLogoPhysics);
+}
+requestAnimationFrame(tickLogoPhysics);
+
+// Modal Close Handlers
+function closeCreatorModal() {
+    if (creatorModal) {
+        creatorModal.classList.remove('active');
+        if (!hasReadCreatorMessage) {
+            hasReadCreatorMessage = true;
+            startMessageRotation();
+        }
+    }
+}
+
+if (modalClose) {
+    modalClose.addEventListener('click', closeCreatorModal);
+}
+if (modalThanks) {
+    modalThanks.addEventListener('click', closeCreatorModal);
+}
+
+// Close modal when clicking on the overlay background
+if (creatorModal) {
+    creatorModal.addEventListener('click', (e) => {
+        if (e.target === creatorModal) {
+            closeCreatorModal();
+        }
+    });
+}
+
+// Function to start speech bubble message rotation
+function startMessageRotation() {
+    if (bubbleText) {
+        // Immediately change to the first thank you message
+        bubbleText.textContent = bubbleMessages[currentMessageIdx];
+        
+        // Set up interval to rotate messages
+        bubbleInterval = setInterval(() => {
+            currentMessageIdx = (currentMessageIdx + 1) % bubbleMessages.length;
+            bubbleText.textContent = bubbleMessages[currentMessageIdx];
+        }, 4000); // Change message every 4 seconds
+    }
+}
+

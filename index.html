@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VibeBuild — Competitive Web Design & AI Sprints</title>
+    <meta name="description" content="VibeBuild is the first competitive AI sprint platform. Build real products, get rated by the community, and win prizes up to $750. No coding degree required.">
+    <meta property="og:title" content="VibeBuild — The Best Build Wins">
+    <meta property="og:description" content="Compete in short AI sprints. Get rated by hundreds of real users. Win prizes same-day. Community-judged, creator-first.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://unknownsorcerer007.github.io/vibes-sprint/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="VibeBuild — Competitive AI Sprints">
+    <meta name="twitter:description" content="Build. Get Rated. Win. The community decides who takes the prize.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,6 +22,20 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    
+    <!-- EMAIL CAPTURE MODAL OVERLAY -->
+    <div id="email-capture-modal" class="email-modal-overlay">
+        <div class="email-modal-card">
+            <div class="email-modal-icon">⚔️</div>
+            <h3>Welcome to VibeBuild</h3>
+            <p>Rate 10 landing page designs and help us build something amazing. Enter your email to get early access!</p>
+            <form id="email-capture-form" class="email-modal-form">
+                <input type="email" id="email-capture-input" placeholder="you@example.com" required autocomplete="email">
+                <button type="submit" class="email-modal-submit">Start Rating →</button>
+            </form>
+            <button id="email-skip-btn" class="email-modal-skip">Skip for now</button>
+        </div>
+    </div>
     
     <!-- FLOATING DASHBOARD CONTROLLER -->
     <header class="showcase-controller">
@@ -1905,6 +1928,41 @@
                 </div>
             </section>
 
+        </div>
+    <!-- FLOATING INTERACTIVE LOGO AND SPEECH BUBBLE -->
+    <div id="vibes-gravity-logo-container" class="gravity-logo-container falling">
+        <div id="vibes-gravity-logo" class="gravity-logo-element">
+            <i data-lucide="swords" class="gravity-logo-icon"></i>
+        </div>
+        <div id="vibes-gravity-bubble" class="gravity-speech-bubble">
+            <span class="bubble-text">Important message, Open me!</span>
+        </div>
+    </div>
+
+    <!-- MESSAGE MODAL -->
+    <div id="vibes-creator-modal" class="creator-modal-overlay">
+        <div class="creator-modal-card">
+            <div class="creator-modal-header">
+                <div class="modal-logo-title">
+                    <i data-lucide="swords" class="modal-logo-icon" style="color: #6366f1;"></i>
+                    <h3>Message from VibeBuild Creator</h3>
+                </div>
+                <button id="vibes-creator-modal-close" class="modal-close-btn">&times;</button>
+            </div>
+            <div class="creator-modal-body">
+                <p>Hello Vibe coders,</p>
+                <p>How Are you? So right now we Are in Building phase and i know i made man mistakes But this is to just take opinion which Landing page looks good. I am also a vibe coder but i work on Multiple Full Stack projects Like A browser for AI Agents Named <strong>Agent X</strong>, An <strong>MCP Handler</strong> that handles Your MCP and token usage and everything, and few more projects.</p>
+                <p>But I am too weak in marketing Because We don't have Any Budget for Markeing. So if you share About this on your social profiles like reddit, x, and whateever you are using, it helps a lot for Me.</p>
+                <p>Thanks for sharing your opinion. We are launching soon!</p>
+            </div>
+            <div class="creator-modal-footer">
+                <p class="footer-prompt">Follow us on X and Join our Discord to get updated:</p>
+                <div class="modal-social-actions">
+                    <a href="https://x.com/" target="_blank" class="modal-action-btn x-btn"><i data-lucide="twitter" style="width:14px;height:14px;"></i> Follow on X</a>
+                    <a href="https://discord.gg/" target="_blank" class="modal-action-btn discord-btn"><i data-lucide="message-square" style="width:14px;height:14px;"></i> Join Discord</a>
+                    <button id="vibes-creator-modal-thanks" class="modal-action-btn thanks-btn">Thanks for sharing!</button>
+                </div>
+            </div>
         </div>
     </div>
 
