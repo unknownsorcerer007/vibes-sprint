@@ -156,24 +156,26 @@ body {
 .slider-container {
     display: flex;
     height: 100%;
-    /* Width will be set dynamically or defaults to 1000vw */
-    width: 1000vw;
+    /* Width will be set dynamically or defaults to 1100vw */
+    width: 1100vw;
     transition: var(--transition-slide);
 }
 
 .slide {
     width: 100vw;
-    height: 100%;
+    height: 100vh;
     position: relative;
+    box-sizing: border-box;
 }
 
 .lp-scrollable {
     width: 100%;
-    height: 100%;
+    height: 100vh;
     overflow-y: auto;
     overflow-x: hidden;
     padding-top: 96px; /* Offset for floating header */
     scroll-behavior: smooth;
+    box-sizing: border-box;
 }
 
 /* Custom scrollbar for landing page bodies */
@@ -2152,6 +2154,219 @@ body {
     color: #15803d;
     background: rgba(22, 163, 74, 0.08);
     border-color: rgba(22, 163, 74, 0.15);
+}
+
+/* Slide Rating Widgets */
+.slide-rating-container {
+    width: 90%;
+    max-width: 800px;
+    margin: 60px auto 20px auto;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+}
+
+.rating-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.rating-header h4 {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.stars-wrapper {
+    display: flex;
+    gap: 4px;
+}
+
+.star-btn {
+    font-size: 24px;
+    color: rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.star-btn:hover,
+.star-btn.hover-active {
+    color: #fbbf24;
+    transform: scale(1.2);
+    text-shadow: 0 0 8px rgba(251, 191, 36, 0.6);
+}
+
+.star-btn.active {
+    color: #fbbf24;
+    text-shadow: 0 0 10px rgba(251, 191, 36, 0.8);
+}
+
+.rating-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fbbf24;
+    background: rgba(251, 191, 36, 0.1);
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.btn-slide-next {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    background: #fff;
+    color: #000;
+}
+
+.btn-slide-next:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+/* Light Theme Overrides for Ratings */
+.lp-zenspace .slide-rating-container,
+.lp-caffeineco .slide-rating-container,
+.lp-edumind .slide-rating-container,
+.lp-terratravel .slide-rating-container {
+    border-top-color: rgba(0, 0, 0, 0.08);
+}
+
+.lp-zenspace .star-btn,
+.lp-caffeineco .star-btn,
+.lp-edumind .star-btn,
+.lp-terratravel .star-btn {
+    color: rgba(0, 0, 0, 0.15);
+}
+
+.lp-zenspace .btn-slide-next {
+    background: #2b3a30;
+    color: #fff;
+}
+.lp-caffeineco .btn-slide-next {
+    background: #3e2723;
+    color: #faf6f0;
+}
+.lp-edumind .btn-slide-next {
+    background: #fbbf24;
+    color: #1e1b4b;
+}
+.lp-terratravel .btn-slide-next {
+    background: #166534;
+    color: #fff;
+}
+
+/* Slide 10 Feedback Form Page Styles */
+.lp-feedbackform {
+    background: #090b11;
+    color: #f8fafc;
+}
+
+.feedback-form-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 680px;
+    margin: 0 auto;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+}
+
+.feedback-form-card h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 24px;
+    text-align: left;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #e2e8f0;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    outline: none;
+    transition: var(--transition-smooth);
+}
+
+.form-input:focus {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: #6366f1;
+    box-shadow: 0 0 10px rgba(99, 102, 241, 0.2);
+}
+
+.form-input.text-area {
+    height: 100px;
+    resize: vertical;
+}
+
+.form-input option {
+    background: #090b11;
+    color: #fff;
+}
+
+.btn-submit-form {
+    width: 100%;
+    height: 48px;
+    border: none;
+    border-radius: 8px;
+    background: #6366f1;
+    color: #fff;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    margin-top: 10px;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+}
+
+.btn-submit-form:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+}
+
+.feedback-success-msg {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: #10b981;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    border-radius: 8px;
+    width: 100%;
+    margin-top: 16px;
+    animation: fadeIn 0.4s ease;
 }
 
 /* RESPONSIVENESS */

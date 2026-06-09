@@ -3,7 +3,7 @@ lucide.createIcons();
 
 // STATE & CONFIG
 let currentSlide = 0;
-const totalSlides = 10;
+const totalSlides = 11;
 
 // DOM ELEMENTS (SLIDER)
 const sliderContainer = document.getElementById('slider-container');
@@ -283,3 +283,118 @@ shareButtons.forEach(btn => {
         }
     });
 });
+
+// --- STAR RATING & NAVIGATION LOGIC ---
+
+// Next Design Buttons Click Handlers
+const nextSlideBtns = document.querySelectorAll('.btn-slide-next');
+nextSlideBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        goToSlide(currentSlide + 1);
+    });
+});
+
+// Star Rating Interactive Logic
+const starsWrappers = document.querySelectorAll('.stars-wrapper');
+starsWrappers.forEach(wrapper => {
+    const stars = wrapper.querySelectorAll('.star-btn');
+    const ratingValueLabel = wrapper.closest('.rating-header').querySelector('.rating-value');
+    
+    stars.forEach(star => {
+        // Hover effects
+        star.addEventListener('mouseenter', () => {
+            const val = parseInt(star.getAttribute('data-value'));
+            stars.forEach(s => {
+                if (parseInt(s.getAttribute('data-value')) <= val) {
+                    s.classList.add('hover-active');
+                } else {
+                    s.classList.remove('hover-active');
+                }
+            });
+        });
+        
+        star.addEventListener('mouseleave', () => {
+            stars.forEach(s => s.classList.remove('hover-active'));
+        });
+        
+        // Click to set rating
+        star.addEventListener('click', () => {
+            const val = parseInt(star.getAttribute('data-value'));
+            stars.forEach(s => {
+                if (parseInt(s.getAttribute('data-value')) <= val) {
+                    s.classList.add('active');
+                } else {
+                    s.classList.remove('active');
+                }
+            });
+            if (ratingValueLabel) {
+                ratingValueLabel.textContent = `${val}/10`;
+            }
+        });
+    });
+});
+
+// Slide 10 Feedback Form Submission
+const btnSubmitFeedback = document.getElementById('btn-submit-feedback');
+if (btnSubmitFeedback) {
+    btnSubmitFeedback.addEventListener('click', () => {
+        const bestPageSelect = document.getElementById('best-page-select');
+        const upgradeSuggestions = document.getElementById('upgrade-suggestions');
+        const userQuestions = document.getElementById('user-questions');
+        const socialPostLink = document.getElementById('social-post-link');
+        const successMessage = document.getElementById('form-success-message');
+        
+        const bestPage = bestPageSelect.value;
+        const suggestions = upgradeSuggestions.value.trim();
+        const doubts = userQuestions.value.trim();
+        const urlValue = socialPostLink.value.trim();
+        
+        if (!bestPage) {
+            alert("Please select which landing page design you liked the most.");
+            return;
+        }
+        if (!suggestions) {
+            alert("Please suggest what upgrades or changes are needed for the designs.");
+            return;
+        }
+        if (!doubts) {
+            alert("Please enter any questions or doubts you have about VibeBuild.");
+            return;
+        }
+        
+        if (urlValue) {
+            try {
+                new URL(urlValue);
+            } catch (_) {
+                alert("Please enter a fully qualified URL (e.g. https://twitter.com/...)");
+                return;
+            }
+        }
+        
+        const formCard = document.querySelector('.feedback-form-card');
+        if (formCard) {
+            // Hide all input fields and submit button
+            const formGroups = formCard.querySelectorAll('.form-group, .btn-submit-form');
+            formGroups.forEach(el => el.style.display = 'none');
+            
+            successMessage.className = 'feedback-success-msg';
+            successMessage.style.display = 'flex';
+            
+            let payoutText = "";
+            if (urlValue) {
+                payoutText = "<br><strong>Payout Claimed:</strong> Social post verification in progress. Payout scheduled in 24 hours.";
+            } else {
+                payoutText = "<br>No payout claim submitted (empty link).";
+            }
+            
+            successMessage.innerHTML = `
+                <div>
+                    <span style="font-size: 20px; font-weight: bold; color: #10b981; margin-right: 8px;">✓</span>
+                    <strong>Feedback submitted successfully!</strong><br>
+                    Thank you for your valuable feedback. Your review will help shape VibeBuild.
+                    ${payoutText}
+                </div>
+            `;
+        }
+    });
+}
