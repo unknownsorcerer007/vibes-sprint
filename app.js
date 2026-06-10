@@ -20,6 +20,12 @@ const creatorModal = document.getElementById('vibes-creator-modal');
 const modalClose = document.getElementById('vibes-creator-modal-close');
 const modalThanks = document.getElementById('vibes-creator-modal-thanks');
 
+// DOM ELEMENTS (NEW X & DISCORD MASCOTS)
+const xMascotContainer = document.getElementById('vibes-x-mascot-container');
+const xMascot = document.getElementById('vibes-x-mascot');
+const discordMascotContainer = document.getElementById('vibes-discord-mascot-container');
+const discordMascot = document.getElementById('vibes-discord-mascot');
+
 // --- LOGO STATE, DIALOGUES & CRYING CONFIG ---
 const preOpenMessages = [
     "Hello Vibe Coder! 👋",
@@ -189,6 +195,14 @@ let stuckSide = 'left';
 let lastCursorX = window.innerWidth / 2;
 let lastCursorY = window.innerHeight / 2;
 
+// X and Discord Mascot state variables
+let xMascotX = window.innerWidth / 2 - 70;
+let xMascotY = window.innerHeight - 80;
+let discordMascotX = window.innerWidth / 2 + 70;
+let discordMascotY = window.innerHeight - 80;
+let isXHovered = false;
+let isDiscordHovered = false;
+
 const stuckMessages = [
     "Help me! I'm stuck! 🥺",
     "Wait, don't leave me behind! 😭",
@@ -204,6 +218,25 @@ const teasingMessages = [
     "Too slow! ⚡😜",
     "Just kidding! Did I scare you? 🤭"
 ];
+
+const xMessages = [
+    "Follow us on X! 🐦",
+    "Spread the word! 𝕏",
+    "Post about your rating! 🚀",
+    "Let's go viral! 📈",
+    "We need your support! 🥺"
+];
+
+const discordMessages = [
+    "Join our Discord! 💬",
+    "Vibe coders assemble! ⚔️",
+    "Need help? Ask here! 🙋‍♂️",
+    "Share your ratings! 👾",
+    "Let's build together! 💻"
+];
+
+let xBubbleInterval = null;
+let discordBubbleInterval = null;
 let cryingInterval = null;
 
 // Touch device detection to bypass hover freeze on screens
@@ -243,6 +276,40 @@ function startBubbleRotation(messagesArray, storageKey) {
         localStorage.setItem(storageKey, index.toString());
         bubbleText.textContent = messagesArray[index];
     }, 3500);
+}
+
+// X and Discord sequential bubble systems
+function startXAndDiscordBubbles() {
+    if (xBubbleInterval) clearInterval(xBubbleInterval);
+    if (discordBubbleInterval) clearInterval(discordBubbleInterval);
+
+    const xBubbleElement = document.getElementById('vibes-x-bubble');
+    const xBubbleText = xBubbleElement ? xBubbleElement.querySelector('.bubble-text') : null;
+    if (xBubbleText) {
+        let xIdx = parseInt(localStorage.getItem('vibebuild_msg_idx_x') || '0');
+        if (isNaN(xIdx) || xIdx >= xMessages.length || xIdx < 0) xIdx = 0;
+        xBubbleText.textContent = xMessages[xIdx];
+        
+        xBubbleInterval = setInterval(() => {
+            xIdx = (xIdx + 1) % xMessages.length;
+            localStorage.setItem('vibebuild_msg_idx_x', xIdx.toString());
+            xBubbleText.textContent = xMessages[xIdx];
+        }, 4000);
+    }
+
+    const discordBubbleElement = document.getElementById('vibes-discord-bubble');
+    const discordBubbleText = discordBubbleElement ? discordBubbleElement.querySelector('.bubble-text') : null;
+    if (discordBubbleText) {
+        let dcIdx = parseInt(localStorage.getItem('vibebuild_msg_idx_discord') || '0');
+        if (isNaN(dcIdx) || dcIdx >= discordMessages.length || dcIdx < 0) dcIdx = 0;
+        discordBubbleText.textContent = discordMessages[dcIdx];
+        
+        discordBubbleInterval = setInterval(() => {
+            dcIdx = (dcIdx + 1) % discordMessages.length;
+            localStorage.setItem('vibebuild_msg_idx_discord', dcIdx.toString());
+            discordBubbleText.textContent = discordMessages[dcIdx];
+        }, 4500);
+    }
 }
 
 // Crying functions
@@ -911,12 +978,23 @@ lucide.createIcons();
 
 // Helper to transition the logo to interactive mode
 function initializeInteractiveLogo() {
-    if (!gravityContainer || !gravityContainer.classList.contains('falling')) return;
+    if (gravityContainer && gravityContainer.classList.contains('falling')) {
+        gravityContainer.classList.remove('falling');
+    }
+    if (xMascotContainer && xMascotContainer.classList.contains('falling')) {
+        xMascotContainer.classList.remove('falling');
+    }
+    if (discordMascotContainer && discordMascotContainer.classList.contains('falling')) {
+        discordMascotContainer.classList.remove('falling');
+    }
     
-    gravityContainer.classList.remove('falling');
     // Position it at the bottom left initially
     logoX = window.innerWidth * 0.05;
     logoY = window.innerHeight - 80;
+    xMascotX = logoX - 70;
+    xMascotY = logoY + 10;
+    discordMascotX = logoX + 70;
+    discordMascotY = logoY + 10;
     
     if (isStuck) {
         // Keep the stuck coordinates and state intact
@@ -939,8 +1017,21 @@ function initializeInteractiveLogo() {
             startBubbleRotation(preOpenMessages, 'vibebuild_msg_idx_pre');
         }
     }
-    gravityContainer.style.left = `${logoX}px`;
-    gravityContainer.style.top = `${logoY}px`;
+
+    startXAndDiscordBubbles();
+
+    if (gravityContainer) {
+        gravityContainer.style.left = `${logoX}px`;
+        gravityContainer.style.top = `${logoY}px`;
+    }
+    if (xMascotContainer) {
+        xMascotContainer.style.left = `${xMascotX}px`;
+        xMascotContainer.style.top = `${xMascotY}px`;
+    }
+    if (discordMascotContainer) {
+        discordMascotContainer.style.left = `${discordMascotX}px`;
+        discordMascotContainer.style.top = `${discordMascotY}px`;
+    }
 }
 
 // AnimationEnd Listener for Gravity Fall
@@ -954,6 +1045,8 @@ if (gravityContainer) {
     // Fallback timer: Force interactive state after 2 seconds even if animationend event fails (critical for mobile support)
     setTimeout(() => {
         initializeInteractiveLogo();
+        if (xMascotContainer) xMascotContainer.classList.remove('falling');
+        if (discordMascotContainer) discordMascotContainer.classList.remove('falling');
     }, 2000);
 
     // Handle hover states for click convenience (Hover Freeze) - bypassed on touch devices to prevent getting stuck
@@ -976,6 +1069,50 @@ if (gravityContainer) {
                 startBubbleRotation(postOpenMessages, 'vibebuild_msg_idx_post');
             }
         }
+    });
+}
+
+// X Mascot listeners
+if (xMascotContainer) {
+    xMascotContainer.addEventListener('animationend', (e) => {
+        if (e.animationName === 'gravity-fall') {
+            xMascotContainer.classList.remove('falling');
+            startXAndDiscordBubbles();
+        }
+    });
+
+    xMascotContainer.addEventListener('mouseenter', () => {
+        if (!isTouchDevice) isXHovered = true;
+    });
+
+    xMascotContainer.addEventListener('mouseleave', () => {
+        isXHovered = false;
+    });
+
+    xMascotContainer.addEventListener('click', () => {
+        window.open('https://x.com/', '_blank');
+    });
+}
+
+// Discord Mascot listeners
+if (discordMascotContainer) {
+    discordMascotContainer.addEventListener('animationend', (e) => {
+        if (e.animationName === 'gravity-fall') {
+            discordMascotContainer.classList.remove('falling');
+            startXAndDiscordBubbles();
+        }
+    });
+
+    discordMascotContainer.addEventListener('mouseenter', () => {
+        if (!isTouchDevice) isDiscordHovered = true;
+    });
+
+    discordMascotContainer.addEventListener('mouseleave', () => {
+        isDiscordHovered = false;
+    });
+
+    discordMascotContainer.addEventListener('click', () => {
+        window.open(DISCORD_LINK, '_blank');
     });
 }
 
@@ -1075,6 +1212,36 @@ function tickLogoPhysics() {
         
         gravityContainer.style.left = `${logoX}px`;
         gravityContainer.style.top = `${logoY}px`;
+        
+        // X Mascot Physics
+        if (xMascotContainer) {
+            const xTargetX = isXHovered ? xMascotX : logoX - 70;
+            const xTargetY = isXHovered ? xMascotY : logoY + 10;
+            xMascotX += (xTargetX - xMascotX) * 0.06;
+            xMascotY += (xTargetY - xMascotY) * 0.06;
+
+            const size = 60;
+            xMascotX = Math.max(10, Math.min(window.innerWidth - size - 10, xMascotX));
+            xMascotY = Math.max(10, Math.min(window.innerHeight - size - 10, xMascotY));
+
+            xMascotContainer.style.left = `${xMascotX}px`;
+            xMascotContainer.style.top = `${xMascotY}px`;
+        }
+
+        // Discord Mascot Physics
+        if (discordMascotContainer) {
+            const discordTargetX = isDiscordHovered ? discordMascotX : logoX + 70;
+            const discordTargetY = isDiscordHovered ? discordMascotY : logoY + 10;
+            discordMascotX += (discordTargetX - discordMascotX) * 0.06;
+            discordMascotY += (discordTargetY - discordMascotY) * 0.06;
+
+            const size = 60;
+            discordMascotX = Math.max(10, Math.min(window.innerWidth - size - 10, discordMascotX));
+            discordMascotY = Math.max(10, Math.min(window.innerHeight - size - 10, discordMascotY));
+
+            discordMascotContainer.style.left = `${discordMascotX}px`;
+            discordMascotContainer.style.top = `${discordMascotY}px`;
+        }
     }
     requestAnimationFrame(tickLogoPhysics);
 }
@@ -1117,6 +1284,7 @@ if (currentSlide === 10) {
 } else {
     // Start standard cute request bubble rotation
     startBubbleRotation(preOpenMessages, 'vibebuild_msg_idx_pre');
+    startXAndDiscordBubbles();
 }
 
 // ========================================================

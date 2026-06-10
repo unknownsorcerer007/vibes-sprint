@@ -3263,3 +3263,63 @@ body {
 .email-modal-skip:hover {
     color: #94a3b8;
 }
+
+/* X AND DISCORD MASCOTS STYLE OVERRIDES */
+.gravity-logo-container.x-mascot.falling {
+    left: 2%;
+    animation-delay: 0.15s; /* stagger falls slightly for premium vibe! */
+}
+.gravity-logo-container.discord-mascot.falling {
+    left: 8%;
+    animation-delay: 0.3s;
+}
+
+/* X Mascot branding */
+.gravity-logo-element.x-logo {
+    border-color: rgba(56, 189, 248, 0.4);
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+.gravity-logo-element.x-logo:hover {
+    border-color: #38bdf8;
+    box-shadow: 0 0 25px rgba(56, 189, 248, 0.6);
+}
+.gravity-logo-icon.x-icon {
+    color: #38bdf8;
+    transform: rotate(0deg) !important;
+}
+.gravity-logo-element.x-logo:hover .gravity-logo-icon.x-icon {
+    color: #fff;
+    transform: scale(1.1) rotate(0deg) !important;
+}
+.x-mascot .gravity-speech-bubble {
+    border-color: rgba(56, 189, 248, 0.5);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 10px rgba(56, 189, 248, 0.2);
+}
+.x-mascot .gravity-speech-bubble::before {
+    border-color: rgba(56, 189, 248, 0.5) transparent transparent transparent;
+}
+
+/* Discord Mascot branding */
+.gravity-logo-element.discord-logo {
+    border-color: rgba(129, 140, 248, 0.4);
+    box-shadow: 0 0 20px rgba(129, 140, 248, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+.gravity-logo-element.discord-logo:hover {
+    border-color: #818cf8;
+    box-shadow: 0 0 25px rgba(129, 140, 248, 0.6);
+}
+.gravity-logo-icon.discord-icon {
+    color: #818cf8;
+    transform: rotate(0deg) !important;
+}
+.gravity-logo-element.discord-logo:hover .gravity-logo-icon.discord-icon {
+    color: #fff;
+    transform: scale(1.1) rotate(0deg) !important;
+}
+.discord-mascot .gravity-speech-bubble {
+    border-color: rgba(129, 140, 248, 0.5);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 10px rgba(129, 140, 248, 0.2);
+}
+.discord-mascot .gravity-speech-bubble::before {
+    border-color: rgba(129, 140, 248, 0.5) transparent transparent transparent;
+}
