@@ -102,18 +102,35 @@ window.addEventListener('touchstart', function onTouchStart() {
 }, { passive: true });
 
 // Function to start speech bubble message rotation
-function startBubbleRotation(messagesArray) {
+// Helper to get next message sequentially using localStorage
+function getNextMessage(messagesArray, storageKey) {
+    let index = parseInt(localStorage.getItem(storageKey) || '0');
+    if (isNaN(index) || index >= messagesArray.length || index < 0) {
+        index = 0;
+    }
+    const message = messagesArray[index];
+    const nextIndex = (index + 1) % messagesArray.length;
+    localStorage.setItem(storageKey, nextIndex.toString());
+    return message;
+}
+
+// Function to start speech bubble message rotation
+function startBubbleRotation(messagesArray, storageKey) {
     if (bubbleInterval) clearInterval(bubbleInterval);
     const bubbleElement = document.getElementById('vibes-gravity-bubble');
     const bubbleText = bubbleElement ? bubbleElement.querySelector('.bubble-text') : null;
     if (!bubbleText) return;
     
-    currentMessageIdx = 0;
-    bubbleText.textContent = messagesArray[currentMessageIdx];
+    let index = parseInt(localStorage.getItem(storageKey) || '0');
+    if (isNaN(index) || index >= messagesArray.length || index < 0) {
+        index = 0;
+    }
+    bubbleText.textContent = messagesArray[index];
     
     bubbleInterval = setInterval(() => {
-        currentMessageIdx = (currentMessageIdx + 1) % messagesArray.length;
-        bubbleText.textContent = messagesArray[currentMessageIdx];
+        index = (index + 1) % messagesArray.length;
+        localStorage.setItem(storageKey, index.toString());
+        bubbleText.textContent = messagesArray[index];
     }, 3500);
 }
 
@@ -164,8 +181,8 @@ function triggerStuckState() {
     const bubbleElement = document.getElementById('vibes-gravity-bubble');
     const bubbleText = bubbleElement ? bubbleElement.querySelector('.bubble-text') : null;
     if (bubbleText) {
-        const randomMsg = stuckMessages[Math.floor(Math.random() * stuckMessages.length)];
-        bubbleText.textContent = randomMsg;
+        const nextMsg = getNextMessage(stuckMessages, 'vibebuild_msg_idx_stuck');
+        bubbleText.textContent = nextMsg;
     }
 }
 
@@ -208,7 +225,7 @@ function goToSlide(index) {
         targetX = 20;
         targetY = 20;
         startCrying();
-        startBubbleRotation(cryingMessages);
+        startBubbleRotation(cryingMessages, 'vibebuild_msg_idx_cry');
     } else {
         stopCrying();
         
@@ -223,9 +240,9 @@ function goToSlide(index) {
                 isLogoInteractive = true;
             }
             if (hasReadCreatorMessage) {
-                startBubbleRotation(postOpenMessages);
+                startBubbleRotation(postOpenMessages, 'vibebuild_msg_idx_post');
             } else {
-                startBubbleRotation(preOpenMessages);
+                startBubbleRotation(preOpenMessages, 'vibebuild_msg_idx_pre');
             }
         }
     }
@@ -800,15 +817,15 @@ function initializeInteractiveLogo() {
         targetY = 20;
         isLogoInteractive = false;
         startCrying();
-        startBubbleRotation(cryingMessages);
+        startBubbleRotation(cryingMessages, 'vibebuild_msg_idx_cry');
     } else {
         targetX = logoX;
         targetY = logoY;
         isLogoInteractive = true;
         if (hasReadCreatorMessage) {
-            startBubbleRotation(postOpenMessages);
+            startBubbleRotation(postOpenMessages, 'vibebuild_msg_idx_post');
         } else {
-            startBubbleRotation(preOpenMessages);
+            startBubbleRotation(preOpenMessages, 'vibebuild_msg_idx_pre');
         }
     }
     gravityContainer.style.left = `${logoX}px`;
@@ -845,7 +862,7 @@ if (gravityContainer) {
             creatorModal.classList.add('active');
             if (currentSlide !== 10 && !hasReadCreatorMessage) {
                 hasReadCreatorMessage = true;
-                startBubbleRotation(postOpenMessages);
+                startBubbleRotation(postOpenMessages, 'vibebuild_msg_idx_post');
             }
         }
     });
@@ -906,7 +923,7 @@ function tickLogoPhysics() {
                 const bubbleElement = document.getElementById('vibes-gravity-bubble');
                 const bubbleText = bubbleElement ? bubbleElement.querySelector('.bubble-text') : null;
                 if (bubbleText) {
-                    const randomTease = teasingMessages[Math.floor(Math.random() * teasingMessages.length)];
+                    const randomTease = getNextMessage(teasingMessages, 'vibebuild_msg_idx_tease');
                     bubbleText.textContent = randomTease;
                 }
                 
@@ -918,9 +935,9 @@ function tickLogoPhysics() {
                         isLogoInteractive = true;
                     }
                     if (hasReadCreatorMessage) {
-                        startBubbleRotation(postOpenMessages);
+                        startBubbleRotation(postOpenMessages, 'vibebuild_msg_idx_post');
                     } else {
-                        startBubbleRotation(preOpenMessages);
+                        startBubbleRotation(preOpenMessages, 'vibebuild_msg_idx_pre');
                     }
                 }, 1500);
             }
@@ -958,7 +975,7 @@ function closeCreatorModal() {
         creatorModal.classList.remove('active');
         if (currentSlide !== 10 && !hasReadCreatorMessage) {
             hasReadCreatorMessage = true;
-            startBubbleRotation(postOpenMessages);
+            startBubbleRotation(postOpenMessages, 'vibebuild_msg_idx_post');
         }
     }
 }
@@ -985,9 +1002,9 @@ if (currentSlide === 10) {
     targetX = 20;
     targetY = 20;
     startCrying();
-    startBubbleRotation(cryingMessages);
+    startBubbleRotation(cryingMessages, 'vibebuild_msg_idx_cry');
 } else {
     // Start standard cute request bubble rotation
-    startBubbleRotation(preOpenMessages);
+    startBubbleRotation(preOpenMessages, 'vibebuild_msg_idx_pre');
 }
 
