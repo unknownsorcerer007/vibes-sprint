@@ -13,6 +13,13 @@ const designSelect = document.getElementById('design-select');
 const slideBadge = document.getElementById('slide-badge');
 const scrollableContainers = document.querySelectorAll('.lp-scrollable');
 
+// DOM ELEMENTS (GRAVITY LOGO & CREATOR MODAL)
+const gravityContainer = document.getElementById('vibes-gravity-logo-container');
+const gravityLogo = document.getElementById('vibes-gravity-logo');
+const creatorModal = document.getElementById('vibes-creator-modal');
+const modalClose = document.getElementById('vibes-creator-modal-close');
+const modalThanks = document.getElementById('vibes-creator-modal-thanks');
+
 // --- LOGO STATE, DIALOGUES & CRYING CONFIG ---
 const preOpenMessages = [
     "Hello Vibe Coder! 👋",
@@ -671,47 +678,6 @@ if (btnSubmitFeedback) {
 }
 
 // ========================================================
-// EMAIL CAPTURE MODAL (Fix 2)
-// ========================================================
-const emailModal = document.getElementById('email-capture-modal');
-const emailForm = document.getElementById('email-capture-form');
-const emailInput = document.getElementById('email-capture-input');
-const emailSkipBtn = document.getElementById('email-skip-btn');
-
-if (emailModal) {
-    // Show modal only if user hasn't submitted email yet
-    const savedEmail = localStorage.getItem('vibebuild_user_email');
-    if (!savedEmail) {
-        // Show modal after a short delay for better UX
-        setTimeout(() => {
-            emailModal.classList.add('visible');
-        }, 1500);
-    }
-
-    // Handle email submit
-    if (emailForm) {
-        emailForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = emailInput.value.trim();
-            if (email) {
-                localStorage.setItem('vibebuild_user_email', email);
-                emailModal.classList.remove('visible');
-                // Sync email with existing ratings
-                syncRatingsToDatabase();
-            }
-        });
-    }
-
-    // Handle skip
-    if (emailSkipBtn) {
-        emailSkipBtn.addEventListener('click', () => {
-            localStorage.setItem('vibebuild_user_email', 'skipped');
-            emailModal.classList.remove('visible');
-        });
-    }
-}
-
-// ========================================================
 // CTA BUTTONS → DISCORD LINK (Fix 3)
 // ========================================================
 const DISCORD_LINK = 'https://discord.gg/vibebuild'; // Replace with actual Discord invite
@@ -725,17 +691,7 @@ ctaButtons.forEach(btn => {
         btn.id === 'btn-generate-brief') return;
     
     btn.addEventListener('click', (e) => {
-        // Check if user has provided email
-        const email = localStorage.getItem('vibebuild_user_email');
-        if (!email || email === 'skipped') {
-            // Show email modal first
-            if (emailModal) {
-                emailModal.classList.add('visible');
-            }
-        } else {
-            // Open Discord
-            window.open(DISCORD_LINK, '_blank');
-        }
+        window.open(DISCORD_LINK, '_blank');
     });
 });
 
@@ -744,23 +700,13 @@ const navCtaLinks = document.querySelectorAll('.lp-btn-primary, .lp-btn-cta, .lp
 navCtaLinks.forEach(link => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
-        const email = localStorage.getItem('vibebuild_user_email');
-        if (!email || email === 'skipped') {
-            if (emailModal) emailModal.classList.add('visible');
-        } else {
-            window.open(DISCORD_LINK, '_blank');
-        }
+        window.open(DISCORD_LINK, '_blank');
     });
 });
 
 // ========================================================
 // FLOATING GRAVITY LOGO & CREATOR MODAL INTERACTIVITY
 // ========================================================
-const gravityContainer = document.getElementById('vibes-gravity-logo-container');
-const gravityLogo = document.getElementById('vibes-gravity-logo');
-const creatorModal = document.getElementById('vibes-creator-modal');
-const modalClose = document.getElementById('vibes-creator-modal-close');
-const modalThanks = document.getElementById('vibes-creator-modal-thanks');
 
 // Initialize Lucide Icons for injected modal buttons
 lucide.createIcons();
