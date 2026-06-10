@@ -219,6 +219,105 @@ const teasingMessages = [
     "Just kidding! Did I scare you? 🤭"
 ];
 
+// --- PAGE-BOUNDARY STUCK MESSAGES (per landing page theme) ---
+const pageStuckMessages = [
+    // Slide 0 → 1: Zenspace (calm) to Cyberpunk
+    [
+        "Wait! The zen vibes won't let me leave! 🧘‍♂️🚧",
+        "This page is SO peaceful I can't move! Help! 😫🌿",
+        "The wellness energy is TRAPPING me! 🥺✨",
+        "I'm stuck in the calm zone! It's too relaxing! 😴🧱",
+        "The page boundary won't let me through! *bangs wall* 🔨"
+    ],
+    // Slide 1 → 2: Cyberpunk to next
+    [
+        "The neon walls are blocking me! 🚧💜",
+        "ERROR: Mascot.exe cannot cross page boundary! 🤖❌",
+        "The cyberpunk firewall is too strong! 😤🔥",
+        "SYSTEM ALERT: I'm stuck between pages! 🆘📟",
+        "This dark theme is swallowing me! Help! 😱🌑"
+    ],
+    // Slide 2 → 3: 
+    [
+        "Inclusivity doesn't include ME crossing pages?! 😤🚪",
+        "No coding needed but I need coding to escape! 🥺💻",
+        "I'm stuck at the page border! This is NOT inclusive! 😭",
+        "HELLO?! Even I need accessibility features! 🆘♿",
+        "The invisible wall doesn't care about my feelings! 💔🧱"
+    ],
+    // Slide 3 → 4:
+    [
+        "Speed angle but I'm moving at ZERO speed! 🏎️💨❌",
+        "Build & Win TODAY? I can't even MOVE today! 😤⏰",
+        "Fast payouts but slow mascot escapes! 😫🐌",
+        "I'm in a speed competition with a WALL and losing! 🧱🏃‍♂️",
+        "Same-day results? I'll be stuck here for DAYS! 📅😭"
+    ],
+    // Slide 4 → 5:
+    [
+        "60% payouts but 0% chance of me escaping! 💰🚫",
+        "The transparency wall is... transparently blocking me! 🙄🪟",
+        "I can SEE the next page but can't REACH it! 😤👀",
+        "Even with full transparency I'm stuck! 📊🧱",
+        "My payout is freedom and I'm NOT getting it! 💸😭"
+    ],
+    // Slide 5 → 6:
+    [
+        "1,000 reviewers but NOBODY is rescuing me! 😭👥",
+        "Community power? Use that power to SAVE ME! 🆘🤝",
+        "The community decided I should stay stuck! Unfair! 😤⚖️",
+        "I need 1,000 people to push me through this wall! 🧱💪",
+        "The reviewers are reviewing my suffering! 😫📋"
+    ],
+    // Slide 6 → 7:
+    [
+        "My constraint: I CAN'T LEAVE THIS PAGE! 🎯🚧",
+        "Unique brief: survive being stuck at the border! 📝😤",
+        "3,000 constraints and ALL of them are walls! 🧱🧱🧱",
+        "The brief generator gave me: 'Stay stuck forever' 😭📋",
+        "This is the most CONSTRAINED I've ever been! 🔒🥺"
+    ],
+    // Slide 7 → 8:
+    [
+        "Ship a REAL product? I can't even ship MYSELF! 🚢❌",
+        "Live product required but I'm a DEAD mascot stuck here! 💀🧱",
+        "My deployment failed at the page boundary! 🚀💥",
+        "GitHub won't let me push past this wall! 😤🔧",
+        "Not a prototype — a REAL stuck mascot! 📦😭"
+    ],
+    // Slide 8 → 9:
+    [
+        "Climbing the season? I can't climb this WALL! 🧗‍♂️🧱",
+        "My XP is maxed out but my ESCAPE skill is zero! 📊😤",
+        "Streak protection doesn't protect against page walls! 🛡️❌",
+        "I've been competing against this border for ages! 🏆🚧",
+        "Season leaderboard: Wall - 1, Me - 0 😭📉"
+    ],
+    // Slide 9 → 10 (review):
+    [
+        "$9 entry but the exit is BLOCKED! 💸🚧",
+        "Enter. Build. Get... STUCK?! That's NOT the deal! 😤",
+        "I entered for $9 and now I can't leave! Scam! 🙄💰",
+        "Get paid? I'd pay to GET OUT of here! 💸😭",
+        "Minimal & direct? This wall is MAXIMALLY in my way! 🧱🤬"
+    ]
+];
+
+const pageBreakthroughMessages = [
+    "I BROKE THROUGH! Freedom!! 🎉💥",
+    "THE WALL IS DOWN! Take THAT! 😤💪",
+    "Finally! I thought I'd be stuck forever! 😮‍💨✨",
+    "HAHA! No wall can hold ME! 🦸‍♂️💫",
+    "I'm FREEEEE! *dramatic slow motion* 🏃‍♂️✨",
+    "Page boundary? More like page DESTROYED! 💥🔨",
+    "Thanks for rescuing me! You're my hero! 🥺❤️",
+    "*breaks through wall like Kool-Aid man* OH YEAH! 💪😎"
+];
+
+let stuckAtPage = -1; // which page boundary mascot is stuck at
+let wallBangCount = 0; // how many times mascot has banged the wall
+let wallBangInterval = null;
+
 const xMessages = [
     "Follow us on X! 🐦",
     "Spread the word! 𝕏",
@@ -334,17 +433,15 @@ function stopCrying() {
     }
 }
 
-// Stuck state behavior
+// Stuck state behavior — original (random edge stuck)
 function triggerStuckState() {
-    if (currentSlide === 10) return; // Don't trigger on final crying slide
+    if (currentSlide === 10) return;
     
     isStuck = true;
     isTeasing = false;
     isLogoInteractive = false;
     
     stuckSide = Math.random() < 0.5 ? 'left' : 'right';
-    
-    // Position vertically on the screen (centered-ish, not offscreen)
     const stuckY = Math.random() * (window.innerHeight - 250) + 120;
     
     if (stuckSide === 'left') {
@@ -354,7 +451,6 @@ function triggerStuckState() {
     }
     targetY = stuckY;
     
-    // Change speech bubble immediately and clear rotation interval
     if (bubbleInterval) clearInterval(bubbleInterval);
     const bubbleElement = document.getElementById('vibes-gravity-bubble');
     const bubbleText = bubbleElement ? bubbleElement.querySelector('.bubble-text') : null;
@@ -362,6 +458,143 @@ function triggerStuckState() {
         const nextMsg = getNextMessage(stuckMessages, 'vibebuild_msg_idx_stuck');
         bubbleText.textContent = nextMsg;
     }
+}
+
+// --- PAGE-BOUNDARY STUCK (mascot can't cross between landing pages) ---
+function triggerPageBoundaryStuck(fromSlide, toSlide, direction) {
+    if (toSlide === 10 || toSlide < 0) return;
+    
+    isStuck = true;
+    isTeasing = false;
+    isLogoInteractive = false;
+    stuckAtPage = fromSlide;
+    wallBangCount = 0;
+    
+    // Stuck on the edge where the page "boundary" is
+    // Going forward → stuck on RIGHT edge (can't cross to next page)
+    // Going backward → stuck on LEFT edge
+    if (direction === 'forward') {
+        stuckSide = 'right';
+        targetX = window.innerWidth - 70;
+    } else {
+        stuckSide = 'left';
+        targetX = 10;
+    }
+    
+    // Center vertically for visibility
+    targetY = window.innerHeight / 2 - 30 + (Math.random() * 60 - 30);
+    
+    // Show page-specific stuck message
+    if (bubbleInterval) clearInterval(bubbleInterval);
+    const bubbleEl = document.getElementById('vibes-gravity-bubble');
+    const bubbleT = bubbleEl ? bubbleEl.querySelector('.bubble-text') : null;
+    
+    // Pick messages from the page's stuck array
+    const pageIdx = Math.min(fromSlide, pageStuckMessages.length - 1);
+    const pageMsgs = pageStuckMessages[pageIdx];
+    const firstMsg = pageMsgs[Math.floor(Math.random() * pageMsgs.length)];
+    
+    if (bubbleT) {
+        bubbleT.textContent = firstMsg;
+    }
+    
+    // Start wall-banging animation — mascot repeatedly hits the wall
+    startWallBanging(direction, pageIdx);
+}
+
+// --- WALL BANGING ANIMATION ---
+function startWallBanging(direction, pageIdx) {
+    if (wallBangInterval) clearInterval(wallBangInterval);
+    
+    const edgeX = direction === 'forward' ? window.innerWidth - 70 : 10;
+    const bangOffset = direction === 'forward' ? -25 : 25;
+    
+    wallBangInterval = setInterval(() => {
+        if (!isStuck) {
+            clearInterval(wallBangInterval);
+            wallBangInterval = null;
+            return;
+        }
+        
+        wallBangCount++;
+        
+        // Lunge toward wall then bounce back
+        targetX = edgeX;
+        setTimeout(() => {
+            if (!isStuck) return;
+            // Bounce back slightly
+            targetX = edgeX + bangOffset;
+            
+            // Shake on impact
+            if (gravityContainer) {
+                gravityContainer.classList.add('shaking');
+                setTimeout(() => gravityContainer.classList.remove('shaking'), 300);
+            }
+        }, 200);
+        
+        // Cycle through page-specific messages
+        const pageMsgs = pageStuckMessages[Math.min(pageIdx, pageStuckMessages.length - 1)];
+        const bubbleEl = document.getElementById('vibes-gravity-bubble');
+        const bubbleT = bubbleEl ? bubbleEl.querySelector('.bubble-text') : null;
+        if (bubbleT && pageMsgs) {
+            bubbleT.textContent = pageMsgs[wallBangCount % pageMsgs.length];
+        }
+        
+        // After 4+ bangs — mascot gets desperate, show extra drama
+        if (wallBangCount === 4) {
+            if (bubbleT) bubbleT.textContent = "*BANG BANG BANG* LET ME THROUGH!! 🔨🔨🔨";
+        }
+        if (wallBangCount === 6) {
+            if (bubbleT) bubbleT.textContent = "I've been banging this wall for AGES! 😤🧱💥";
+        }
+        
+        // After 8 bangs — break through automatically
+        if (wallBangCount >= 8) {
+            clearInterval(wallBangInterval);
+            wallBangInterval = null;
+            breakThroughWall(direction);
+        }
+        
+    }, 1200); // Bang every 1.2 seconds
+}
+
+// --- BREAK THROUGH THE WALL ---
+function breakThroughWall(direction) {
+    isStuck = false;
+    isTeasing = false;
+    stuckAtPage = -1;
+    wallBangCount = 0;
+    
+    // Dramatic breakthrough — dash to center of screen
+    const centerX = window.innerWidth / 2 - 30;
+    const centerY = window.innerHeight / 2;
+    targetX = centerX;
+    targetY = centerY;
+    
+    // Show breakthrough message
+    const bubbleEl = document.getElementById('vibes-gravity-bubble');
+    const bubbleT = bubbleEl ? bubbleEl.querySelector('.bubble-text') : null;
+    if (bubbleT) {
+        bubbleT.textContent = pageBreakthroughMessages[Math.floor(Math.random() * pageBreakthroughMessages.length)];
+    }
+    
+    // Victory spin + sparkles
+    if (gravityContainer) {
+        gravityContainer.classList.add('spinning');
+        setTimeout(() => gravityContainer.classList.remove('spinning'), 600);
+    }
+    
+    // Resume following cursor after celebration
+    setTimeout(() => {
+        if (gravityContainer && !gravityContainer.classList.contains('falling')) {
+            isLogoInteractive = true;
+        }
+        if (hasReadCreatorMessage) {
+            startBubbleRotation(postOpenMessages, 'vibebuild_msg_idx_post');
+        } else {
+            startBubbleRotation(preOpenMessages, 'vibebuild_msg_idx_pre');
+        }
+    }, 2000);
 }
 
 // --- SLIDER NAVIGATION LOGIC ---
@@ -376,6 +609,7 @@ function goToSlide(index) {
         scrollableContainers[currentSlide].scrollTop = 0;
     }
 
+    const previousSlide = currentSlide; // Track for page-boundary stuck direction
     currentSlide = index;
 
     // Transition container horizontally
@@ -395,10 +629,15 @@ function goToSlide(index) {
     btnNext.style.opacity = (currentSlide === totalSlides - 1) ? '0.4' : '1';
     btnNext.style.pointerEvents = (currentSlide === totalSlides - 1) ? 'none' : 'auto';
 
+    // Track slide direction for page-boundary stuck
+    const slideDirection = index > previousSlide ? 'forward' : 'backward';
+    
     // Slide 10 (Review Page) specific logo interaction & crying effect
     if (currentSlide === 10) {
+        // Stop any wall banging
+        if (wallBangInterval) { clearInterval(wallBangInterval); wallBangInterval = null; }
         isLogoInteractive = false;
-        isStuck = false; // Reset if stuck
+        isStuck = false;
         isTeasing = false;
         targetX = 20;
         targetY = 20;
@@ -407,12 +646,20 @@ function goToSlide(index) {
     } else {
         stopCrying();
         
-        // Stuck State Trigger Chance: 35% chance when changing pages
-        if (Math.random() < 0.35) {
+        // Page-Boundary Stuck: 45% chance when switching between landing pages (slides 0-9)
+        // Only trigger if actually changing slides (not loading same slide)
+        if (previousSlide !== index && previousSlide < 10 && Math.random() < 0.45) {
+            triggerPageBoundaryStuck(previousSlide, index, slideDirection);
+        }
+        // Original random edge stuck: 20% chance on remaining cases
+        else if (Math.random() < 0.20) {
             triggerStuckState();
         } else {
+            // Clean state — stop any wall banging
+            if (wallBangInterval) { clearInterval(wallBangInterval); wallBangInterval = null; }
             isStuck = false;
             isTeasing = false;
+            stuckAtPage = -1;
             // Only return to follow mode if it's no longer falling
             if (gravityContainer && !gravityContainer.classList.contains('falling')) {
                 isLogoInteractive = true;
