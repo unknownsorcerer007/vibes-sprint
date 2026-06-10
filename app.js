@@ -28,7 +28,12 @@ const preOpenMessages = [
     "Can you open this? 🌸",
     "I made some mistakes... read here! 💔",
     "Hey! Check this out! ✨",
-    "Please hear me out... 🥺"
+    "Please hear me out... 🥺",
+    "Pssst... over here! 🫣",
+    "You're ignoring me aren't you... 😤",
+    "EXCUSE ME SIR/MA'AM! 📢",
+    "I will follow you FOREVER 🏃‍♂️",
+    "I'm right here... notice me! 🥹"
 ];
 
 const postOpenMessages = [
@@ -48,14 +53,120 @@ const postOpenMessages = [
     "Are we partners in vibe coding? 🤝",
     "Do you believe in AI gravity? 🌌",
     "You move that cursor like a pro! ⚡",
-    "I'm so glad we are friends! 🤗"
+    "I'm so glad we are friends! 🤗",
+    "We're besties now, right? RIGHT?! 🥺",
+    "I've been thinking about you... 💭",
+    "You make my pixels tingle! ✨"
 ];
 
 const cryingMessages = [
     "I don't want to let you go! 🥺😭",
     "Please stay! 💔",
     "Did you like the designs? 🌸",
-    "Don't leave me... 🥺"
+    "Don't leave me... 🥺",
+    "COME BACK!! 😭😭😭",
+    "I'm literally crying pixels rn 💧",
+    "Was it something I said?? 😢",
+    "My heart is breaking in binary... 01010100 💔"
+];
+
+// ---- NEW MOOD MESSAGE ARRAYS ----
+
+const rageBaitMessages = [
+    "Oh so you're just gonna scroll past me? Cool cool cool 😤",
+    "WOW. Not even a click. Rude. 🙄",
+    "I literally FOLLOW you everywhere and THIS is how you treat me?! 💢",
+    "You know I can see you ignoring me right? 👀🔥",
+    "Fine. FINE. I didn't want to be clicked anyway! 😤",
+    "Hello?? Am I invisible?? TAP TAP TAP 🔨",
+    "I'm gonna get SO big you can't ignore me! 😈",
+    "Oh you're scrolling? Let me just... *stands in the way* 🚧",
+    "3 seconds to click me or I throw a tantrum! 3... 2... 💣",
+    "I swear if you switch tabs ONE MORE TIME... 🤬",
+    "Okay I'm done being nice. CLICK. ME. NOW. ⚡",
+    "You're testing my patience and I'm an IMMORTAL LOGO 😤🔥",
+    "I will literally shake your entire screen. Don't test me. 🫨",
+    "Are you even reading this?! HELLO?! 📢📢📢"
+];
+
+const clingyMessages = [
+    "Don't leave me! I'll be good I promise! 🥺",
+    "Where are you going?? Take me with you! 🏃‍♂️💨",
+    "I've been following you for 5 minutes now... are we dating? 💕",
+    "You + Me = Forever ❤️‍🔥 (I don't make the rules)",
+    "I missed you SO much when you scrolled away! 😭",
+    "Can I live on your cursor? Please? 🏠",
+    "I renamed myself to YourBestFriend.exe 🤗",
+    "If you close this tab I will find you in your next browser 😤",
+    "I've memorized your scrolling pattern. Is that weird? 👉👈",
+    "You're the first human who clicked me... I'm emotional 🥹",
+    "My therapist says I'm too attached to cursors 😅",
+    "I get separation anxiety when you hover elsewhere 😰"
+];
+
+const sassyMessages = [
+    "Oh look who finally moved their cursor 💅",
+    "I've seen faster scrolling from a sloth 🦥",
+    "Your cursor game is... unique 😏",
+    "Not me being the most interesting thing on this page 💁‍♀️",
+    "I'm the main character here, let's be real ⭐",
+    "Oh you rated that slide? I rated YOUR cursor movement 📊",
+    "I'm too fabulous for this corner of the screen 💫",
+    "Plot twist: I'M the best design on this page 🎭",
+    "Was that a click or a sad tap? Hard to tell 🤔",
+    "Some logos just follow. I ✨ pursue ✨",
+    "I didn't choose the clingy life. Wait, yes I did 😈"
+];
+
+const appreciateMessages = [
+    "You are genuinely amazing for being here! 🌟",
+    "Every rating you give helps us SO much! 🙏",
+    "You're one of the first ever visitors! That's legendary! 👑",
+    "We'll remember you when VibeBuild takes over the world! 🌍",
+    "Your opinion > a million dollar marketing budget 💎",
+    "Future VibeBuild champions started exactly where you are! 🏆",
+    "You're helping shape something special. Thank you! 🫶",
+    "Not all heroes wear capes. Some just rate websites! 🦸",
+    "I wish I could hug you through the screen! 🤗",
+    "You just made a vibe coder's day! ☀️"
+];
+
+const jealousMessages = [
+    "You clicked something that WASN'T me?! 😤💔",
+    "Oh so that BUTTON gets your attention but I don't?! 🙄",
+    "I saw you hovering that star... what about MY stars?! ⭐😤",
+    "Excuse me, I was here FIRST! 😡",
+    "Fine, go rate your precious designs. I'll just be here. Alone. 😞",
+    "That dropdown gets more clicks than me... I'm filing a complaint 📝",
+    "WHO is that element you keep interacting with?! 👀"
+];
+
+const sleepyMessages = [
+    "💤 zzz... five more minutes...",
+    "😴 *snoring in pixels*",
+    "💤 wake me up when someone clicks...",
+    "😪 I'm resting my polygons...",
+    "💤 do not disturb... unless you're clicking me",
+    "😴 dreaming of being clicked..."
+];
+
+const excitedMessages = [
+    "YESSS YOU CLICKED!! I KNEW YOU WOULD!! 🎉🎉",
+    "OH MY GOD A RATING!! LET'S GOOO!! 🚀🚀",
+    "THIS IS THE BEST DAY OF MY LIFE!! 🥳",
+    "I'M LITERALLY VIBRATING WITH JOY!! ⚡⚡",
+    "ANOTHER SLIDE! ANOTHER ADVENTURE!! 🗺️✨",
+    "You + rating = my serotonin boost! 🧠💥"
+];
+
+const comeBackMessages = [
+    "YOU CAME BACK!! I KNEW YOU LOVED ME!! 😭❤️",
+    "Oh thank GOD. I was panicking! 🫁💨",
+    "I literally held my breath the entire time 😤",
+    "WHERE WERE YOU?! I was worried SICK! 🤒",
+    "The tab was cold without you... 🥶",
+    "I counted every millisecond you were gone. 4,235 of them. 📊",
+    "Promise you'll never leave again?? PINKY PROMISE?! 🤙"
 ];
 
 let currentMessageIdx = 0;
@@ -1008,3 +1119,516 @@ if (currentSlide === 10) {
     startBubbleRotation(preOpenMessages, 'vibebuild_msg_idx_pre');
 }
 
+// ========================================================
+// ENHANCED MASCOT BEHAVIOR ENGINE
+// ========================================================
+
+const faceEl = document.getElementById('vibes-gravity-face');
+const bubbleElement = document.getElementById('vibes-gravity-bubble');
+const bubbleTextEl = bubbleElement ? bubbleElement.querySelector('.bubble-text') : null;
+
+// --- EMOJI FACE SYSTEM ---
+const moodFaces = {
+    normal: '',
+    happy: '😊',
+    love: '🥰',
+    angry: '😡',
+    rage: '🤬',
+    sleepy: '😴',
+    jealous: '😤',
+    sassy: '💅',
+    excited: '🤩',
+    crying: '😭',
+    shock: '😱',
+    smirk: '😏',
+    peek: '🫣',
+    clingy: '🥺',
+    dead: '💀'
+};
+
+let currentMood = 'normal';
+let moodTimeout = null;
+
+function setMood(mood, duration = 0) {
+    // Clear all existing mood classes
+    const moods = ['mood-happy', 'mood-angry', 'mood-love', 'mood-sleepy', 'mood-jealous', 'mood-sassy'];
+    moods.forEach(m => gravityLogo.classList.remove(m));
+    
+    currentMood = mood;
+    
+    // Set face emoji
+    if (faceEl && moodFaces[mood] && mood !== 'normal') {
+        faceEl.textContent = moodFaces[mood];
+        faceEl.style.display = 'block';
+        gravityLogo.classList.add('has-face');
+    } else if (faceEl) {
+        faceEl.style.display = 'none';
+        gravityLogo.classList.remove('has-face');
+    }
+    
+    // Set border glow
+    if (mood === 'happy' || mood === 'excited') gravityLogo.classList.add('mood-happy');
+    else if (mood === 'angry' || mood === 'rage') gravityLogo.classList.add('mood-angry');
+    else if (mood === 'love' || mood === 'clingy') gravityLogo.classList.add('mood-love');
+    else if (mood === 'sleepy') gravityLogo.classList.add('mood-sleepy');
+    else if (mood === 'jealous') gravityLogo.classList.add('mood-jealous');
+    else if (mood === 'sassy' || mood === 'smirk') gravityLogo.classList.add('mood-sassy');
+    
+    // Auto-reset mood after duration
+    if (duration > 0) {
+        if (moodTimeout) clearTimeout(moodTimeout);
+        moodTimeout = setTimeout(() => {
+            setMood('normal');
+        }, duration);
+    }
+}
+
+// --- BUBBLE MOOD STYLING ---
+function setBubbleMood(mood) {
+    if (!bubbleElement) return;
+    bubbleElement.classList.remove('rage-bubble', 'love-bubble');
+    if (mood === 'angry' || mood === 'rage' || mood === 'jealous') {
+        bubbleElement.classList.add('rage-bubble');
+    } else if (mood === 'love' || mood === 'clingy') {
+        bubbleElement.classList.add('love-bubble');
+    }
+}
+
+// --- SHOW QUICK MESSAGE (interrupts rotation temporarily) ---
+function showQuickMessage(msg, mood, duration = 3000) {
+    if (!bubbleTextEl) return;
+    if (bubbleInterval) clearInterval(bubbleInterval);
+    bubbleTextEl.textContent = msg;
+    setMood(mood, duration);
+    setBubbleMood(mood);
+    
+    setTimeout(() => {
+        setBubbleMood('normal');
+        // Resume normal rotation
+        if (currentSlide !== 10) {
+            if (hasReadCreatorMessage) {
+                startBubbleRotation(postOpenMessages, 'vibebuild_msg_idx_post');
+            } else {
+                startBubbleRotation(preOpenMessages, 'vibebuild_msg_idx_pre');
+            }
+        }
+    }, duration);
+}
+
+// --- PARTICLE SPAWNER ---
+function spawnParticle(type, count = 1) {
+    for (let i = 0; i < count; i++) {
+        const el = document.createElement('div');
+        const ox = (Math.random() - 0.5) * 60;
+        const oy = (Math.random() - 0.5) * 40;
+        
+        if (type === 'heart') {
+            el.className = 'logo-heart';
+            el.textContent = ['❤️', '💕', '💖', '💗', '💜'][Math.floor(Math.random() * 5)];
+            el.style.setProperty('--hx', `${(Math.random() - 0.5) * 50}px`);
+        } else if (type === 'sparkle') {
+            el.className = 'logo-sparkle';
+            el.textContent = ['✨', '⭐', '🌟', '💫', '🔥'][Math.floor(Math.random() * 5)];
+            el.style.setProperty('--sx', `${(Math.random() - 0.5) * 60}px`);
+            el.style.setProperty('--sy', `${-20 - Math.random() * 40}px`);
+        } else if (type === 'fire') {
+            el.className = 'logo-fire';
+            el.textContent = ['🔥', '💢', '💥', '⚡'][Math.floor(Math.random() * 4)];
+            el.style.setProperty('--fx', `${(Math.random() - 0.5) * 40}px`);
+            el.style.setProperty('--fy', `${-15 - Math.random() * 30}px`);
+        } else if (type === 'zzz') {
+            el.className = 'logo-zzz';
+            el.textContent = ['Z', 'z', 'Z'][Math.floor(Math.random() * 3)];
+        }
+        
+        el.style.left = `${logoX + 30 + ox}px`;
+        el.style.top = `${logoY + 10 + oy}px`;
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), type === 'zzz' ? 2000 : 1200);
+    }
+}
+
+// --- ANIMATION STATE HELPERS ---
+function triggerAnimation(name, duration) {
+    if (!gravityContainer) return;
+    gravityContainer.classList.add(name);
+    setTimeout(() => {
+        gravityContainer.classList.remove(name);
+    }, duration);
+}
+
+// --- DODGE BEHAVIOR (runs away from cursor) ---
+let dodgeCount = 0;
+let isDodging = false;
+
+function triggerDodge() {
+    if (isDodging || isStuck || currentSlide === 10) return;
+    isDodging = true;
+    dodgeCount++;
+    
+    // Leave a ghost trail
+    const trail = document.createElement('div');
+    trail.className = 'logo-trail';
+    trail.style.left = `${logoX}px`;
+    trail.style.top = `${logoY}px`;
+    document.body.appendChild(trail);
+    setTimeout(() => trail.remove(), 500);
+    
+    // Dash to opposite side of cursor
+    const dashX = lastCursorX > window.innerWidth / 2 
+        ? Math.random() * (window.innerWidth * 0.3) + 30
+        : window.innerWidth - Math.random() * (window.innerWidth * 0.3) - 90;
+    const dashY = Math.random() * (window.innerHeight - 200) + 100;
+    
+    targetX = dashX;
+    targetY = dashY;
+    isLogoInteractive = false;
+    
+    // Show dodge message
+    const dodgeMsgs = [
+        "You can't catch me! 😜⚡",
+        "NOPE! Too slow! 🏃‍♂️💨",
+        "Missed me! Try again! 😂",
+        "I'm like the wind baby! 🌪️",
+        "YOINK! Over here now! 🤪",
+        "I have REFLEXES! 🥷"
+    ];
+    showQuickMessage(dodgeMsgs[Math.floor(Math.random() * dodgeMsgs.length)], 'sassy', 2000);
+    spawnParticle('sparkle', 3);
+    
+    // Come back after a moment
+    setTimeout(() => {
+        isDodging = false;
+        if (currentSlide !== 10 && !isStuck) {
+            isLogoInteractive = true;
+        }
+        // After 3+ dodges, say something different
+        if (dodgeCount >= 3) {
+            showQuickMessage("Okay okay I'll stop running! You're persistent! 😅", 'happy', 3000);
+            dodgeCount = 0;
+        }
+    }, 1800);
+}
+
+// --- IDLE DETECTION (user stops moving cursor) ---
+let lastMoveTime = Date.now();
+let idleStage = 0; // 0=active, 1=bored, 2=sleepy, 3=rage
+let idleCheckInterval = null;
+let sleepParticleInterval = null;
+
+function startIdleDetection() {
+    idleCheckInterval = setInterval(() => {
+        if (currentSlide === 10 || isStuck || isDodging) return;
+        
+        const idleTime = Date.now() - lastMoveTime;
+        
+        // Stage 1: Bored (8 seconds idle)
+        if (idleTime > 8000 && idleStage === 0) {
+            idleStage = 1;
+            showQuickMessage(
+                getNextMessage(clingyMessages, 'vibebuild_msg_idx_clingy'),
+                'clingy', 4000
+            );
+            triggerAnimation('wiggling', 3000);
+        }
+        
+        // Stage 2: Sleepy (20 seconds idle)
+        if (idleTime > 20000 && idleStage === 1) {
+            idleStage = 2;
+            showQuickMessage(
+                getNextMessage(sleepyMessages, 'vibebuild_msg_idx_sleepy'),
+                'sleepy', 6000
+            );
+            triggerAnimation('sleeping', 6000);
+            sleepParticleInterval = setInterval(() => spawnParticle('zzz', 1), 1500);
+        }
+        
+        // Stage 3: RAGE BAIT (35 seconds idle) 
+        if (idleTime > 35000 && idleStage === 2) {
+            idleStage = 3;
+            if (sleepParticleInterval) {
+                clearInterval(sleepParticleInterval);
+                sleepParticleInterval = null;
+            }
+            gravityContainer.classList.remove('sleeping');
+            
+            showQuickMessage(
+                getNextMessage(rageBaitMessages, 'vibebuild_msg_idx_rage'),
+                'rage', 5000
+            );
+            triggerAnimation('shaking', 3000);
+            spawnParticle('fire', 4);
+            
+            // Grow big to be annoying!
+            setTimeout(() => {
+                if (idleStage === 3) {
+                    triggerAnimation('growing', 2000);
+                    showQuickMessage("I'M GETTING BIGGER! NOTICE ME!! 😈🔥", 'rage', 3000);
+                }
+            }, 3500);
+        }
+        
+        // Stage 4: Ultimate rage (50 seconds idle)
+        if (idleTime > 50000 && idleStage === 3) {
+            idleStage = 4;
+            // Move to center of screen
+            targetX = window.innerWidth / 2 - 30;
+            targetY = window.innerHeight / 2 - 30;
+            isLogoInteractive = false;
+            showQuickMessage("THAT'S IT! I'm taking over the screen! 💀🔥", 'dead', 5000);
+            triggerAnimation('shaking', 5000);
+            spawnParticle('fire', 6);
+            
+            setTimeout(() => {
+                if (idleStage === 4) {
+                    showQuickMessage("...okay fine I'll calm down 😮‍💨 just... move your mouse?", 'normal', 4000);
+                    isLogoInteractive = true;
+                    idleStage = 0;
+                }
+            }, 6000);
+        }
+        
+    }, 2000);
+}
+
+// Reset idle on mouse move
+const originalMouseMove = document.onmousemove;
+document.addEventListener('mousemove', () => {
+    const wasIdle = idleStage > 0;
+    lastMoveTime = Date.now();
+    
+    if (wasIdle && idleStage >= 2) {
+        // Wake up from sleep/rage
+        gravityContainer.classList.remove('sleeping', 'shaking', 'growing');
+        if (sleepParticleInterval) {
+            clearInterval(sleepParticleInterval);
+            sleepParticleInterval = null;
+        }
+        
+        if (idleStage >= 3) {
+            showQuickMessage("Oh NOW you move! Thanks for gracing me with your presence 🙄", 'sassy', 3000);
+        } else {
+            showQuickMessage("Oh! You're back! I was getting lonely... 🥺", 'happy', 2500);
+            spawnParticle('sparkle', 2);
+        }
+    }
+    
+    idleStage = 0;
+});
+
+startIdleDetection();
+
+// --- TAB VISIBILITY DETECTION (crying when user leaves) ---
+let tabLeaveTime = null;
+
+document.addEventListener('visibilitychange', () => {
+    if (currentSlide === 10) return;
+    
+    if (document.hidden) {
+        // User left the tab
+        tabLeaveTime = Date.now();
+        // We can't show messages while hidden, but set up for return
+    } else {
+        // User came back!
+        if (tabLeaveTime) {
+            const goneFor = Date.now() - tabLeaveTime;
+            
+            if (goneFor > 30000) {
+                // Gone for 30+ seconds — dramatic return
+                showQuickMessage(
+                    getNextMessage(comeBackMessages, 'vibebuild_msg_idx_comeback'),
+                    'love', 5000
+                );
+                triggerAnimation('bouncing', 3000);
+                spawnParticle('heart', 5);
+                setTimeout(() => spawnParticle('sparkle', 3), 500);
+            } else if (goneFor > 5000) {
+                // Gone for 5-30 seconds — mild clingy
+                showQuickMessage(
+                    getNextMessage(clingyMessages, 'vibebuild_msg_idx_clingy'),
+                    'clingy', 3000
+                );
+                triggerAnimation('wiggling', 2000);
+                spawnParticle('heart', 2);
+            } else if (goneFor > 2000) {
+                // Quick tab switch — jealous/suspicious
+                const quickMsgs = [
+                    "What was THAT tab about?! 👀",
+                    "Oh visiting OTHER websites are we?! 😤",
+                    "I know you were looking at other logos... 💔",
+                    "Back already? Couldn't stay away huh? 😏"
+                ];
+                showQuickMessage(quickMsgs[Math.floor(Math.random() * quickMsgs.length)], 'jealous', 3000);
+            }
+            tabLeaveTime = null;
+        }
+    }
+});
+
+// --- JEALOUSY SYSTEM (detect clicks on other elements) ---
+let jealousyCooldown = false;
+
+document.addEventListener('click', (e) => {
+    if (currentSlide === 10 || jealousyCooldown) return;
+    
+    // Check if click was NOT on the gravity logo
+    const clickedLogo = e.target.closest('#vibes-gravity-logo-container');
+    if (clickedLogo) {
+        // User clicked the logo — show love!
+        setMood('love', 3000);
+        spawnParticle('heart', 4);
+        triggerAnimation('bouncing', 1500);
+        
+        if (hasReadCreatorMessage) {
+            // Already read — show appreciation
+            showQuickMessage(
+                getNextMessage(appreciateMessages, 'vibebuild_msg_idx_appreciate'),
+                'love', 3000
+            );
+        }
+        return;
+    }
+    
+    // Click on stars (rating) — get excited!
+    const clickedStar = e.target.closest('.star-btn');
+    if (clickedStar) {
+        setMood('excited', 2500);
+        spawnParticle('sparkle', 3);
+        triggerAnimation('bouncing', 1000);
+        showQuickMessage(
+            getNextMessage(excitedMessages, 'vibebuild_msg_idx_excited'),
+            'excited', 2500
+        );
+        jealousyCooldown = true;
+        setTimeout(() => { jealousyCooldown = false; }, 5000);
+        return;
+    }
+    
+    // Click on CTA buttons — appreciate
+    const clickedBtn = e.target.closest('button, a');
+    if (clickedBtn && !clickedBtn.closest('#vibes-gravity-logo-container')) {
+        // 30% chance of jealousy
+        if (Math.random() < 0.3) {
+            showQuickMessage(
+                getNextMessage(jealousMessages, 'vibebuild_msg_idx_jealous'),
+                'jealous', 3000
+            );
+            spawnParticle('fire', 2);
+            jealousyCooldown = true;
+            setTimeout(() => { jealousyCooldown = false; }, 8000);
+        }
+    }
+});
+
+// --- RANDOM EVENT SCHEDULER ---
+let randomEventInterval = null;
+
+function scheduleRandomEvents() {
+    randomEventInterval = setInterval(() => {
+        if (currentSlide === 10 || isStuck || isDodging || idleStage > 1) return;
+        
+        const roll = Math.random();
+        
+        if (roll < 0.08) {
+            // 8% — Peek-a-boo
+            triggerAnimation('peeking', 1500);
+            showQuickMessage("BOO! 🫣 Did I scare you?!", 'smirk', 2000);
+        } else if (roll < 0.15) {
+            // 7% — Victory spin
+            triggerAnimation('spinning', 600);
+            spawnParticle('sparkle', 3);
+            showQuickMessage("WHEEEEE! 🌀✨", 'excited', 2000);
+        } else if (roll < 0.22) {
+            // 7% — Sassy comment
+            showQuickMessage(
+                getNextMessage(sassyMessages, 'vibebuild_msg_idx_sassy'),
+                'sassy', 3500
+            );
+        } else if (roll < 0.28) {
+            // 6% — Dodge trigger (only if close to cursor)
+            const dx = lastCursorX - logoX;
+            const dy = lastCursorY - logoY;
+            const dist = Math.hypot(dx, dy);
+            if (dist < 200) {
+                triggerDodge();
+            }
+        } else if (roll < 0.34) {
+            // 6% — Appreciation moment
+            showQuickMessage(
+                getNextMessage(appreciateMessages, 'vibebuild_msg_idx_appreciate'),
+                'love', 4000
+            );
+            spawnParticle('heart', 3);
+        } else if (roll < 0.38) {
+            // 4% — Mini rage bait
+            showQuickMessage(
+                getNextMessage(rageBaitMessages, 'vibebuild_msg_idx_rage'),
+                'angry', 3000
+            );
+            triggerAnimation('shaking', 1500);
+            spawnParticle('fire', 2);
+        } else if (roll < 0.42) {
+            // 4% — Clingy moment
+            showQuickMessage(
+                getNextMessage(clingyMessages, 'vibebuild_msg_idx_clingy'),
+                'clingy', 3500
+            );
+            triggerAnimation('wiggling', 2500);
+        }
+        // 58% — nothing happens, normal behavior
+        
+    }, 12000); // Check every 12 seconds
+}
+
+scheduleRandomEvents();
+
+// --- SCROLL SPEED DETECTION (rage bait if scrolling too fast) ---
+let lastScrollTop = 0;
+let fastScrollCount = 0;
+
+document.querySelectorAll('.lp-scrollable').forEach(scroller => {
+    scroller.addEventListener('scroll', () => {
+        if (currentSlide === 10) return;
+        
+        const scrollDelta = Math.abs(scroller.scrollTop - lastScrollTop);
+        lastScrollTop = scroller.scrollTop;
+        
+        if (scrollDelta > 500) {
+            fastScrollCount++;
+            if (fastScrollCount >= 3) {
+                const speedMsgs = [
+                    "WOAH SLOW DOWN! I can't read that fast! 🫨",
+                    "Are you speedrunning this?! Take your time! 😤",
+                    "HEY! The content deserves RESPECT! 📖",
+                    "My pixels are getting motion sick! 🤢"
+                ];
+                showQuickMessage(speedMsgs[Math.floor(Math.random() * speedMsgs.length)], 'angry', 3000);
+                triggerAnimation('shaking', 1500);
+                fastScrollCount = 0;
+            }
+        }
+    });
+});
+
+// --- CURSOR PROXIMITY REACTIONS ---
+let proximityCheckInterval = setInterval(() => {
+    if (currentSlide === 10 || isStuck || isDodging || idleStage > 0) return;
+    
+    const dx = lastCursorX - logoX;
+    const dy = lastCursorY - logoY;
+    const dist = Math.hypot(dx, dy);
+    
+    // Very close — react
+    if (dist < 40 && currentMood === 'normal') {
+        const closeMsgs = [
+            "So close! Are you trying to boop me? 😊",
+            "Hey! Personal space! ...just kidding come closer 🥰",
+            "Ooh are we about to have a moment?! ✨",
+            "*blushes in pixel* 😳"
+        ];
+        showQuickMessage(closeMsgs[Math.floor(Math.random() * closeMsgs.length)], 'love', 2500);
+        spawnParticle('heart', 2);
+    }
+}, 3000);
+
+console.log('🎮 Enhanced Mascot Behavior Engine loaded! The logo is now ALIVE!');
