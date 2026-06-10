@@ -41,7 +41,14 @@ const postOpenMessages = [
     "Join our Discord! 💬",
     "Agent X will be epic! 🚀",
     "Your opinion means everything! 🙌",
-    "Vibe build forever! ⚔️"
+    "Vibe build forever! ⚔️",
+    "We make a great team! 🦸‍♂️",
+    "Don't work too hard! ☕",
+    "I'm always watching you... in a cute way! 👀",
+    "Are we partners in vibe coding? 🤝",
+    "Do you believe in AI gravity? 🌌",
+    "You move that cursor like a pro! ⚡",
+    "I'm so glad we are friends! 🤗"
 ];
 
 const cryingMessages = [
@@ -63,6 +70,29 @@ let targetY = logoY;
 let isLogoInteractive = false;
 let isHovered = false;
 let isTouchDevice = false;
+
+// Cute stuck state and companion variables
+let isStuck = false;
+let isTeasing = false;
+let stuckSide = 'left';
+let lastCursorX = window.innerWidth / 2;
+let lastCursorY = window.innerHeight / 2;
+
+const stuckMessages = [
+    "Help me! I'm stuck! 🥺",
+    "Wait, don't leave me behind! 😭",
+    "Help me, vibe coder! 🆘",
+    "I'm stuck, help! 👉👈",
+    "Aaaah, I can't move! 😭"
+];
+
+const teasingMessages = [
+    "Just kidding dude! 😜",
+    "Gotcha! Haha! 😂",
+    "Psyche! Just kidding! 🤪",
+    "Too slow! ⚡😜",
+    "Just kidding! Did I scare you? 🤭"
+];
 let cryingInterval = null;
 
 // Touch device detection to bypass hover freeze on screens
@@ -109,6 +139,36 @@ function stopCrying() {
     }
 }
 
+// Stuck state behavior
+function triggerStuckState() {
+    if (currentSlide === 10) return; // Don't trigger on final crying slide
+    
+    isStuck = true;
+    isTeasing = false;
+    isLogoInteractive = false;
+    
+    stuckSide = Math.random() < 0.5 ? 'left' : 'right';
+    
+    // Position vertically on the screen (centered-ish, not offscreen)
+    const stuckY = Math.random() * (window.innerHeight - 250) + 120;
+    
+    if (stuckSide === 'left') {
+        targetX = 20;
+    } else {
+        targetX = window.innerWidth - 80;
+    }
+    targetY = stuckY;
+    
+    // Change speech bubble immediately and clear rotation interval
+    if (bubbleInterval) clearInterval(bubbleInterval);
+    const bubbleElement = document.getElementById('vibes-gravity-bubble');
+    const bubbleText = bubbleElement ? bubbleElement.querySelector('.bubble-text') : null;
+    if (bubbleText) {
+        const randomMsg = stuckMessages[Math.floor(Math.random() * stuckMessages.length)];
+        bubbleText.textContent = randomMsg;
+    }
+}
+
 // --- SLIDER NAVIGATION LOGIC ---
 
 function goToSlide(index) {
@@ -143,20 +203,30 @@ function goToSlide(index) {
     // Slide 10 (Review Page) specific logo interaction & crying effect
     if (currentSlide === 10) {
         isLogoInteractive = false;
+        isStuck = false; // Reset if stuck
+        isTeasing = false;
         targetX = 20;
         targetY = 20;
         startCrying();
         startBubbleRotation(cryingMessages);
     } else {
         stopCrying();
-        // Only return to follow mode if it's no longer falling
-        if (gravityContainer && !gravityContainer.classList.contains('falling')) {
-            isLogoInteractive = true;
-        }
-        if (hasReadCreatorMessage) {
-            startBubbleRotation(postOpenMessages);
+        
+        // Stuck State Trigger Chance: 35% chance when changing pages
+        if (Math.random() < 0.35) {
+            triggerStuckState();
         } else {
-            startBubbleRotation(preOpenMessages);
+            isStuck = false;
+            isTeasing = false;
+            // Only return to follow mode if it's no longer falling
+            if (gravityContainer && !gravityContainer.classList.contains('falling')) {
+                isLogoInteractive = true;
+            }
+            if (hasReadCreatorMessage) {
+                startBubbleRotation(postOpenMessages);
+            } else {
+                startBubbleRotation(preOpenMessages);
+            }
         }
     }
 }
@@ -720,6 +790,11 @@ function initializeInteractiveLogo() {
     logoX = window.innerWidth * 0.05;
     logoY = window.innerHeight - 80;
     
+    if (isStuck) {
+        // Keep the stuck coordinates and state intact
+        return;
+    }
+
     if (currentSlide === 10) {
         targetX = 20;
         targetY = 20;
@@ -778,6 +853,8 @@ if (gravityContainer) {
 
 // Handle mouse movement for physics spring follow
 document.addEventListener('mousemove', (e) => {
+    lastCursorX = e.clientX;
+    lastCursorY = e.clientY;
     const isModalActive = creatorModal && creatorModal.classList.contains('active');
     if (isLogoInteractive && !isHovered && !isModalActive) {
         // Offset the target coordinates so the logo sits next to the cursor instead of directly under it
@@ -788,6 +865,10 @@ document.addEventListener('mousemove', (e) => {
 
 // Handle touch movement for mobile devices
 document.addEventListener('touchmove', (e) => {
+    if (e.touches.length > 0) {
+        lastCursorX = e.touches[0].clientX;
+        lastCursorY = e.touches[0].clientY;
+    }
     const isModalActive = creatorModal && creatorModal.classList.contains('active');
     if (isLogoInteractive && !isHovered && !isModalActive && e.touches.length > 0) {
         targetX = e.touches[0].clientX + 10;
@@ -799,6 +880,52 @@ document.addEventListener('touchmove', (e) => {
 function tickLogoPhysics() {
     if (gravityContainer) {
         const isModalActive = creatorModal && creatorModal.classList.contains('active');
+        
+        // Escape check for stuck logo
+        if (isStuck && !isTeasing) {
+            const dx = lastCursorX - logoX;
+            const dy = lastCursorY - logoY;
+            const dist = Math.hypot(dx, dy);
+            
+            if (dist < 150) {
+                isTeasing = true;
+                
+                // Jump to the opposite side
+                if (stuckSide === 'left') {
+                    stuckSide = 'right';
+                    targetX = window.innerWidth - 80;
+                } else {
+                    stuckSide = 'left';
+                    targetX = 20;
+                }
+                
+                // Randomize Y slightly to feel playful
+                targetY = Math.max(120, Math.min(window.innerHeight - 150, targetY + (Math.random() * 120 - 60)));
+                
+                // Set dialogue to tease
+                const bubbleElement = document.getElementById('vibes-gravity-bubble');
+                const bubbleText = bubbleElement ? bubbleElement.querySelector('.bubble-text') : null;
+                if (bubbleText) {
+                    const randomTease = teasingMessages[Math.floor(Math.random() * teasingMessages.length)];
+                    bubbleText.textContent = randomTease;
+                }
+                
+                // Wait for escape slide animation to complete, then return to normal follow
+                setTimeout(() => {
+                    isStuck = false;
+                    isTeasing = false;
+                    if (gravityContainer && !gravityContainer.classList.contains('falling')) {
+                        isLogoInteractive = true;
+                    }
+                    if (hasReadCreatorMessage) {
+                        startBubbleRotation(postOpenMessages);
+                    } else {
+                        startBubbleRotation(preOpenMessages);
+                    }
+                }, 1500);
+            }
+        }
+
         if (isLogoInteractive) {
             if (isHovered || isModalActive) {
                 targetX = logoX;
@@ -813,7 +940,7 @@ function tickLogoPhysics() {
             logoX = Math.max(10, Math.min(window.innerWidth - size - 10, logoX));
             logoY = Math.max(10, Math.min(window.innerHeight - size - 10, logoY));
         } else {
-            // Non-interactive flight home (Slide 10 flight)
+            // Non-interactive flight (Slide 10 flight, falling, or stuck slide)
             logoX += (targetX - logoX) * 0.08;
             logoY += (targetY - logoY) * 0.08;
         }
