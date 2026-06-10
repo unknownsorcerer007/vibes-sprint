@@ -55,7 +55,14 @@ let targetX = logoX;
 let targetY = logoY;
 let isLogoInteractive = false;
 let isHovered = false;
+let isTouchDevice = false;
 let cryingInterval = null;
+
+// Touch device detection to bypass hover freeze on screens
+window.addEventListener('touchstart', function onTouchStart() {
+    isTouchDevice = true;
+    window.removeEventListener('touchstart', onTouchStart);
+}, { passive: true });
 
 // Function to start speech bubble message rotation
 function startBubbleRotation(messagesArray) {
@@ -758,39 +765,53 @@ const modalThanks = document.getElementById('vibes-creator-modal-thanks');
 // Initialize Lucide Icons for injected modal buttons
 lucide.createIcons();
 
+// Helper to transition the logo to interactive mode
+function initializeInteractiveLogo() {
+    if (!gravityContainer || !gravityContainer.classList.contains('falling')) return;
+    
+    gravityContainer.classList.remove('falling');
+    // Position it at the bottom left initially
+    logoX = window.innerWidth * 0.05;
+    logoY = window.innerHeight - 80;
+    
+    if (currentSlide === 10) {
+        targetX = 20;
+        targetY = 20;
+        isLogoInteractive = false;
+        startCrying();
+        startBubbleRotation(cryingMessages);
+    } else {
+        targetX = logoX;
+        targetY = logoY;
+        isLogoInteractive = true;
+        if (hasReadCreatorMessage) {
+            startBubbleRotation(postOpenMessages);
+        } else {
+            startBubbleRotation(preOpenMessages);
+        }
+    }
+    gravityContainer.style.left = `${logoX}px`;
+    gravityContainer.style.top = `${logoY}px`;
+}
+
 // AnimationEnd Listener for Gravity Fall
 if (gravityContainer) {
     gravityContainer.addEventListener('animationend', (e) => {
         if (e.animationName === 'gravity-fall') {
-            gravityContainer.classList.remove('falling');
-            // Position it at the bottom left initially
-            logoX = window.innerWidth * 0.05;
-            logoY = window.innerHeight - 80;
-            
-            if (currentSlide === 10) {
-                targetX = 20;
-                targetY = 20;
-                isLogoInteractive = false;
-                startCrying();
-                startBubbleRotation(cryingMessages);
-            } else {
-                targetX = logoX;
-                targetY = logoY;
-                isLogoInteractive = true;
-                if (hasReadCreatorMessage) {
-                    startBubbleRotation(postOpenMessages);
-                } else {
-                    startBubbleRotation(preOpenMessages);
-                }
-            }
-            gravityContainer.style.left = `${logoX}px`;
-            gravityContainer.style.top = `${logoY}px`;
+            initializeInteractiveLogo();
         }
     });
 
-    // Handle hover states for click convenience (Hover Freeze)
+    // Fallback timer: Force interactive state after 2 seconds even if animationend event fails (critical for mobile support)
+    setTimeout(() => {
+        initializeInteractiveLogo();
+    }, 2000);
+
+    // Handle hover states for click convenience (Hover Freeze) - bypassed on touch devices to prevent getting stuck
     gravityContainer.addEventListener('mouseenter', () => {
-        isHovered = true;
+        if (!isTouchDevice) {
+            isHovered = true;
+        }
     });
     
     gravityContainer.addEventListener('mouseleave', () => {
@@ -823,10 +844,10 @@ document.addEventListener('mousemove', (e) => {
 document.addEventListener('touchmove', (e) => {
     const isModalActive = creatorModal && creatorModal.classList.contains('active');
     if (isLogoInteractive && !isHovered && !isModalActive && e.touches.length > 0) {
-        targetX = e.touches[0].clientX + 20;
-        targetY = e.touches[0].clientY + 20;
+        targetX = e.touches[0].clientX + 10;
+        targetY = e.touches[0].clientY + 10;
     }
-});
+}, { passive: true });
 
 // Tick loop for smooth CSS updates
 function tickLogoPhysics() {
