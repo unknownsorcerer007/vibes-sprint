@@ -1,6 +1,36 @@
 // Initialize Lucide Icons
 lucide.createIcons();
 
+// ── TOAST NOTIFICATION HELPER ─────────────────────────
+function showVBToast(message, type) {
+    const toast = document.getElementById('vb-toast');
+    const text = document.getElementById('vb-toast-text');
+    if (!toast || !text) return;
+    text.textContent = message;
+    toast.className = 'vb-toast';
+    if (type) toast.classList.add('vb-toast-' + type);
+    toast.style.display = 'block';
+    requestAnimationFrame(() => {
+        toast.classList.add('vb-toast-visible');
+    });
+    clearTimeout(toast._hideTimer);
+    toast._hideTimer = setTimeout(() => {
+        toast.classList.remove('vb-toast-visible');
+        setTimeout(() => { toast.style.display = 'none'; }, 400);
+    }, 3000);
+}
+
+// ── SUPABASE INIT ─────────────────────────────────────
+if (typeof VB !== 'undefined' && VB.init) {
+    VB.init().then(result => {
+        if (result.success) {
+            console.log('[App] Supabase connected successfully');
+            // Track initial slide view
+            VB.trackPageView(0);
+        }
+    });
+}
+
 // STATE & CONFIG
 let currentSlide = 0;
 const totalSlides = 11;
@@ -374,7 +404,7 @@ function startBubbleRotation(messagesArray, storageKey) {
         index = (index + 1) % messagesArray.length;
         localStorage.setItem(storageKey, index.toString());
         bubbleText.textContent = messagesArray[index];
-    }, 3500);
+    }, 7500); // Increased from 3.5s to 7.5s
 }
 
 // X and Discord sequential bubble systems
@@ -393,7 +423,7 @@ function startXAndDiscordBubbles() {
             xIdx = (xIdx + 1) % xMessages.length;
             localStorage.setItem('vibebuild_msg_idx_x', xIdx.toString());
             xBubbleText.textContent = xMessages[xIdx];
-        }, 4000);
+        }, 8500); // Increased from 4s to 8.5s
     }
 
     const discordBubbleElement = document.getElementById('vibes-discord-bubble');
@@ -407,7 +437,7 @@ function startXAndDiscordBubbles() {
             dcIdx = (dcIdx + 1) % discordMessages.length;
             localStorage.setItem('vibebuild_msg_idx_discord', dcIdx.toString());
             discordBubbleText.textContent = discordMessages[dcIdx];
-        }, 4500);
+        }, 9000); // Increased from 4.5s to 9s
     }
 }
 
@@ -670,6 +700,10 @@ function goToSlide(index) {
                 startBubbleRotation(preOpenMessages, 'vibebuild_msg_idx_pre');
             }
         }
+    }
+    // ── SUPABASE: Track page view on slide change ─────
+    if (typeof VB !== 'undefined' && VB.trackPageView) {
+        VB.trackPageView(currentSlide);
     }
 }
 
@@ -1067,6 +1101,18 @@ starsWrappers.forEach(wrapper => {
             
             // Sync to remote database
             syncRatingsToDatabase();
+
+            // ── SUPABASE: Save rating ─────────────────────
+            if (typeof VB !== 'undefined' && VB.saveRating) {
+                const lr = JSON.parse(localStorage.getItem('vibebuild_ratings') || '{}');
+                const dr = (lr[slideIndex] && lr[slideIndex].design) || 0;
+                const cr = (lr[slideIndex] && lr[slideIndex].content) || 0;
+                if (dr > 0 && cr > 0) {
+                    VB.saveRating(slideIndex, dr, cr).then(res => {
+                        if (res.success) showVBToast('⭐ Rating saved!', 'success');
+                    });
+                }
+            }
         });
     });
 });
@@ -1159,6 +1205,26 @@ if (btnSubmitFeedback) {
             console.log('Feedback saved to KVdb successfully!');
         } catch (err) {
             console.error('Error saving feedback to KVdb:', err);
+        }
+
+        // ── SUPABASE: Save feedback ───────────────────
+        if (typeof VB !== 'undefined' && VB.saveFeedback) {
+            const bestPageNames = [
+                '1. Direct & Bold (ZenSpace)', '2. Problem-First (AetherCrypt)',
+                '3. Inclusive (NovusSaaS)', '4. Speed Angle (VeloceFit)',
+                '5. Transparency Angle (CaffeineCo)', '6. Community Power (NebulaAgency)',
+                '7. Constraint Angle (SentriShield)', '8. Outcome Angle (Edumind)',
+                '9. Retention Angle (TerraTravel)', '10. Minimal & Direct (Aerospace)'
+            ];
+            VB.saveFeedback({
+                bestPage: parseInt(bestPage),
+                bestPageName: bestPageNames[parseInt(bestPage)] || '',
+                suggestions: suggestions,
+                questions: doubts,
+                socialLink: urlValue
+            }).then(res => {
+                if (res.success) showVBToast('✅ Feedback saved to database!', 'success');
+            });
         }
         
         const formCard = document.querySelector('.feedback-form-card');
@@ -1315,6 +1381,10 @@ if (gravityContainer) {
                 hasReadCreatorMessage = true;
                 startBubbleRotation(postOpenMessages, 'vibebuild_msg_idx_post');
             }
+        }
+        // ── SUPABASE: Track mascot click ─────────────────
+        if (typeof VB !== 'undefined' && VB.trackMascotEvent) {
+            VB.trackMascotEvent('click', hasReadCreatorMessage ? 'post_open' : 'pre_open', currentSlide);
         }
     });
 }
@@ -2046,4 +2116,676 @@ let proximityCheckInterval = setInterval(() => {
     }
 }, 3000);
 
+// ========================================================
+// MASCOT INTERACTION ENGINE — Inter-Mascot Behaviors
+// ========================================================
+
+// --- STATE ---
+let interactionState = 'idle'; // idle, fight, push, rescue, rope, celebrate
+let capturedMascotId = null;   // which mascot is captured by cursor
+let ropeActive = false;
+let ropeElements = [];         // DOM rope line elements
+let formationMode = 'triangle'; // triangle, line, orbit, scatter
+let interactionCooldown = false;
+let pushedOffMascot = null;    // which mascot was pushed off screen
+let hoverTimer = null;         // timer for rope capture detection
+let hoveredMascotId = null;    // which mascot cursor is hovering
+
+// Helpers to set bubble text on X/Discord
+function setXBubble(msg, moodClass) {
+    const bubble = document.getElementById('vibes-x-bubble');
+    if (!bubble) return;
+    const text = bubble.querySelector('.bubble-text');
+    if (text) text.textContent = msg;
+    bubble.classList.remove('fight-bubble', 'rescue-bubble');
+    if (moodClass) bubble.classList.add(moodClass);
+}
+
+function setDiscordBubble(msg, moodClass) {
+    const bubble = document.getElementById('vibes-discord-bubble');
+    if (!bubble) return;
+    const text = bubble.querySelector('.bubble-text');
+    if (text) text.textContent = msg;
+    bubble.classList.remove('fight-bubble', 'rescue-bubble');
+    if (moodClass) bubble.classList.add(moodClass);
+}
+
+function clearSideBubbleMoods() {
+    const xB = document.getElementById('vibes-x-bubble');
+    const dB = document.getElementById('vibes-discord-bubble');
+    if (xB) xB.classList.remove('fight-bubble', 'rescue-bubble');
+    if (dB) dB.classList.remove('fight-bubble', 'rescue-bubble');
+}
+
+// Spawn collision particles between two points
+function spawnCollisionParticles(x, y, count) {
+    const emojis = ['💥', '⚡', '💢', '✨', '🔥'];
+    for (let i = 0; i < count; i++) {
+        const el = document.createElement('div');
+        el.className = 'collision-particle';
+        el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        el.style.left = `${x}px`;
+        el.style.top = `${y}px`;
+        el.style.setProperty('--cx', `${(Math.random() - 0.5) * 80}px`);
+        el.style.setProperty('--cy', `${(Math.random() - 0.5) * 80}px`);
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 700);
+    }
+}
+
+// --- BEHAVIOR 1: FIGHT MODE ---
+function triggerMascotFight() {
+    if (interactionState !== 'idle' || interactionCooldown || currentSlide === 10 || isStuck) return;
+    interactionState = 'fight';
+    interactionCooldown = true;
+
+    // Pick two fighters randomly
+    const mascots = ['main', 'x', 'discord'];
+    const i1 = Math.floor(Math.random() * 3);
+    let i2 = (i1 + 1 + Math.floor(Math.random() * 2)) % 3;
+    const fighter1 = mascots[i1];
+    const fighter2 = mascots[i2];
+    const bystander = mascots.find(m => m !== fighter1 && m !== fighter2);
+
+    // Collision point = midpoint of both mascots
+    const midX = window.innerWidth / 2;
+    const midY = window.innerHeight / 2;
+
+    // Move fighters toward each other
+    const getContainer = (id) => {
+        if (id === 'main') return gravityContainer;
+        if (id === 'x') return xMascotContainer;
+        return discordMascotContainer;
+    };
+
+    // Temporarily override positions
+    const prevInteractive = isLogoInteractive;
+    isLogoInteractive = false;
+    targetX = midX - 20;
+    targetY = midY;
+
+    // Fight messages
+    const fightMsgs = {
+        main: ["I'm the MAIN mascot! Back off! 😤⚔️", "You dare challenge ME?! 🔥", "I was here FIRST! 💪"],
+        x: ["I have MORE followers! 𝕏💪", "Trending topics say I WIN! 📈", "Blue checkmark beats you! ✓😎"],
+        discord: ["Community > Everything! 💬🔥", "My server has MORE members! 👥", "Voice chat THIS! 🎤💥"]
+    };
+
+    showQuickMessage(fightMsgs[fighter1][Math.floor(Math.random() * 3)], 'angry', 3500);
+    setXBubble(fighter2 === 'x' ? fightMsgs.x[Math.floor(Math.random() * 3)] : "Oh no, a fight! 😱", 'fight-bubble');
+    setDiscordBubble(fighter2 === 'discord' ? fightMsgs.discord[Math.floor(Math.random() * 3)] : "Oh no, a fight! 😱", 'fight-bubble');
+
+    // Apply shake animations
+    [fighter1, fighter2].forEach(f => {
+        const c = getContainer(f);
+        if (c) c.classList.add('fight-shaking');
+    });
+
+    // Collision particles after a delay
+    setTimeout(() => {
+        spawnCollisionParticles(midX, midY, 5);
+    }, 600);
+
+    // End fight after 3 seconds
+    setTimeout(() => {
+        [fighter1, fighter2].forEach(f => {
+            const c = getContainer(f);
+            if (c) c.classList.remove('fight-shaking');
+        });
+
+        // Loser gets dizzy
+        const loser = Math.random() < 0.5 ? fighter1 : fighter2;
+        const loserContainer = getContainer(loser);
+        if (loserContainer) {
+            loserContainer.classList.add('dizzy');
+            // Add dizzy stars
+            const stars = document.createElement('div');
+            stars.className = 'dizzy-stars';
+            stars.textContent = '⭐🌟⭐';
+            loserContainer.appendChild(stars);
+            setTimeout(() => {
+                loserContainer.classList.remove('dizzy');
+                stars.remove();
+            }, 2000);
+        }
+
+        const winnerMsgs = ["I WON! 🏆", "Too easy! 😎💪", "Don't mess with me! 🔥"];
+        const loserMsgs = ["Oww... 🫨💫", "That was unfair... 😵", "I'll get you next time! 😤"];
+
+        if (loser === 'main') {
+            showQuickMessage(loserMsgs[Math.floor(Math.random() * 3)], 'shock', 2500);
+        } else {
+            showQuickMessage(winnerMsgs[Math.floor(Math.random() * 3)], 'excited', 2500);
+        }
+
+        clearSideBubbleMoods();
+        isLogoInteractive = prevInteractive;
+        interactionState = 'idle';
+        setTimeout(() => { interactionCooldown = false; }, 8000);
+    }, 3200);
+}
+
+// --- BEHAVIOR 2: PUSH / DHAKKA ---
+function triggerMascotPush() {
+    if (interactionState !== 'idle' || interactionCooldown || currentSlide === 10 || isStuck) return;
+    interactionState = 'push';
+    interactionCooldown = true;
+
+    // Pick victim randomly
+    const mascots = ['main', 'x', 'discord'];
+    const victimIdx = Math.floor(Math.random() * 3);
+    const victim = mascots[victimIdx];
+    const bullies = mascots.filter(m => m !== victim);
+
+    const getContainer = (id) => {
+        if (id === 'main') return gravityContainer;
+        if (id === 'x') return xMascotContainer;
+        return discordMascotContainer;
+    };
+
+    const victimContainer = getContainer(victim);
+    if (!victimContainer) return;
+
+    pushedOffMascot = victim;
+
+    // Bullies say something mean
+    const bullyMsgs = ["BYE BYE! 😈💨", "Get OUTTA here! 🤣", "YEET! 🚀😂", "Don't come back! 😤"];
+    bullies.forEach(b => {
+        if (b === 'x') setXBubble(bullyMsgs[Math.floor(Math.random() * bullyMsgs.length)], 'fight-bubble');
+        if (b === 'discord') setDiscordBubble(bullyMsgs[Math.floor(Math.random() * bullyMsgs.length)], 'fight-bubble');
+        if (b === 'main') showQuickMessage(bullyMsgs[Math.floor(Math.random() * bullyMsgs.length)], 'sassy', 3000);
+    });
+
+    // Collision particles at victim
+    const victimX = victim === 'main' ? logoX : (victim === 'x' ? xMascotX : discordMascotX);
+    const victimY = victim === 'main' ? logoY : (victim === 'x' ? xMascotY : discordMascotY);
+    spawnCollisionParticles(victimX + 30, victimY + 30, 4);
+
+    // Push animation
+    victimContainer.classList.add('pushed-off');
+
+    // Respawn after 3 seconds
+    setTimeout(() => {
+        victimContainer.classList.remove('pushed-off');
+        victimContainer.classList.add('respawning');
+
+        const respawnMsgs = ["Hey! That was RUDE! 😤", "I'm telling the user! 🥺", "You'll PAY for that! 💢", "I'm BACK baby! 😎"];
+        if (victim === 'main') showQuickMessage(respawnMsgs[Math.floor(Math.random() * respawnMsgs.length)], 'angry', 3000);
+        if (victim === 'x') setXBubble(respawnMsgs[Math.floor(Math.random() * respawnMsgs.length)]);
+        if (victim === 'discord') setDiscordBubble(respawnMsgs[Math.floor(Math.random() * respawnMsgs.length)]);
+
+        clearSideBubbleMoods();
+
+        setTimeout(() => {
+            victimContainer.classList.remove('respawning');
+            pushedOffMascot = null;
+            interactionState = 'idle';
+            setTimeout(() => { interactionCooldown = false; }, 10000);
+        }, 800);
+    }, 3000);
+}
+
+// --- BEHAVIOR 3: PAGE BOUNDARY RESCUE ---
+// Modify the existing page-boundary stuck to add rescue from X and Discord
+const originalTriggerPageBoundaryStuck = triggerPageBoundaryStuck;
+triggerPageBoundaryStuck = function(fromSlide, toSlide, direction) {
+    originalTriggerPageBoundaryStuck(fromSlide, toSlide, direction);
+
+    // After 3 seconds, X and Discord notice and try to rescue
+    setTimeout(() => {
+        if (!isStuck) return; // Already freed
+
+        setXBubble("OH NO! They're stuck! 😱 PULL!", 'rescue-bubble');
+        setDiscordBubble("We got you! HEAVE! 💪🪢", 'rescue-bubble');
+
+        // Create rescue ropes
+        createRopeBetween('x-rescue', xMascotContainer, gravityContainer);
+        createRopeBetween('discord-rescue', discordMascotContainer, gravityContainer);
+        ropeActive = true;
+
+        // Strain effect after 2 more seconds
+        setTimeout(() => {
+            ropeElements.forEach(r => r.classList.add('straining'));
+            setXBubble("PULL HARDER! 🏋️💦", 'rescue-bubble');
+            setDiscordBubble("Almost... got... it! 😤💪", 'rescue-bubble');
+        }, 2000);
+    }, 3000);
+};
+
+// Clean up ropes when stuck state ends
+const originalBreakThroughWall = breakThroughWall;
+breakThroughWall = function(direction) {
+    removeAllRopes();
+    clearSideBubbleMoods();
+    setXBubble("We did it! 🎉");
+    setDiscordBubble("FREEDOM! 🥳");
+    originalBreakThroughWall(direction);
+};
+
+// --- ROPE RENDERING ---
+function createRopeBetween(id, fromEl, toEl) {
+    const rope = document.createElement('div');
+    rope.className = 'mascot-rope';
+    rope.id = `rope-${id}`;
+    rope.dataset.from = fromEl ? fromEl.id : '';
+    rope.dataset.to = toEl ? toEl.id : '';
+    document.body.appendChild(rope);
+    ropeElements.push(rope);
+    return rope;
+}
+
+function updateRopePositions() {
+    ropeElements.forEach(rope => {
+        const fromEl = document.getElementById(rope.dataset.from);
+        const toEl = document.getElementById(rope.dataset.to);
+        if (!fromEl || !toEl) return;
+
+        const fromRect = fromEl.getBoundingClientRect();
+        const toRect = toEl.getBoundingClientRect();
+        const x1 = fromRect.left + fromRect.width / 2;
+        const y1 = fromRect.top + fromRect.height / 2;
+        const x2 = toRect.left + toRect.width / 2;
+        const y2 = toRect.top + toRect.height / 2;
+
+        const dx = x2 - x1;
+        const dy = y2 - y1;
+        const length = Math.hypot(dx, dy);
+        const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+
+        rope.style.left = `${x1}px`;
+        rope.style.top = `${y1}px`;
+        rope.style.width = `${length}px`;
+        rope.style.transform = `rotate(${angle}deg)`;
+    });
+}
+
+function removeAllRopes() {
+    ropeElements.forEach(r => {
+        r.classList.add('snapping');
+        setTimeout(() => r.remove(), 300);
+    });
+    ropeElements = [];
+    ropeActive = false;
+}
+
+// --- BEHAVIOR 4: ROPE CAPTURE ---
+// Hover over a mascot for 2+ seconds to capture it
+function setupRopeCapture() {
+    const mascotContainers = [
+        { el: gravityContainer, id: 'main' },
+        { el: xMascotContainer, id: 'x' },
+        { el: discordMascotContainer, id: 'discord' }
+    ];
+
+    mascotContainers.forEach(({ el, id }) => {
+        if (!el) return;
+        el.addEventListener('mouseenter', () => {
+            if (interactionState !== 'idle' || capturedMascotId) return;
+            hoveredMascotId = id;
+            hoverTimer = setTimeout(() => {
+                if (hoveredMascotId === id && interactionState === 'idle') {
+                    startRopeCapture(id);
+                }
+            }, 2000);
+        });
+        el.addEventListener('mouseleave', () => {
+            if (hoveredMascotId === id && !capturedMascotId) {
+                clearTimeout(hoverTimer);
+                hoveredMascotId = null;
+            }
+        });
+    });
+
+    // Double-click to cut rope
+    document.addEventListener('dblclick', (e) => {
+        if (!capturedMascotId || !ropeActive) return;
+        // Spawn cut particles
+        const cutEl = document.createElement('div');
+        cutEl.className = 'rope-cut-particle';
+        cutEl.textContent = '✂️💥';
+        cutEl.style.left = `${e.clientX}px`;
+        cutEl.style.top = `${e.clientY}px`;
+        document.body.appendChild(cutEl);
+        setTimeout(() => cutEl.remove(), 600);
+
+        endRopeCapture();
+    });
+}
+
+function startRopeCapture(mascotId) {
+    if (interactionState !== 'idle') return;
+    interactionState = 'rope';
+    capturedMascotId = mascotId;
+    ropeActive = true;
+
+    // Create ropes from other two mascots to captured one
+    const getContainer = (id) => {
+        if (id === 'main') return gravityContainer;
+        if (id === 'x') return xMascotContainer;
+        return discordMascotContainer;
+    };
+
+    const others = ['main', 'x', 'discord'].filter(m => m !== mascotId);
+    others.forEach(otherId => {
+        createRopeBetween(`capture-${otherId}`, getContainer(otherId), getContainer(mascotId));
+    });
+
+    // Jealous messages from the others
+    const jealousMsgs = [
+        "HEY! Give them back! 😤",
+        "You're STEALING our friend! 🥺",
+        "That's OUR buddy! 😡",
+        "UNHAND our comrade! 🪖"
+    ];
+
+    others.forEach(o => {
+        const msg = jealousMsgs[Math.floor(Math.random() * jealousMsgs.length)];
+        if (o === 'main') showQuickMessage(msg, 'jealous', 4000);
+        if (o === 'x') setXBubble(msg, 'fight-bubble');
+        if (o === 'discord') setDiscordBubble(msg, 'fight-bubble');
+    });
+
+    // Strain ropes after 3 seconds
+    setTimeout(() => {
+        if (capturedMascotId) {
+            ropeElements.forEach(r => r.classList.add('straining'));
+            others.forEach(o => {
+                if (o === 'x') setXBubble("PULL! We're losing them! 😤🪢");
+                if (o === 'discord') setDiscordBubble("HEAVE HO! 💪💪");
+                if (o === 'main') showQuickMessage("I won't let go! 😤🪢", 'angry', 3000);
+            });
+        }
+    }, 3000);
+
+    // Auto-release after 8 seconds if user doesn't cut
+    setTimeout(() => {
+        if (capturedMascotId === mascotId) {
+            endRopeCapture();
+        }
+    }, 8000);
+}
+
+function endRopeCapture() {
+    const freed = capturedMascotId;
+    capturedMascotId = null;
+    removeAllRopes();
+    clearSideBubbleMoods();
+
+    const freeMsgs = ["I'M FREE! 🎉", "Thanks for cutting the rope! ✂️✨", "LIBERTY! 🗽", "Never catch me again! 😤💨"];
+    const msg = freeMsgs[Math.floor(Math.random() * freeMsgs.length)];
+    if (freed === 'main') showQuickMessage(msg, 'excited', 2500);
+    if (freed === 'x') setXBubble(msg);
+    if (freed === 'discord') setDiscordBubble(msg);
+
+    spawnParticle('sparkle', 3);
+    interactionState = 'idle';
+}
+
+setupRopeCapture();
+
+// --- BEHAVIOR 5: JEALOUSY CHAIN ---
+let cursorNearMascotTimer = null;
+let favoredMascot = null;
+
+function checkJealousyChain() {
+    if (interactionState !== 'idle' || interactionCooldown || currentSlide === 10 || isStuck) return;
+
+    // Check which mascot cursor is nearest to
+    const dists = {
+        main: Math.hypot(lastCursorX - logoX, lastCursorY - logoY),
+        x: Math.hypot(lastCursorX - xMascotX, lastCursorY - xMascotY),
+        discord: Math.hypot(lastCursorX - discordMascotX, lastCursorY - discordMascotY)
+    };
+
+    const closest = Object.entries(dists).sort((a, b) => a[1] - b[1])[0];
+    if (closest[1] < 80 && closest[0] === favoredMascot) {
+        // Already tracking — handled by timer
+        return;
+    }
+
+    if (closest[1] < 80) {
+        favoredMascot = closest[0];
+        clearTimeout(cursorNearMascotTimer);
+        cursorNearMascotTimer = setTimeout(() => {
+            if (interactionState !== 'idle') return;
+
+            // Trigger jealousy
+            const bragMsgs = ["They like ME the most! 😎✨", "I'm clearly the favorite! 👑", "See? I'm #1! 🥇"];
+            const jealousMsgs2 = ["What about US?! 😤", "This is SO unfair! 💔", "We're cooler! 😡"];
+
+            if (favoredMascot === 'main') showQuickMessage(bragMsgs[Math.floor(Math.random() * 3)], 'sassy', 3000);
+            if (favoredMascot === 'x') setXBubble(bragMsgs[Math.floor(Math.random() * 3)]);
+            if (favoredMascot === 'discord') setDiscordBubble(bragMsgs[Math.floor(Math.random() * 3)]);
+
+            ['main', 'x', 'discord'].filter(m => m !== favoredMascot).forEach(m => {
+                const msg = jealousMsgs2[Math.floor(Math.random() * 3)];
+                if (m === 'main') showQuickMessage(msg, 'jealous', 3000);
+                if (m === 'x') setXBubble(msg, 'fight-bubble');
+                if (m === 'discord') setDiscordBubble(msg, 'fight-bubble');
+            });
+
+            setTimeout(() => { clearSideBubbleMoods(); favoredMascot = null; }, 4000);
+        }, 5000);
+    } else {
+        favoredMascot = null;
+        clearTimeout(cursorNearMascotTimer);
+    }
+}
+
+// --- BEHAVIOR 6: FORMATION MODES ---
+function setFormation(mode) {
+    formationMode = mode;
+}
+
+function getFormationTarget(mascotId) {
+    // Returns {x, y} offset from main mascot based on formation
+    const time = Date.now() / 1000;
+    switch (formationMode) {
+        case 'line':
+            if (mascotId === 'x') return { x: -80, y: 0 };
+            if (mascotId === 'discord') return { x: 80, y: 0 };
+            break;
+        case 'orbit':
+            if (mascotId === 'x') {
+                return {
+                    x: Math.cos(time * 1.5) * 90,
+                    y: Math.sin(time * 1.5) * 90
+                };
+            }
+            if (mascotId === 'discord') {
+                return {
+                    x: Math.cos(time * 1.5 + Math.PI) * 90,
+                    y: Math.sin(time * 1.5 + Math.PI) * 90
+                };
+            }
+            break;
+        case 'scatter':
+            if (mascotId === 'x') return { x: -150 + Math.sin(time) * 20, y: -100 + Math.cos(time) * 15 };
+            if (mascotId === 'discord') return { x: 150 + Math.cos(time) * 20, y: 100 + Math.sin(time) * 15 };
+            break;
+        default: // triangle
+            if (mascotId === 'x') return { x: -70, y: 10 };
+            if (mascotId === 'discord') return { x: 70, y: 10 };
+    }
+    return { x: 0, y: 0 };
+}
+
+// --- BEHAVIOR 7: COOPERATIVE CELEBRATION ---
+function triggerCoopCelebration() {
+    if (interactionState !== 'idle' || currentSlide === 10) return;
+    interactionState = 'celebrate';
+
+    // All mascots jump and celebrate
+    [gravityContainer, xMascotContainer, discordMascotContainer].forEach((c, i) => {
+        if (!c) return;
+        setTimeout(() => {
+            c.classList.add('celebrating');
+            setTimeout(() => c.classList.remove('celebrating'), 600);
+        }, i * 200); // Stagger for wave effect
+    });
+
+    // Sequential messages
+    showQuickMessage("GREAT RATING! 🎉⚔️", 'excited', 2000);
+    setTimeout(() => setXBubble("Share it on X! 𝕏🐦"), 300);
+    setTimeout(() => setDiscordBubble("Tell the community! 💬🎊"), 600);
+
+    // Collision sparkles at center
+    setTimeout(() => {
+        const cx = (logoX + xMascotX + discordMascotX) / 3 + 30;
+        const cy = (logoY + xMascotY + discordMascotY) / 3 + 30;
+        spawnCollisionParticles(cx, cy, 6);
+        spawnParticle('heart', 3);
+    }, 800);
+
+    setTimeout(() => {
+        interactionState = 'idle';
+    }, 3000);
+}
+
+// Hook celebration into star rating clicks
+const originalStarClickHandler = document.querySelector('.star-btn');
+document.addEventListener('click', (e) => {
+    const star = e.target.closest('.star-btn');
+    if (star && Math.random() < 0.4) { // 40% chance on rating
+        setTimeout(triggerCoopCelebration, 500);
+    }
+});
+
+// --- BEHAVIOR 8: ENHANCED GRAVITY FALL ---
+// Modify the existing initializeInteractiveLogo to add collision bounce
+const originalInitializeInteractiveLogo = initializeInteractiveLogo;
+initializeInteractiveLogo = function() {
+    originalInitializeInteractiveLogo();
+
+    // After all three land, collision bounce
+    setTimeout(() => {
+        if (gravityContainer) gravityContainer.classList.add('landing-bounce');
+        if (xMascotContainer) xMascotContainer.classList.add('landing-bounce');
+        if (discordMascotContainer) discordMascotContainer.classList.add('landing-bounce');
+
+        // Collision particles at landing point
+        spawnCollisionParticles(logoX + 30, logoY + 20, 3);
+
+        // Landing messages
+        showQuickMessage("OOF! Rough landing! 💥⚔️", 'shock', 2000);
+        setTimeout(() => setXBubble("Oww my pixels! 😵 Ready tho! 𝕏"), 300);
+        setTimeout(() => setDiscordBubble("That hurt! 🤕 Let's go! 💬"), 500);
+
+        setTimeout(() => {
+            [gravityContainer, xMascotContainer, discordMascotContainer].forEach(c => {
+                if (c) c.classList.remove('landing-bounce');
+            });
+            showQuickMessage("Okay team, let's go! ⚔️🔥", 'excited', 2000);
+            setTimeout(() => setXBubble("Ready! 𝕏✨"), 200);
+            setTimeout(() => setDiscordBubble("Ready! 💬✨"), 400);
+        }, 1500);
+    }, 500); // After gravity fall ends
+};
+
+// --- UPDATED PHYSICS LOOP (formation + rope) ---
+// Patch into the existing tickLogoPhysics for formation and rope rendering
+const originalTickLogoPhysics = tickLogoPhysics;
+// We can't easily replace the rAF function, so we add a separate updater
+function tickInteractions() {
+    // Update rope positions if active
+    if (ropeActive && ropeElements.length > 0) {
+        updateRopePositions();
+    }
+
+    // Apply formation offsets to X and Discord targets (override the simple follow)
+    if (interactionState === 'idle' && !isStuck && pushedOffMascot === null) {
+        const formX = getFormationTarget('x');
+        const formD = getFormationTarget('discord');
+
+        if (xMascotContainer && !isXHovered && capturedMascotId !== 'x') {
+            const xTarget = logoX + formX.x;
+            const yTarget = logoY + formX.y;
+            xMascotX += (xTarget - xMascotX) * 0.06;
+            xMascotY += (yTarget - xMascotY) * 0.06;
+            const sz = 60;
+            xMascotX = Math.max(10, Math.min(window.innerWidth - sz - 10, xMascotX));
+            xMascotY = Math.max(10, Math.min(window.innerHeight - sz - 10, xMascotY));
+            xMascotContainer.style.left = `${xMascotX}px`;
+            xMascotContainer.style.top = `${xMascotY}px`;
+        }
+
+        if (discordMascotContainer && !isDiscordHovered && capturedMascotId !== 'discord') {
+            const dTargetX = logoX + formD.x;
+            const dTargetY = logoY + formD.y;
+            discordMascotX += (dTargetX - discordMascotX) * 0.06;
+            discordMascotY += (dTargetY - discordMascotY) * 0.06;
+            const sz = 60;
+            discordMascotX = Math.max(10, Math.min(window.innerWidth - sz - 10, discordMascotX));
+            discordMascotY = Math.max(10, Math.min(window.innerHeight - sz - 10, discordMascotY));
+            discordMascotContainer.style.left = `${discordMascotX}px`;
+            discordMascotContainer.style.top = `${discordMascotY}px`;
+        }
+    }
+
+    // Captured mascot follows cursor
+    if (capturedMascotId) {
+        const speed = 0.1;
+        if (capturedMascotId === 'main') {
+            targetX = lastCursorX + 20;
+            targetY = lastCursorY + 20;
+        } else if (capturedMascotId === 'x' && xMascotContainer) {
+            xMascotX += (lastCursorX - xMascotX) * speed;
+            xMascotY += (lastCursorY - xMascotY) * speed;
+            xMascotContainer.style.left = `${xMascotX}px`;
+            xMascotContainer.style.top = `${xMascotY}px`;
+        } else if (capturedMascotId === 'discord' && discordMascotContainer) {
+            discordMascotX += (lastCursorX - discordMascotX) * speed;
+            discordMascotY += (lastCursorY - discordMascotY) * speed;
+            discordMascotContainer.style.left = `${discordMascotX}px`;
+            discordMascotContainer.style.top = `${discordMascotY}px`;
+        }
+    }
+
+    // Check jealousy
+    checkJealousyChain();
+
+    requestAnimationFrame(tickInteractions);
+}
+requestAnimationFrame(tickInteractions);
+
+// --- RANDOM INTERACTION SCHEDULER ---
+let mascotInteractionInterval = setInterval(() => {
+    if (interactionState !== 'idle' || interactionCooldown || currentSlide === 10 || isStuck || isDodging) return;
+
+    const roll = Math.random();
+
+    if (roll < 0.12) {
+        // 12% — Fight
+        triggerMascotFight();
+    } else if (roll < 0.20) {
+        // 8% — Push/Dhakka
+        triggerMascotPush();
+    } else if (roll < 0.28) {
+        // 8% — Change formation
+        const formations = ['triangle', 'line', 'orbit', 'scatter'];
+        const current = formationMode;
+        let next;
+        do { next = formations[Math.floor(Math.random() * formations.length)]; } while (next === current);
+        setFormation(next);
+
+        const formMsgs = {
+            triangle: "Triangle formation! ▲",
+            line: "Line up! ➡️",
+            orbit: "Orbit mode! 🌀",
+            scatter: "SCATTER! 💨"
+        };
+        showQuickMessage(formMsgs[next], 'excited', 2000);
+        setTimeout(() => setXBubble("Roger that! 𝕏"), 200);
+        setTimeout(() => setDiscordBubble("Copy! 💬"), 400);
+
+        // Return to triangle after 10 seconds
+        setTimeout(() => {
+            if (formationMode === next) setFormation('triangle');
+        }, 10000);
+    }
+    // 72% — nothing, normal behavior
+
+}, 18000); // Check every 18 seconds
+
 console.log('🎮 Enhanced Mascot Behavior Engine loaded! The logo is now ALIVE!');
+console.log('🤝 Mascot Interaction Engine loaded! 3 mascots now fight, push, rescue, and celebrate together!');

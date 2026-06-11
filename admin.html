@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VibeBuild Admin Dashboard</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- App Config & Styles -->
+  <script src="config.js"></script>
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+
+<!-- ============================================================
+     TOAST CONTAINER
+     ============================================================ -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ============================================================
+     LOGIN SCREEN
+     ============================================================ -->
+<div id="loginScreen" class="login-container">
+  <div class="login-card">
+    <span class="login-logo">⚔️</span>
+    <h1 class="login-title">VibeBuild</h1>
+    <p class="login-subtitle">Admin Dashboard — Sign in to continue</p>
+
+    <form id="loginForm" autocomplete="on">
+      <div class="form-group">
+        <label for="loginEmail">Email</label>
+        <input type="email" id="loginEmail" placeholder="admin@vibebuild.dev" required autocomplete="email" />
+      </div>
+      <div class="form-group">
+        <label for="loginPassword">Password</label>
+        <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password" />
+      </div>
+      <button type="submit" class="login-btn" id="loginBtn">Sign In</button>
+    </form>
+
+    <div class="login-error" id="loginError"></div>
+  </div>
+</div>
+
+<!-- ============================================================
+     DASHBOARD
+     ============================================================ -->
+<div id="dashboardScreen" class="dashboard-container hidden">
+
+  <!-- Top Bar -->
+  <header class="top-bar">
+    <div class="top-bar-title">
+      <span class="logo-emoji">⚔️</span> VibeBuild Admin
+    </div>
+    <div class="top-bar-right">
+      <span class="refresh-indicator"><span class="refresh-dot"></span> Live</span>
+      <span class="top-bar-user" id="userEmail"></span>
+      <button class="logout-btn" id="logoutBtn">Logout</button>
+    </div>
+  </header>
+
+  <main class="main-content">
+
+    <!-- Tab Navigation -->
+    <nav class="tab-nav">
+      <button class="tab-btn active" data-tab="overview">Overview</button>
+      <button class="tab-btn" data-tab="ratings">Ratings</button>
+      <button class="tab-btn" data-tab="emails">Emails</button>
+      <button class="tab-btn" data-tab="feedback">Feedback</button>
+      <button class="tab-btn" data-tab="analytics">Analytics</button>
+    </nav>
+
+    <!-- ==================== OVERVIEW TAB ==================== -->
+    <section class="tab-content active" id="tab-overview">
+
+      <!-- Stat Cards -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-icon">👥</span>
+          <div class="stat-value" id="statVisitors">—</div>
+          <div class="stat-label">Total Visitors</div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon">⭐</span>
+          <div class="stat-value" id="statRatings">—</div>
+          <div class="stat-label">Total Ratings</div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon">📧</span>
+          <div class="stat-value" id="statEmails">—</div>
+          <div class="stat-label">Email Signups</div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon">💬</span>
+          <div class="stat-value" id="statFeedback">—</div>
+          <div class="stat-label">Feedback Entries</div>
+        </div>
+      </div>
+
+      <!-- Best Design & Best Content -->
+      <div class="highlight-grid">
+        <div class="highlight-card">
+          <div class="highlight-card-title">🎨 Best Design Rating</div>
+          <div class="highlight-card-value" id="bestDesignName">Loading…</div>
+          <div class="highlight-card-sub">Average score: <span class="highlight-score" id="bestDesignScore">—</span></div>
+        </div>
+        <div class="highlight-card success">
+          <div class="highlight-card-title">📝 Best Content Rating</div>
+          <div class="highlight-card-value" id="bestContentName">Loading…</div>
+          <div class="highlight-card-sub">Average score: <span class="highlight-score" id="bestContentScore">—</span></div>
+        </div>
+      </div>
+
+      <!-- Recent Activity -->
+      <div class="activity-feed">
+        <div class="activity-feed-title">Recent Activity</div>
+        <div id="activityList">
+          <div class="spinner-wrap"><div class="spinner"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== RATINGS TAB ==================== -->
+    <section class="tab-content" id="tab-ratings">
+      <h3 class="section-heading">Summary by Slide</h3>
+      <div class="table-card">
+        <div class="table-header">
+          <span class="table-title">Slide Ratings Summary</span>
+        </div>
+        <div id="ratingsSummaryTable">
+          <div class="spinner-wrap"><div class="spinner"></div></div>
+        </div>
+      </div>
+
+      <h3 class="section-heading">Individual Ratings</h3>
+      <div class="table-card">
+        <div class="table-header">
+          <span class="table-title">All Ratings</span>
+          <div class="table-actions">
+            <select class="filter-select" id="ratingsFilter">
+              <option value="">All Slides</option>
+            </select>
+          </div>
+        </div>
+        <div id="ratingsDetailTable">
+          <div class="spinner-wrap"><div class="spinner"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== EMAILS TAB ==================== -->
+    <section class="tab-content" id="tab-emails">
+      <div class="table-card">
+        <div class="table-header">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span class="table-title">Email Signups</span>
+            <span class="table-badge" id="emailCountBadge">0</span>
+          </div>
+          <div class="table-actions">
+            <button class="export-btn" id="exportEmailsBtn">⬇ Export CSV</button>
+          </div>
+        </div>
+        <div id="emailsTable">
+          <div class="spinner-wrap"><div class="spinner"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== FEEDBACK TAB ==================== -->
+    <section class="tab-content" id="tab-feedback">
+      <div class="table-card">
+        <div class="table-header">
+          <span class="table-title">User Feedback</span>
+        </div>
+        <div id="feedbackTable">
+          <div class="spinner-wrap"><div class="spinner"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== ANALYTICS TAB ==================== -->
+    <section class="tab-content" id="tab-analytics">
+      <div class="chart-container">
+        <div class="chart-title">📊 Page Views per Slide</div>
+        <div id="viewsChart">
+          <div class="spinner-wrap"><div class="spinner"></div></div>
+        </div>
+      </div>
+
+      <div class="chart-container">
+        <div class="chart-title">⏱ Avg Time Spent per Slide (seconds)</div>
+        <div id="timeChart">
+          <div class="spinner-wrap"><div class="spinner"></div></div>
+        </div>
+      </div>
+
+      <div class="chart-container">
+        <div class="chart-title">🐾 Mascot Events Breakdown</div>
+        <div id="mascotChart">
+          <div class="spinner-wrap"><div class="spinner"></div></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ============================================================
+     INLINE JAVASCRIPT
+     ============================================================ -->
+<script>
+(function () {
+  'use strict';
+
+  /* ──────────────────────────────────────────────
+     1. SUPABASE INIT
+     ────────────────────────────────────────────── */
+  const sb = window.supabase.createClient(
+    VIBE_CONFIG.SUPABASE_URL,
+    VIBE_CONFIG.SUPABASE_ANON_KEY
+  );
+
+  /* ──────────────────────────────────────────────
+     DOM REFS
+     ────────────────────────────────────────────── */
+  const $  = (s) => document.querySelector(s);
+  const $$ = (s) => document.querySelectorAll(s);
+
+  const loginScreen     = $('#loginScreen');
+  const dashboardScreen = $('#dashboardScreen');
+  const loginForm       = $('#loginForm');
+  const loginBtn        = $('#loginBtn');
+  const loginError      = $('#loginError');
+  const logoutBtn       = $('#logoutBtn');
+  const userEmailEl     = $('#userEmail');
+  const ratingsFilter   = $('#ratingsFilter');
+
+  let refreshTimer = null;
+  let emailsData   = [];  // cached for CSV export
+
+  /* ──────────────────────────────────────────────
+     2. TOAST NOTIFICATIONS
+     ────────────────────────────────────────────── */
+  function showToast(message, type = 'info') {
+    const container = $('#toastContainer');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = message;
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), 3200);
+  }
+
+  /* ──────────────────────────────────────────────
+     3. AUTH — LOGIN
+     ────────────────────────────────────────────── */
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    loginBtn.disabled = true;
+    loginBtn.textContent = 'Signing in…';
+    hideLoginError();
+
+    const email    = $('#loginEmail').value.trim();
+    const password = $('#loginPassword').value;
+
+    const { data, error } = await sb.auth.signInWithPassword({ email, password });
+
+    if (error) {
+      showLoginError(error.message);
+      loginBtn.disabled = false;
+      loginBtn.textContent = 'Sign In';
+      return;
+    }
+
+    showDashboard(data.user);
+    loginBtn.disabled = false;
+    loginBtn.textContent = 'Sign In';
+  });
+
+  function showLoginError(msg) {
+    loginError.textContent = msg;
+    loginError.classList.add('show');
+    loginError.style.display = 'block';
+  }
+  function hideLoginError() {
+    loginError.classList.remove('show');
+    loginError.style.display = 'none';
+  }
+
+  /* ──────────────────────────────────────────────
+     4. AUTH — SESSION CHECK ON LOAD
+     ────────────────────────────────────────────── */
+  (async function checkSession() {
+    const { data: { session } } = await sb.auth.getSession();
+    if (session && session.user) {
+      showDashboard(session.user);
+    }
+  })();
+
+  /* ──────────────────────────────────────────────
+     5. AUTH — LOGOUT
+     ────────────────────────────────────────────── */
+  logoutBtn.addEventListener('click', async () => {
+    await sb.auth.signOut();
+    clearInterval(refreshTimer);
+    dashboardScreen.classList.add('hidden');
+    loginScreen.classList.remove('hidden');
+    showToast('Signed out', 'info');
+  });
+
+  /* ──────────────────────────────────────────────
+     6. SHOW DASHBOARD
+     ────────────────────────────────────────────── */
+  function showDashboard(user) {
+    loginScreen.classList.add('hidden');
+    dashboardScreen.classList.remove('hidden');
+    userEmailEl.textContent = user.email;
+    loadAllData();
+    // Auto-refresh every 30 seconds
+    clearInterval(refreshTimer);
+    refreshTimer = setInterval(loadAllData, 30000);
+    showToast('Welcome back!', 'success');
+  }
+
+  /* ──────────────────────────────────────────────
+     7. TAB SWITCHING
+     ────────────────────────────────────────────── */
+  $$('.tab-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      $$('.tab-btn').forEach((b) => b.classList.remove('active'));
+      $$('.tab-content').forEach((c) => c.classList.remove('active'));
+      btn.classList.add('active');
+      $(`#tab-${btn.dataset.tab}`).classList.add('active');
+    });
+  });
+
+  /* ──────────────────────────────────────────────
+     8. LOAD ALL DATA
+     ────────────────────────────────────────────── */
+  async function loadAllData() {
+    try {
+      await Promise.all([
+        loadOverview(),
+        loadRatings(),
+        loadEmails(),
+        loadFeedback(),
+        loadAnalytics()
+      ]);
+    } catch (err) {
+      console.error('Data load error:', err);
+      showToast('Error loading data', 'error');
+    }
+  }
+
+  /* ──────────────────────────────────────────────
+     9. OVERVIEW TAB
+     ────────────────────────────────────────────── */
+  async function loadOverview() {
+    // Total visitors (page_views table)
+    const { count: visitCount } = await sb
+      .from('visitors')
+      .select('*', { count: 'exact', head: true });
+    $('#statVisitors').textContent = formatNum(visitCount ?? 0);
+
+    // Total ratings
+    const { data: ratings, count: ratingCount } = await sb
+      .from('ratings')
+      .select('*', { count: 'exact' });
+    $('#statRatings').textContent = formatNum(ratingCount ?? 0);
+
+    // Email signups
+    const { count: emailCount } = await sb
+      .from('email_signups')
+      .select('*', { count: 'exact', head: true });
+    $('#statEmails').textContent = formatNum(emailCount ?? 0);
+
+    // Feedback entries
+    const { count: fbCount } = await sb
+      .from('feedback')
+      .select('*', { count: 'exact', head: true });
+    $('#statFeedback').textContent = formatNum(fbCount ?? 0);
+
+    // Best Design & Best Content
+    if (ratings && ratings.length) {
+      const slideMap = {};
+      ratings.forEach((r) => {
+        if (!slideMap[r.slide_name]) slideMap[r.slide_name] = { design: [], content: [] };
+        if (r.design_rating != null) slideMap[r.slide_name].design.push(r.design_rating);
+        if (r.content_rating != null) slideMap[r.slide_name].content.push(r.content_rating);
+      });
+
+      let bestDesign  = { name: '—', avg: 0 };
+      let bestContent = { name: '—', avg: 0 };
+
+      for (const [name, vals] of Object.entries(slideMap)) {
+        const dAvg = vals.design.length ? avg(vals.design) : 0;
+        const cAvg = vals.content.length ? avg(vals.content) : 0;
+        if (dAvg > bestDesign.avg)  bestDesign  = { name, avg: dAvg };
+        if (cAvg > bestContent.avg) bestContent = { name, avg: cAvg };
+      }
+
+      $('#bestDesignName').textContent  = bestDesign.name;
+      $('#bestDesignScore').textContent = bestDesign.avg.toFixed(2);
+      $('#bestContentName').textContent  = bestContent.name;
+      $('#bestContentScore').textContent = bestContent.avg.toFixed(2);
+    } else {
+      $('#bestDesignName').textContent  = 'No data yet';
+      $('#bestDesignScore').textContent = '—';
+      $('#bestContentName').textContent  = 'No data yet';
+      $('#bestContentScore').textContent = '—';
+    }
+
+    // Recent Activity (merge last 10 from multiple tables)
+    await loadRecentActivity();
+  }
+
+  async function loadRecentActivity() {
+    const activities = [];
+
+    // Last ratings
+    const { data: recentRatings } = await sb
+      .from('ratings')
+      .select('slide_name, design_rating, content_rating, created_at')
+      .order('created_at', { ascending: false })
+      .limit(5);
+    (recentRatings || []).forEach((r) => {
+      activities.push({
+        type: 'rating',
+        text: `Rated "${r.slide_name}" — Design: ${r.design_rating ?? '–'}, Content: ${r.content_rating ?? '–'}`,
+        time: r.created_at
+      });
+    });
+
+    // Last email signups
+    const { data: recentEmails } = await sb
+      .from('email_signups')
+      .select('email, created_at')
+      .order('created_at', { ascending: false })
+      .limit(3);
+    (recentEmails || []).forEach((e) => {
+      activities.push({
+        type: 'email',
+        text: `New signup: ${maskEmail(e.email)}`,
+        time: e.created_at
+      });
+    });
+
+    // Last feedback
+    const { data: recentFb } = await sb
+      .from('feedback')
+      .select('best_page, created_at')
+      .order('created_at', { ascending: false })
+      .limit(3);
+    (recentFb || []).forEach((f) => {
+      activities.push({
+        type: 'feedback',
+        text: `Feedback received — Best page: "${f.best_page || 'N/A'}"`,
+        time: f.created_at
+      });
+    });
+
+    // Sort by time descending, keep 10
+    activities.sort((a, b) => new Date(b.time) - new Date(a.time));
+    const top10 = activities.slice(0, 10);
+
+    const container = $('#activityList');
+    if (!top10.length) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <span class="empty-state-icon">📭</span>
+          <div class="empty-state-text">No activity yet</div>
+          <div class="empty-state-sub">Actions will appear here as users interact with VibeBuild.</div>
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = top10.map((a) => `
+      <div class="activity-item">
+        <span class="activity-dot ${a.type}"></span>
+        <div>
+          <div class="activity-text">${escHtml(a.text)}</div>
+          <div class="activity-time">${timeAgo(a.time)}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  /* ──────────────────────────────────────────────
+     10. RATINGS TAB
+     ────────────────────────────────────────────── */
+  async function loadRatings() {
+    const { data: ratings } = await sb
+      .from('ratings')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (!ratings || !ratings.length) {
+      $('#ratingsSummaryTable').innerHTML = emptyHtml('⭐', 'No ratings yet');
+      $('#ratingsDetailTable').innerHTML  = emptyHtml('⭐', 'No ratings yet');
+      return;
+    }
+
+    // Build summary
+    const slideMap = {};
+    const slideNames = new Set();
+    ratings.forEach((r) => {
+      slideNames.add(r.slide_name);
+      if (!slideMap[r.slide_name]) slideMap[r.slide_name] = { design: [], content: [], count: 0 };
+      slideMap[r.slide_name].count++;
+      if (r.design_rating != null) slideMap[r.slide_name].design.push(r.design_rating);
+      if (r.content_rating != null) slideMap[r.slide_name].content.push(r.content_rating);
+    });
+
+    const summary = Object.entries(slideMap).map(([name, v]) => {
+      const dAvg = v.design.length ? avg(v.design) : 0;
+      const cAvg = v.content.length ? avg(v.content) : 0;
+      return { name, dAvg, cAvg, count: v.count, combined: dAvg + cAvg };
+    }).sort((a, b) => b.combined - a.combined);
+
+    $('#ratingsSummaryTable').innerHTML = `
+      <table class="data-table">
+        <thead><tr>
+          <th>Slide Name</th><th>Avg Design</th><th>Avg Content</th><th>Total Ratings</th><th>Combined</th>
+        </tr></thead>
+        <tbody>
+          ${summary.map((s) => `
+            <tr>
+              <td>${escHtml(s.name)}</td>
+              <td><span class="score-pill ${pillClass(s.dAvg)}">${s.dAvg.toFixed(2)}</span></td>
+              <td><span class="score-pill ${pillClass(s.cAvg)}">${s.cAvg.toFixed(2)}</span></td>
+              <td class="mono">${s.count}</td>
+              <td class="mono text-accent">${s.combined.toFixed(2)}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>`;
+
+    // Populate filter dropdown
+    ratingsFilter.innerHTML = '<option value="">All Slides</option>' +
+      [...slideNames].sort().map((n) => `<option value="${escHtml(n)}">${escHtml(n)}</option>`).join('');
+
+    renderDetailRatings(ratings);
+
+    // Filter listener
+    ratingsFilter.onchange = () => {
+      const val = ratingsFilter.value;
+      const filtered = val ? ratings.filter((r) => r.slide_name === val) : ratings;
+      renderDetailRatings(filtered);
+    };
+  }
+
+  function renderDetailRatings(list) {
+    if (!list.length) {
+      $('#ratingsDetailTable').innerHTML = emptyHtml('🔍', 'No ratings match filter');
+      return;
+    }
+    $('#ratingsDetailTable').innerHTML = `
+      <table class="data-table">
+        <thead><tr>
+          <th>Slide</th><th>Design</th><th>Content</th><th>Submitted</th>
+        </tr></thead>
+        <tbody>
+          ${list.map((r) => `
+            <tr>
+              <td>${escHtml(r.slide_name)}</td>
+              <td class="mono">${r.design_rating ?? '–'}</td>
+              <td class="mono">${r.content_rating ?? '–'}</td>
+              <td class="mono" style="font-size:12px;color:#64748b">${fmtDate(r.created_at)}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>`;
+  }
+
+  /* ──────────────────────────────────────────────
+     11. EMAILS TAB
+     ────────────────────────────────────────────── */
+  async function loadEmails() {
+    const { data: emails } = await sb
+      .from('email_signups')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    emailsData = emails || [];
+    $('#emailCountBadge').textContent = emailsData.length;
+
+    if (!emailsData.length) {
+      $('#emailsTable').innerHTML = emptyHtml('📧', 'No signups yet');
+      return;
+    }
+
+    $('#emailsTable').innerHTML = `
+      <table class="data-table">
+        <thead><tr>
+          <th>Email</th><th>Name</th><th>Source Slide</th><th>Signed Up At</th>
+        </tr></thead>
+        <tbody>
+          ${emailsData.map((e) => `
+            <tr>
+              <td class="mono text-accent">${escHtml(e.email)}</td>
+              <td>${escHtml(e.name || '—')}</td>
+              <td>${escHtml(e.source_slide || '—')}</td>
+              <td class="mono" style="font-size:12px;color:#64748b">${fmtDate(e.created_at)}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>`;
+  }
+
+  /* ──────────────────────────────────────────────
+     12. CSV EXPORT
+     ────────────────────────────────────────────── */
+  $('#exportEmailsBtn').addEventListener('click', () => {
+    if (!emailsData.length) {
+      showToast('No emails to export', 'error');
+      return;
+    }
+
+    const headers = ['Email', 'Name', 'Source Slide', 'Signed Up At'];
+    const rows = emailsData.map((e) => [
+      csvSafe(e.email),
+      csvSafe(e.name || ''),
+      csvSafe(e.source_slide || ''),
+      csvSafe(e.created_at)
+    ]);
+
+    const csv = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = `vibebuild-emails-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('CSV exported!', 'success');
+  });
+
+  function csvSafe(val) {
+    const s = String(val ?? '');
+    return s.includes(',') || s.includes('"') || s.includes('\n')
+      ? `"${s.replace(/"/g, '""')}"`
+      : s;
+  }
+
+  /* ──────────────────────────────────────────────
+     13. FEEDBACK TAB
+     ────────────────────────────────────────────── */
+  async function loadFeedback() {
+    const { data: feedback } = await sb
+      .from('feedback')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (!feedback || !feedback.length) {
+      $('#feedbackTable').innerHTML = emptyHtml('💬', 'No feedback yet');
+      return;
+    }
+
+    $('#feedbackTable').innerHTML = `
+      <table class="data-table">
+        <thead><tr>
+          <th>Best Page</th><th>Suggestions</th><th>Questions</th><th>Social Link</th><th>Submitted</th>
+        </tr></thead>
+        <tbody>
+          ${feedback.map((f) => `
+            <tr>
+              <td>${escHtml(f.best_page || '—')}</td>
+              <td><span class="expandable-text" onclick="this.classList.toggle('expanded')">${escHtml(f.suggestions || '—')}</span></td>
+              <td><span class="expandable-text" onclick="this.classList.toggle('expanded')">${escHtml(f.questions || '—')}</span></td>
+              <td>${f.social_link ? `<a href="${escHtml(f.social_link)}" target="_blank" rel="noopener">${escHtml(f.social_link)}</a>` : '—'}</td>
+              <td class="mono" style="font-size:12px;color:#64748b">${fmtDate(f.created_at)}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>`;
+  }
+
+  /* ──────────────────────────────────────────────
+     14. ANALYTICS TAB
+     ────────────────────────────────────────────── */
+  async function loadAnalytics() {
+    // Page views per slide
+    const { data: views } = await sb
+      .from('page_views')
+      .select('slide_index');
+
+    if (views && views.length) {
+      const viewCounts = {};
+      const slideNames = (typeof VIBE_CONFIG !== 'undefined' && VIBE_CONFIG.SLIDE_NAMES) || [];
+      views.forEach((v) => {
+        const name = slideNames[v.slide_index] || `Slide ${v.slide_index}`;
+        viewCounts[name] = (viewCounts[name] || 0) + 1;
+      });
+      renderBarChart('viewsChart', viewCounts, 'views');
+    } else {
+      $('#viewsChart').innerHTML = emptyHtml('📊', 'No page view data');
+    }
+
+    // Avg time per slide
+    const { data: timeData } = await sb
+      .from('page_views')
+      .select('slide_index, time_spent_seconds');
+
+    if (timeData && timeData.length) {
+      const timeMap = {};
+      const slideNames = (typeof VIBE_CONFIG !== 'undefined' && VIBE_CONFIG.SLIDE_NAMES) || [];
+      timeData.forEach((t) => {
+        if (t.time_spent_seconds == null) return;
+        const name = slideNames[t.slide_index] || `Slide ${t.slide_index}`;
+        if (!timeMap[name]) timeMap[name] = [];
+        timeMap[name].push(t.time_spent_seconds);
+      });
+      const avgMap = {};
+      for (const [name, vals] of Object.entries(timeMap)) {
+        avgMap[name] = Math.round(avg(vals));
+      }
+      if (Object.keys(avgMap).length) {
+        renderBarChart('timeChart', avgMap, 'seconds', 'success');
+      } else {
+        $('#timeChart').innerHTML = emptyHtml('⏱', 'No time data available');
+      }
+    } else {
+      $('#timeChart').innerHTML = emptyHtml('⏱', 'No time data available');
+    }
+
+    // Mascot events
+    const { data: mascotData } = await sb
+      .from('mascot_events')
+      .select('event_type');
+
+    if (mascotData && mascotData.length) {
+      const eventCounts = {};
+      mascotData.forEach((m) => {
+        eventCounts[m.event_type] = (eventCounts[m.event_type] || 0) + 1;
+      });
+      renderBarChart('mascotChart', eventCounts, 'events', 'warning');
+    } else {
+      $('#mascotChart').innerHTML = emptyHtml('🐾', 'No mascot events yet');
+    }
+  }
+
+  function renderBarChart(containerId, dataObj, unit, colorClass = '') {
+    const entries = Object.entries(dataObj).sort((a, b) => b[1] - a[1]);
+    const max = Math.max(...entries.map((e) => e[1]), 1);
+
+    $(`#${containerId}`).innerHTML = entries.map(([label, value]) => {
+      const pct = Math.max((value / max) * 100, 4);
+      return `
+        <div class="chart-row">
+          <span class="chart-label" title="${escHtml(label)}">${escHtml(label)}</span>
+          <div class="chart-bar-track">
+            <div class="chart-bar ${colorClass}" style="width:${pct}%">
+              <span class="chart-bar-value">${value} ${unit}</span>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  /* ──────────────────────────────────────────────
+     HELPERS
+     ────────────────────────────────────────────── */
+  function avg(arr) {
+    return arr.reduce((a, b) => a + b, 0) / arr.length;
+  }
+
+  function formatNum(n) {
+    return Number(n).toLocaleString();
+  }
+
+  function escHtml(str) {
+    const d = document.createElement('div');
+    d.textContent = str;
+    return d.innerHTML;
+  }
+
+  function maskEmail(email) {
+    if (!email) return '—';
+    const [local, domain] = email.split('@');
+    if (!domain) return email;
+    return local.slice(0, 2) + '••••@' + domain;
+  }
+
+  function fmtDate(iso) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    return d.toLocaleDateString('en-US', {
+      month: 'short', day: 'numeric', year: 'numeric',
+      hour: '2-digit', minute: '2-digit'
+    });
+  }
+
+  function timeAgo(iso) {
+    const diff = (Date.now() - new Date(iso)) / 1000;
+    if (diff < 60)    return 'just now';
+    if (diff < 3600)  return `${Math.floor(diff / 60)}m ago`;
+    if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+    return `${Math.floor(diff / 86400)}d ago`;
+  }
+
+  function pillClass(score) {
+    if (score >= 4)  return 'high';
+    if (score >= 2.5) return 'mid';
+    return 'low';
+  }
+
+  function emptyHtml(icon, text) {
+    return `
+      <div class="empty-state">
+        <span class="empty-state-icon">${icon}</span>
+        <div class="empty-state-text">${text}</div>
+        <div class="empty-state-sub">Data will appear here once available.</div>
+      </div>`;
+  }
+
+})();
+</script>
+
+</body>
+</html>
