@@ -771,38 +771,41 @@ document.addEventListener('keydown', (e) => {
 // INTERACTIVE WIDGET LOGIC
 // ========================================================
 
-// 1. ZenSpace Duration Poll (Slide 0)
-const pollOptions = document.querySelectorAll('.poll-option');
-let hasVoted = false;
-
-pollOptions.forEach(option => {
-    option.addEventListener('click', () => {
-        if (hasVoted) return;
-        
-        hasVoted = true;
-        
-        // Increment votes for selected option
-        const selectedVotes = parseInt(option.getAttribute('data-votes')) + 1;
-        option.setAttribute('data-votes', selectedVotes);
-        option.classList.add('voted');
-
-        // Sum total votes
-        let totalVotes = 0;
-        pollOptions.forEach(opt => {
-            totalVotes += parseInt(opt.getAttribute('data-votes'));
-        });
-
-        // Calculate and render percentages
-        pollOptions.forEach(opt => {
-            const votes = parseInt(opt.getAttribute('data-votes'));
-            const percent = Math.round((votes / totalVotes) * 100);
+// 1. Interactive Duration Poll Widgets (Slide 0 & Slide 3)
+const pollWidgets = document.querySelectorAll('.interactive-poll');
+pollWidgets.forEach(widget => {
+    const options = widget.querySelectorAll('.poll-option');
+    let hasVotedInThisPoll = false;
+    
+    options.forEach(option => {
+        option.addEventListener('click', () => {
+            if (hasVotedInThisPoll) return;
             
-            const fill = opt.querySelector('.progress-bar-fill');
-            const label = opt.querySelector('.percent-label');
+            hasVotedInThisPoll = true;
             
-            fill.style.width = `${percent}%`;
-            label.textContent = `${percent}%`;
-            opt.style.cursor = 'default';
+            // Increment votes for selected option
+            const selectedVotes = parseInt(option.getAttribute('data-votes')) + 1;
+            option.setAttribute('data-votes', selectedVotes);
+            option.classList.add('voted');
+
+            // Sum total votes inside this poll
+            let totalVotes = 0;
+            options.forEach(opt => {
+                totalVotes += parseInt(opt.getAttribute('data-votes'));
+            });
+
+            // Calculate and render percentages for this poll
+            options.forEach(opt => {
+                const votes = parseInt(opt.getAttribute('data-votes'));
+                const percent = Math.round((votes / totalVotes) * 100);
+                
+                const fill = opt.querySelector('.progress-bar-fill');
+                const label = opt.querySelector('.percent-label');
+                
+                if (fill) fill.style.width = `${percent}%`;
+                if (label) label.textContent = `${percent}%`;
+                opt.style.cursor = 'default';
+            });
         });
     });
 });
