@@ -1304,9 +1304,11 @@ function initializeInteractiveLogo() {
     // Position it at the bottom left initially
     logoX = window.innerWidth * 0.05;
     logoY = window.innerHeight - 80;
-    xMascotX = logoX - 70;
+    const isMobileInit = window.innerWidth < 768;
+    const spacingInit = isMobileInit ? 70 : 120;
+    xMascotX = logoX - spacingInit;
     xMascotY = logoY + 10;
-    discordMascotX = logoX + 70;
+    discordMascotX = logoX + spacingInit;
     discordMascotY = logoY + 10;
     
     if (isStuck) {
@@ -1543,8 +1545,8 @@ function tickLogoPhysics() {
                 // Ground targets for the two bullies/saviors
                 const saviorTargets = {
                     main: { x: groundCenter, y: groundY },
-                    x: { x: groundCenter - (isMobile ? 45 : 70), y: groundY },
-                    discord: { x: groundCenter + (isMobile ? 45 : 70), y: groundY }
+                    x: { x: groundCenter - (isMobile ? 70 : 120), y: groundY },
+                    discord: { x: groundCenter + (isMobile ? 70 : 120), y: groundY }
                 };
 
                 // Move non-pushed mascots
@@ -1571,8 +1573,8 @@ function tickLogoPhysics() {
                     // Mascots pull victim back themselves
                     const victimTargetY = groundY;
                     let victimTargetX = groundCenter;
-                    if (pushedOffMascot === 'x') victimTargetX = groundCenter - (isMobile ? 45 : 70);
-                    if (pushedOffMascot === 'discord') victimTargetX = groundCenter + (isMobile ? 45 : 70);
+                    if (pushedOffMascot === 'x') victimTargetX = groundCenter - (isMobile ? 70 : 120);
+                    if (pushedOffMascot === 'discord') victimTargetX = groundCenter + (isMobile ? 70 : 120);
 
                     if (pushedOffMascot === 'main') {
                         logoX += (victimTargetX - logoX) * 0.05;
@@ -1591,8 +1593,8 @@ function tickLogoPhysics() {
             else if (activeFollowerId !== null) {
                 // Get ground positions for the other two mascots
                 const targetM = { x: groundCenter, y: groundY + Math.sin(Date.now() / bobbingSpeed) * 5 };
-                const targetXVal = { x: groundCenter - (isMobile ? 45 : 70), y: groundY + Math.sin(Date.now() / bobbingSpeed + 1) * 5 };
-                const targetDVal = { x: groundCenter + (isMobile ? 45 : 70), y: groundY + Math.sin(Date.now() / bobbingSpeed + 2) * 5 };
+                const targetXVal = { x: groundCenter - (isMobile ? 70 : 120), y: groundY + Math.sin(Date.now() / bobbingSpeed + 1) * 5 };
+                const targetDVal = { x: groundCenter + (isMobile ? 70 : 120), y: groundY + Math.sin(Date.now() / bobbingSpeed + 2) * 5 };
 
                 // Apply standard ground positioning to non-followers
                 if (activeFollowerId !== 'main') {
@@ -1627,8 +1629,8 @@ function tickLogoPhysics() {
                 }
 
                 // Apply rubber-band tension force (pulling mascot down to friends)
-                targetFollowerX += (tensionCenterX - targetFollowerX) * 0.25;
-                targetFollowerY += (tensionCenterY - targetFollowerY) * 0.25;
+                targetFollowerX += (tensionCenterX - targetFollowerX) * 0.15;
+                targetFollowerY += (tensionCenterY - targetFollowerY) * 0.15;
 
                 // Interpolate follower position
                 if (activeFollowerId === 'main') {
@@ -1642,19 +1644,20 @@ function tickLogoPhysics() {
                     discordMascotY += (targetFollowerY - discordMascotY) * 0.08;
                 }
 
-                // Check slip logic: if user drags cursor too far (> 180px distance) from follower mascot
+                // Check slip logic: if user drags cursor too far (> 350px distance) from follower mascot
                 const currentFollowerX = activeFollowerId === 'main' ? logoX : (activeFollowerId === 'x' ? xMascotX : discordMascotX);
                 const currentFollowerY = activeFollowerId === 'main' ? logoY : (activeFollowerId === 'x' ? xMascotY : discordMascotY);
                 const distToCursor = Math.hypot(lastCursorX - (currentFollowerX + size / 2), lastCursorY - (currentFollowerY + size / 2));
                 
-                if (distToCursor > 180 && !isModalActive) {
+                if (distToCursor > 350 && !isModalActive) {
                     // Slip grip! Mascot falls back down
-                    endRopeCapture(); // resets activeFollowerId and removes ropes
-                    const slipMsgs = ["Ouch, slipped! 🫨💫", "Whoops! Too fast! 🌪️", "Ah, gravity wins! 🌌🙃"];
+                    const victimId = activeFollowerId;
+                    const slipMsgs = ["Ouch, slipped! 🫨💫", "Whoops! Too fast! 🌪️", "Ah, gravity wins! 🌌🙃", "The rope snapped! 🪢💥"];
                     const msg = slipMsgs[Math.floor(Math.random() * slipMsgs.length)];
-                    if (activeFollowerId === 'main') showQuickMessage(msg, 'shock', 2500);
-                    else if (activeFollowerId === 'x') setXBubble(msg);
+                    if (victimId === 'main') showQuickMessage(msg, 'shock', 2500);
+                    else if (victimId === 'x') setXBubble(msg);
                     else setDiscordBubble(msg);
+                    endRopeCapture(); // resets activeFollowerId and removes ropes
                 }
             }
             
@@ -1662,8 +1665,8 @@ function tickLogoPhysics() {
             else {
                 // Target ground coordinates with separate offset bobs
                 const targetM = { x: groundCenter, y: groundY + Math.sin(Date.now() / bobbingSpeed) * 5 };
-                const targetXVal = { x: groundCenter - (isMobile ? 45 : 70), y: groundY + Math.sin(Date.now() / bobbingSpeed + 1.2) * 5 };
-                const targetDVal = { x: groundCenter + (isMobile ? 45 : 70), y: groundY + Math.sin(Date.now() / bobbingSpeed + 2.4) * 5 };
+                const targetXVal = { x: groundCenter - (isMobile ? 70 : 120), y: groundY + Math.sin(Date.now() / bobbingSpeed + 1.2) * 5 };
+                const targetDVal = { x: groundCenter + (isMobile ? 70 : 120), y: groundY + Math.sin(Date.now() / bobbingSpeed + 2.4) * 5 };
 
                 // Smoothly walk/interpolate towards targets
                 logoX += (targetM.x - logoX) * 0.08;
@@ -1957,6 +1960,39 @@ function triggerDodge() {
     }, 1800);
 }
 
+function triggerAttentionSeeking() {
+    const mascots = ['main', 'x', 'discord'];
+    const selected = mascots[Math.floor(Math.random() * 3)];
+    
+    // Jump animation
+    const container = selected === 'main' ? gravityContainer : (selected === 'x' ? xMascotContainer : discordMascotContainer);
+    if (container) {
+        container.classList.add('celebrating');
+        setTimeout(() => container.classList.remove('celebrating'), 600);
+    }
+    
+    if (selected === 'main') {
+        const msgs = ["Ahem! I'm right here! ⚔️👀", "Interact with me! 🥺", "Please notice me! 👉👈", "Look at me! 🤩"];
+        showQuickMessage(msgs[Math.floor(Math.random() * msgs.length)], 'clingy', 4000);
+    } else if (selected === 'x') {
+        const msgs = ["Follow me on X! 𝕏✨", "Click me for trending info! 🕏", "Hey user, hover over me! 🥺", "Look at my cool logo! 𝕏"];
+        setXBubble(msgs[Math.floor(Math.random() * msgs.length)], 'fight-bubble');
+        setTimeout(() => {
+            const xBubbleElement = document.getElementById('vibes-x-bubble');
+            if (xBubbleElement) xBubbleElement.classList.remove('fight-bubble');
+        }, 4000);
+    } else {
+        const msgs = ["Join our Discord! 💬", "Ping me for a surprise! 🔔", "Don't leave us hanging! 👾", "Come chat with me! 💬"];
+        setDiscordBubble(msgs[Math.floor(Math.random() * msgs.length)], 'fight-bubble');
+        setTimeout(() => {
+            const discordBubbleElement = document.getElementById('vibes-discord-bubble');
+            if (discordBubbleElement) discordBubbleElement.classList.remove('fight-bubble');
+        }, 4000);
+    }
+    
+    spawnParticle('sparkle', 2);
+}
+
 // --- IDLE DETECTION (user stops moving cursor) ---
 let lastMoveTime = Date.now();
 let idleStage = 0; // 0=active, 1=bored, 2=sleepy, 3=rage
@@ -1972,11 +2008,7 @@ function startIdleDetection() {
         // Stage 1: Bored (8 seconds idle)
         if (idleTime > 8000 && idleStage === 0) {
             idleStage = 1;
-            showQuickMessage(
-                getNextMessage(clingyMessages, 'vibebuild_msg_idx_clingy'),
-                'clingy', 4000
-            );
-            triggerAnimation('wiggling', 3000);
+            triggerAttentionSeeking();
         }
         
         // Stage 2: Sleepy (20 seconds idle)
@@ -2698,16 +2730,17 @@ function startRopeCapture(mascotId) {
 
     // Dialogue prompts on follow
     const followMsgs = {
-        main: ["Wheee! I'm flying! ⚔️🤩", "Look at me go! 🚀", "Up we go! ✨"],
-        x: ["Trending on top! 𝕏😎", "To the moon! 🚀𝕏", "We are viral! 📈"],
-        discord: ["Voice chat activated! 🎤", "Ping everyone! 🔔", "Community member joined! 💬🎉"]
+        main: ["Wheee! I can see the whole website! 🌌", "Higher! 🎈", "Look at me float! 🤩"],
+        x: ["Whoa! Higher than the clouds! 𝕏☁️", "Help, I'm being hijacked! 🕏😂", "Wheee! I'm viral now! 📈"],
+        discord: ["I can see our server from here! 💬🌌", "Don't drop me! 🔔😱", "Floating in voice chat! 🚀"]
     };
 
     const jealousMsgs = [
-        "HEY! Come back! 😤",
-        "Don't leave us! 🥺",
-        "That's OUR buddy! 😡",
-        "Get down here! 🪢"
+        "Leave him alone! 😡",
+        "Nooo! Don't kidnap them! 🚨",
+        "Hey! Put him down, user! 😤",
+        "Save him! 😭",
+        "Stop dragging our buddy! 🥺🪢"
     ];
 
     if (mascotId === 'main') showQuickMessage(followMsgs.main[Math.floor(Math.random() * 3)], 'excited', 3000);
@@ -2842,8 +2875,8 @@ function getFormationTarget(mascotId) {
             if (mascotId === 'discord') return { x: 150 * scale + Math.cos(time) * 20, y: 100 * scale + Math.sin(time) * 15 };
             break;
         default: // triangle
-            if (mascotId === 'x') return { x: -70 * scale, y: 10 * scale };
-            if (mascotId === 'discord') return { x: 70 * scale, y: 10 * scale };
+            if (mascotId === 'x') return { x: -120 * scale, y: 10 * scale };
+            if (mascotId === 'discord') return { x: 120 * scale, y: 10 * scale };
     }
     return { x: 0, y: 0 };
 }
@@ -2916,6 +2949,15 @@ initializeInteractiveLogo = function() {
             showQuickMessage("Okay team, let's go! ⚔️🔥", 'excited', 2000);
             setTimeout(() => setXBubble("Ready! 𝕏✨"), 200);
             setTimeout(() => setDiscordBubble("Ready! 💬✨"), 400);
+
+            // Auto-open Creator Modal on Load
+            setTimeout(() => {
+                if (creatorModal && !hasReadCreatorMessage) {
+                    creatorModal.classList.add('active');
+                    hasReadCreatorMessage = true;
+                    startBubbleRotation(postOpenMessages, 'vibebuild_msg_idx_post');
+                }
+            }, 700);
         }, 1500);
     }, 500); // After gravity fall ends
 };
@@ -2943,14 +2985,14 @@ let mascotInteractionInterval = setInterval(() => {
 
     const roll = Math.random();
 
-    if (roll < 0.12) {
-        // 12% — Fight
+    if (roll < 0.25) {
+        // 25% — Fight
         triggerMascotFight();
-    } else if (roll < 0.20) {
-        // 8% — Push/Dhakka
+    } else if (roll < 0.45) {
+        // 20% — Push/Dhakka
         triggerMascotPush();
-    } else if (roll < 0.28) {
-        // 8% — Change formation
+    } else if (roll < 0.60) {
+        // 15% — Change formation
         const formations = ['triangle', 'line', 'orbit', 'scatter'];
         const current = formationMode;
         let next;
@@ -2972,9 +3014,9 @@ let mascotInteractionInterval = setInterval(() => {
             if (formationMode === next) setFormation('triangle');
         }, 10000);
     }
-    // 72% — nothing, normal behavior
+    // 40% — nothing, normal behavior
 
-}, 18000); // Check every 18 seconds
+}, 12000); // Check every 12 seconds
 
 console.log('🎮 Enhanced Mascot Behavior Engine loaded! The logo is now ALIVE!');
 console.log('🤝 Mascot Interaction Engine loaded! 3 mascots now fight, push, rescue, and celebrate together!');
