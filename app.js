@@ -1461,9 +1461,11 @@ document.addEventListener('touchmove', (e) => {
 // Tick loop for smooth CSS updates
 function tickLogoPhysics() {
     if (gravityContainer) {
+        const isMobile = window.innerWidth < 768;
+        const size = isMobile ? 44 : 60;
         const isModalActive = creatorModal && creatorModal.classList.contains('active');
         
-        // Escape check for stuck logo
+        // Escape check for stuck logo (Slide boundary stuck)
         if (isStuck && !isTeasing) {
             const dx = lastCursorX - logoX;
             const dy = lastCursorY - logoY;
@@ -1471,8 +1473,6 @@ function tickLogoPhysics() {
             
             if (dist < 150) {
                 isTeasing = true;
-                
-                // Jump to the opposite side
                 if (stuckSide === 'left') {
                     stuckSide = 'right';
                     targetX = window.innerWidth - 80;
@@ -1480,22 +1480,19 @@ function tickLogoPhysics() {
                     stuckSide = 'left';
                     targetX = 20;
                 }
-                
-                // Randomize Y slightly to feel playful
                 targetY = Math.max(120, Math.min(window.innerHeight - 150, targetY + (Math.random() * 120 - 60)));
                 
-                // Set dialogue to tease
                 const bubbleElement = document.getElementById('vibes-gravity-bubble');
                 const bubbleText = bubbleElement ? bubbleElement.querySelector('.bubble-text') : null;
                 if (bubbleText) {
-                    const randomTease = getNextMessage(teasingMessages, 'vibebuild_msg_idx_tease');
-                    bubbleText.textContent = randomTease;
+                    bubbleText.textContent = getNextMessage(teasingMessages, 'vibebuild_msg_idx_tease');
                 }
                 
-                // Wait for escape slide animation to complete, then return to normal follow
                 setTimeout(() => {
                     isStuck = false;
                     isTeasing = false;
+                    removeAllRopes();
+                    clearSideBubbleMoods();
                     if (gravityContainer && !gravityContainer.classList.contains('falling')) {
                         isLogoInteractive = true;
                     }
@@ -1508,58 +1505,221 @@ function tickLogoPhysics() {
             }
         }
 
-        if (isLogoInteractive) {
-            if (isHovered || isModalActive) {
-                targetX = logoX;
-                targetY = logoY;
-            }
-            // Interpolate current position to target (smooth lag follow)
-            logoX += (targetX - logoX) * 0.08;
-            logoY += (targetY - logoY) * 0.08;
+        // Bypassed if currently falling (CSS handles falling)
+        const mainFalling = gravityContainer.classList.contains('falling');
+        const xFalling = xMascotContainer && xMascotContainer.classList.contains('falling');
+        const dFalling = discordMascotContainer && discordMascotContainer.classList.contains('falling');
+
+        if (!mainFalling && !xFalling && !dFalling) {
             
-            // Boundaries restriction
-            const size = window.innerWidth < 768 ? 44 : 60;
-            logoX = Math.max(10, Math.min(window.innerWidth - size - 10, logoX));
-            logoY = Math.max(10, Math.min(window.innerHeight - size - 10, logoY));
-        } else {
-            // Non-interactive flight (Slide 10 flight, falling, or stuck slide)
-            logoX += (targetX - logoX) * 0.08;
-            logoY += (targetY - logoY) * 0.08;
-        }
-        
-        gravityContainer.style.left = `${logoX}px`;
-        gravityContainer.style.top = `${logoY}px`;
-        
-        // X Mascot Physics
-        if (xMascotContainer) {
-            const isMobile = window.innerWidth < 768;
-            const xTargetX = isXHovered ? xMascotX : logoX - (isMobile ? 45 : 70);
-            const xTargetY = isXHovered ? xMascotY : logoY + (isMobile ? 5 : 10);
-            xMascotX += (xTargetX - xMascotX) * 0.06;
-            xMascotY += (xTargetY - xMascotY) * 0.06;
+            // --- STUCK BOUNDARY RESCUE STATE ---
+            if (isStuck) {
+                // Main mascot hits boundary wall
+                logoX += (targetX - logoX) * 0.08;
+                logoY += (targetY - logoY) * 0.08;
 
-            const size = isMobile ? 44 : 60;
-            xMascotX = Math.max(10, Math.min(window.innerWidth - size - 10, xMascotX));
-            xMascotY = Math.max(10, Math.min(window.innerHeight - size - 10, xMascotY));
+                // X and Discord stand close to pull main back
+                const rescueOffset = stuckSide === 'left' ? 60 : -60;
+                
+                if (xMascotContainer) {
+                    xMascotX += ((logoX + rescueOffset) - xMascotX) * 0.08;
+                    xMascotY += (logoY - xMascotY) * 0.08;
+                }
+                if (discordMascotContainer) {
+                    discordMascotX += ((logoX + rescueOffset * 1.8) - discordMascotX) * 0.08;
+                    discordMascotY += (logoY - discordMascotY) * 0.08;
+                }
+            }
 
-            xMascotContainer.style.left = `${xMascotX}px`;
-            xMascotContainer.style.top = `${xMascotY}px`;
-        }
+            // --- DRIFT/WANDERING CENTER (WALKING AT BOTTOM) ---
+            else {
+                groundCenter = (window.innerWidth / 2) + Math.sin(Date.now() / 3500) * (window.innerWidth * 0.22);
+            }
+            const groundY = window.innerHeight - size - (isMobile ? 12 : 25);
+            const bobbingSpeed = 400; // ms per bob cycles
 
-        // Discord Mascot Physics
-        if (discordMascotContainer) {
-            const isMobile = window.innerWidth < 768;
-            const discordTargetX = isDiscordHovered ? discordMascotX : logoX + (isMobile ? 45 : 70);
-            const discordTargetY = isDiscordHovered ? discordMascotY : logoY + (isMobile ? 5 : 10);
-            discordMascotX += (discordTargetX - discordMascotX) * 0.06;
-            discordMascotY += (discordTargetY - discordMascotY) * 0.06;
+            // --- PUSH RESCUE STATE MACHINE ---
+            if (pushedOffMascot !== null) {
+                // Ground targets for the two bullies/saviors
+                const saviorTargets = {
+                    main: { x: groundCenter, y: groundY },
+                    x: { x: groundCenter - (isMobile ? 45 : 70), y: groundY },
+                    discord: { x: groundCenter + (isMobile ? 45 : 70), y: groundY }
+                };
 
-            const size = isMobile ? 44 : 60;
-            discordMascotX = Math.max(10, Math.min(window.innerWidth - size - 10, discordMascotX));
-            discordMascotY = Math.max(10, Math.min(window.innerHeight - size - 10, discordMascotY));
+                // Move non-pushed mascots
+                if (pushedOffMascot !== 'main') {
+                    logoX += (saviorTargets.main.x - logoX) * 0.08;
+                    logoY += (saviorTargets.main.y - logoY) * 0.08;
+                }
+                if (pushedOffMascot !== 'x' && xMascotContainer) {
+                    xMascotX += (saviorTargets.x.x - xMascotX) * 0.08;
+                    xMascotY += (saviorTargets.x.y - xMascotY) * 0.08;
+                }
+                if (pushedOffMascot !== 'discord' && discordMascotContainer) {
+                    discordMascotX += (saviorTargets.discord.x - discordMascotX) * 0.08;
+                    discordMascotY += (saviorTargets.discord.y - discordMascotY) * 0.08;
+                }
 
-            discordMascotContainer.style.left = `${discordMascotX}px`;
-            discordMascotContainer.style.top = `${discordMascotY}px`;
+                // Check user hover rescue near bottom
+                if (rescueState === 'waiting_user') {
+                    if (lastCursorY > window.innerHeight - 100) {
+                        // User hovered near bottom to save them
+                        triggerRescueSuccess(true);
+                    }
+                } else if (rescueState === 'self_rescuing') {
+                    // Mascots pull victim back themselves
+                    const victimTargetY = groundY;
+                    let victimTargetX = groundCenter;
+                    if (pushedOffMascot === 'x') victimTargetX = groundCenter - (isMobile ? 45 : 70);
+                    if (pushedOffMascot === 'discord') victimTargetX = groundCenter + (isMobile ? 45 : 70);
+
+                    if (pushedOffMascot === 'main') {
+                        logoX += (victimTargetX - logoX) * 0.05;
+                        logoY += (victimTargetY - logoY) * 0.05;
+                    } else if (pushedOffMascot === 'x') {
+                        xMascotX += (victimTargetX - xMascotX) * 0.05;
+                        xMascotY += (victimTargetY - xMascotY) * 0.05;
+                    } else if (pushedOffMascot === 'discord') {
+                        discordMascotX += (victimTargetX - discordMascotX) * 0.05;
+                        discordMascotY += (victimTargetY - discordMascotY) * 0.05;
+                    }
+                }
+            }
+            
+            // --- ACTIVE CURSOR FOLLOWER PHYSICS ---
+            else if (activeFollowerId !== null) {
+                // Get ground positions for the other two mascots
+                const targetM = { x: groundCenter, y: groundY + Math.sin(Date.now() / bobbingSpeed) * 5 };
+                const targetXVal = { x: groundCenter - (isMobile ? 45 : 70), y: groundY + Math.sin(Date.now() / bobbingSpeed + 1) * 5 };
+                const targetDVal = { x: groundCenter + (isMobile ? 45 : 70), y: groundY + Math.sin(Date.now() / bobbingSpeed + 2) * 5 };
+
+                // Apply standard ground positioning to non-followers
+                if (activeFollowerId !== 'main') {
+                    logoX += (targetM.x - logoX) * 0.08;
+                    logoY += (targetM.y - logoY) * 0.08;
+                }
+                if (activeFollowerId !== 'x' && xMascotContainer) {
+                    xMascotX += (targetXVal.x - xMascotX) * 0.08;
+                    xMascotY += (targetXVal.y - xMascotY) * 0.08;
+                }
+                if (activeFollowerId !== 'discord' && discordMascotContainer) {
+                    discordMascotX += (targetDVal.x - discordMascotX) * 0.08;
+                    discordMascotY += (targetDVal.y - discordMascotY) * 0.08;
+                }
+
+                // Follower position calculations
+                let targetFollowerX = lastCursorX - size / 2;
+                let targetFollowerY = lastCursorY - size / 2;
+
+                // Midpoint of the two grounded mascots (tension center)
+                let tensionCenterX = groundCenter;
+                let tensionCenterY = groundY;
+                if (activeFollowerId === 'main') {
+                    tensionCenterX = (xMascotX + discordMascotX) / 2;
+                    tensionCenterY = (xMascotY + discordMascotY) / 2;
+                } else if (activeFollowerId === 'x') {
+                    tensionCenterX = (logoX + discordMascotX) / 2;
+                    tensionCenterY = (logoY + discordMascotY) / 2;
+                } else if (activeFollowerId === 'discord') {
+                    tensionCenterX = (logoX + xMascotX) / 2;
+                    tensionCenterY = (logoY + xMascotY) / 2;
+                }
+
+                // Apply rubber-band tension force (pulling mascot down to friends)
+                targetFollowerX += (tensionCenterX - targetFollowerX) * 0.25;
+                targetFollowerY += (tensionCenterY - targetFollowerY) * 0.25;
+
+                // Interpolate follower position
+                if (activeFollowerId === 'main') {
+                    logoX += (targetFollowerX - logoX) * 0.08;
+                    logoY += (targetFollowerY - logoY) * 0.08;
+                } else if (activeFollowerId === 'x' && xMascotContainer) {
+                    xMascotX += (targetFollowerX - xMascotX) * 0.08;
+                    xMascotY += (targetFollowerY - xMascotY) * 0.08;
+                } else if (activeFollowerId === 'discord' && discordMascotContainer) {
+                    discordMascotX += (targetFollowerX - discordMascotX) * 0.08;
+                    discordMascotY += (targetFollowerY - discordMascotY) * 0.08;
+                }
+
+                // Check slip logic: if user drags cursor too far (> 180px distance) from follower mascot
+                const currentFollowerX = activeFollowerId === 'main' ? logoX : (activeFollowerId === 'x' ? xMascotX : discordMascotX);
+                const currentFollowerY = activeFollowerId === 'main' ? logoY : (activeFollowerId === 'x' ? xMascotY : discordMascotY);
+                const distToCursor = Math.hypot(lastCursorX - (currentFollowerX + size / 2), lastCursorY - (currentFollowerY + size / 2));
+                
+                if (distToCursor > 180 && !isModalActive) {
+                    // Slip grip! Mascot falls back down
+                    endRopeCapture(); // resets activeFollowerId and removes ropes
+                    const slipMsgs = ["Ouch, slipped! 🫨💫", "Whoops! Too fast! 🌪️", "Ah, gravity wins! 🌌🙃"];
+                    const msg = slipMsgs[Math.floor(Math.random() * slipMsgs.length)];
+                    if (activeFollowerId === 'main') showQuickMessage(msg, 'shock', 2500);
+                    else if (activeFollowerId === 'x') setXBubble(msg);
+                    else setDiscordBubble(msg);
+                }
+            }
+            
+            // --- IDLE WANDERING PHYSICS (NO ACTIVE FOLLOWER) ---
+            else {
+                // Target ground coordinates with separate offset bobs
+                const targetM = { x: groundCenter, y: groundY + Math.sin(Date.now() / bobbingSpeed) * 5 };
+                const targetXVal = { x: groundCenter - (isMobile ? 45 : 70), y: groundY + Math.sin(Date.now() / bobbingSpeed + 1.2) * 5 };
+                const targetDVal = { x: groundCenter + (isMobile ? 45 : 70), y: groundY + Math.sin(Date.now() / bobbingSpeed + 2.4) * 5 };
+
+                // Smoothly walk/interpolate towards targets
+                logoX += (targetM.x - logoX) * 0.08;
+                logoY += (targetM.y - logoY) * 0.08;
+
+                if (xMascotContainer) {
+                    xMascotX += (targetXVal.x - xMascotX) * 0.08;
+                    xMascotY += (targetXVal.y - xMascotY) * 0.08;
+                }
+                if (discordMascotContainer) {
+                    discordMascotX += (targetDVal.x - discordMascotX) * 0.08;
+                    discordMascotY += (targetDVal.y - discordMascotY) * 0.08;
+                }
+
+                // Proximity detector: check if cursor is close to any mascot to trigger follow
+                if (interactionState === 'idle' && !isStuck && !isModalActive) {
+                    const dists = {
+                        main: Math.hypot(lastCursorX - (logoX + size / 2), lastCursorY - (logoY + size / 2)),
+                        x: xMascotContainer ? Math.hypot(lastCursorX - (xMascotX + size / 2), lastCursorY - (xMascotY + size / 2)) : 9999,
+                        discord: discordMascotContainer ? Math.hypot(lastCursorX - (discordMascotX + size / 2), lastCursorY - (discordMascotY + size / 2)) : 9999
+                    };
+
+                    const closest = Object.entries(dists).sort((a, b) => a[1] - b[1])[0];
+                    if (closest[1] < 45) {
+                        // Trigger follow capture!
+                        startRopeCapture(closest[0]);
+                    }
+                }
+            }
+
+            // --- BOUNDARIES RESTRICTIONS ---
+            // Ensure no mascot flies off screen (except pushed off ones)
+            if (pushedOffMascot !== 'main') {
+                logoX = Math.max(10, Math.min(window.innerWidth - size - 10, logoX));
+                logoY = Math.max(10, Math.min(window.innerHeight - size - 10, logoY));
+            }
+            if (xMascotContainer && pushedOffMascot !== 'x') {
+                xMascotX = Math.max(10, Math.min(window.innerWidth - size - 10, xMascotX));
+                xMascotY = Math.max(10, Math.min(window.innerHeight - size - 10, xMascotY));
+            }
+            if (discordMascotContainer && pushedOffMascot !== 'discord') {
+                discordMascotX = Math.max(10, Math.min(window.innerWidth - size - 10, discordMascotX));
+                discordMascotY = Math.max(10, Math.min(window.innerHeight - size - 10, discordMascotY));
+            }
+
+            // Apply positions to HTML DOM
+            gravityContainer.style.left = `${logoX}px`;
+            gravityContainer.style.top = `${logoY}px`;
+            if (xMascotContainer) {
+                xMascotContainer.style.left = `${xMascotX}px`;
+                xMascotContainer.style.top = `${xMascotY}px`;
+            }
+            if (discordMascotContainer) {
+                discordMascotContainer.style.left = `${discordMascotX}px`;
+                discordMascotContainer.style.top = `${discordMascotY}px`;
+            }
         }
     }
     requestAnimationFrame(tickLogoPhysics);
@@ -2124,14 +2284,15 @@ let proximityCheckInterval = setInterval(() => {
 
 // --- STATE ---
 let interactionState = 'idle'; // idle, fight, push, rescue, rope, celebrate
-let capturedMascotId = null;   // which mascot is captured by cursor
+let activeFollowerId = null;   // 'main', 'x', or 'discord' (none follow cursor by default)
 let ropeActive = false;
 let ropeElements = [];         // DOM rope line elements
 let formationMode = 'triangle'; // triangle, line, orbit, scatter
 let interactionCooldown = false;
 let pushedOffMascot = null;    // which mascot was pushed off screen
-let hoverTimer = null;         // timer for rope capture detection
-let hoveredMascotId = null;    // which mascot cursor is hovering
+let groundCenter = window.innerWidth / 2;
+let rescueState = 'none';      // none, waiting_user, self_rescuing
+let rescueTimer = null;
 
 // Helpers to set bubble text on X/Discord
 function setXBubble(msg, moodClass) {
@@ -2177,7 +2338,7 @@ function spawnCollisionParticles(x, y, count) {
 
 // --- BEHAVIOR 1: FIGHT MODE ---
 function triggerMascotFight() {
-    if (interactionState !== 'idle' || interactionCooldown || currentSlide === 10 || isStuck) return;
+    if (interactionState !== 'idle' || interactionCooldown || currentSlide === 10 || isStuck || activeFollowerId !== null) return;
     interactionState = 'fight';
     interactionCooldown = true;
 
@@ -2187,24 +2348,16 @@ function triggerMascotFight() {
     let i2 = (i1 + 1 + Math.floor(Math.random() * 2)) % 3;
     const fighter1 = mascots[i1];
     const fighter2 = mascots[i2];
-    const bystander = mascots.find(m => m !== fighter1 && m !== fighter2);
 
-    // Collision point = midpoint of both mascots
-    const midX = window.innerWidth / 2;
-    const midY = window.innerHeight / 2;
-
-    // Move fighters toward each other
     const getContainer = (id) => {
         if (id === 'main') return gravityContainer;
         if (id === 'x') return xMascotContainer;
         return discordMascotContainer;
     };
 
-    // Temporarily override positions
-    const prevInteractive = isLogoInteractive;
-    isLogoInteractive = false;
-    targetX = midX - 20;
-    targetY = midY;
+    // Midpoint of both fighters for collision point
+    const midX = window.innerWidth / 2;
+    const midY = window.innerHeight - 100;
 
     // Fight messages
     const fightMsgs = {
@@ -2240,7 +2393,6 @@ function triggerMascotFight() {
         const loserContainer = getContainer(loser);
         if (loserContainer) {
             loserContainer.classList.add('dizzy');
-            // Add dizzy stars
             const stars = document.createElement('div');
             stars.className = 'dizzy-stars';
             stars.textContent = '⭐🌟⭐';
@@ -2261,15 +2413,14 @@ function triggerMascotFight() {
         }
 
         clearSideBubbleMoods();
-        isLogoInteractive = prevInteractive;
         interactionState = 'idle';
         setTimeout(() => { interactionCooldown = false; }, 8000);
     }, 3200);
 }
 
-// --- BEHAVIOR 2: PUSH / DHAKKA ---
+// --- BEHAVIOR 2: PUSH / DHAKKA & RESCUE ---
 function triggerMascotPush() {
-    if (interactionState !== 'idle' || interactionCooldown || currentSlide === 10 || isStuck) return;
+    if (interactionState !== 'idle' || interactionCooldown || currentSlide === 10 || isStuck || activeFollowerId !== null) return;
     interactionState = 'push';
     interactionCooldown = true;
 
@@ -2289,6 +2440,7 @@ function triggerMascotPush() {
     if (!victimContainer) return;
 
     pushedOffMascot = victim;
+    rescueState = 'waiting_user';
 
     // Bullies say something mean
     const bullyMsgs = ["BYE BYE! 😈💨", "Get OUTTA here! 🤣", "YEET! 🚀😂", "Don't come back! 😤"];
@@ -2301,60 +2453,158 @@ function triggerMascotPush() {
     // Collision particles at victim
     const victimX = victim === 'main' ? logoX : (victim === 'x' ? xMascotX : discordMascotX);
     const victimY = victim === 'main' ? logoY : (victim === 'x' ? xMascotY : discordMascotY);
-    spawnCollisionParticles(victimX + 30, victimY + 30, 4);
+    spawnCollisionParticles(victimX + 20, victimY + 20, 4);
 
-    // Push animation
+    // Push animation (launches off screen)
     victimContainer.classList.add('pushed-off');
 
-    // Respawn after 3 seconds
+    // Notify user to rescue
     setTimeout(() => {
+        if (pushedOffMascot === victim && rescueState === 'waiting_user') {
+            const helpMsg = "HELP! Bring them back! 🥺";
+            const edgeMsg = "Hover cursor near the bottom edge! 🆘";
+            bullies.forEach(b => {
+                if (b === 'main') showQuickMessage(helpMsg, 'crying', 4000);
+                if (b === 'x') setXBubble(edgeMsg, 'rescue-bubble');
+                if (b === 'discord') setDiscordBubble(edgeMsg, 'rescue-bubble');
+            });
+        }
+    }, 800);
+
+    // Auto self-rescue after 4.5 seconds if user ignores
+    if (rescueTimer) clearTimeout(rescueTimer);
+    rescueTimer = setTimeout(() => {
+        if (pushedOffMascot === victim && rescueState === 'waiting_user') {
+            triggerSelfRescue();
+        }
+    }, 4500);
+}
+
+// User rescues mascot by hovering near bottom edge
+function triggerRescueSuccess(byUser) {
+    if (pushedOffMascot === null) return;
+    if (rescueTimer) clearTimeout(rescueTimer);
+    rescueState = 'none';
+
+    const victim = pushedOffMascot;
+    const getContainer = (id) => {
+        if (id === 'main') return gravityContainer;
+        if (id === 'x') return xMascotContainer;
+        return discordMascotContainer;
+    };
+
+    const victimContainer = getContainer(victim);
+    if (victimContainer) {
         victimContainer.classList.remove('pushed-off');
         victimContainer.classList.add('respawning');
 
-        const respawnMsgs = ["Hey! That was RUDE! 😤", "I'm telling the user! 🥺", "You'll PAY for that! 💢", "I'm BACK baby! 😎"];
-        if (victim === 'main') showQuickMessage(respawnMsgs[Math.floor(Math.random() * respawnMsgs.length)], 'angry', 3000);
-        if (victim === 'x') setXBubble(respawnMsgs[Math.floor(Math.random() * respawnMsgs.length)]);
-        if (victim === 'discord') setDiscordBubble(respawnMsgs[Math.floor(Math.random() * respawnMsgs.length)]);
+        // Remove rescue ropes
+        removeAllRopes();
 
-        clearSideBubbleMoods();
+        // Dialogue messages
+        const successMsgs = byUser 
+            ? ["Gotcha! Thank you! 💖", "Phew, saved! 🥺✨", "User is our hero! 🦸‍♂️🎉"]
+            : ["Phew! Got them! 😮‍💨", "We did it ourselves! 💪", "Don't scare us! 😤"];
+            
+        if (victim === 'main') showQuickMessage(successMsgs[Math.floor(Math.random() * 3)], 'excited', 2500);
+        else if (victim === 'x') setXBubble(successMsgs[Math.floor(Math.random() * 3)]);
+        else if (victim === 'discord') setDiscordBubble(successMsgs[Math.floor(Math.random() * 3)]);
+
+        // Celebrate
+        const saviors = ['main', 'x', 'discord'].filter(m => m !== victim);
+        saviors.forEach(s => {
+            const container = getContainer(s);
+            if (container) {
+                container.classList.add('celebrating');
+                setTimeout(() => container.classList.remove('celebrating'), 600);
+            }
+            if (s === 'main') showQuickMessage(byUser ? "Nice save! 🤩" : "Got the rope! 👍", 'happy', 2000);
+            else if (s === 'x') setXBubble(byUser ? "Thanks user! 🕏" : "Heave! 🪢");
+            else if (s === 'discord') setDiscordBubble(byUser ? "Hooray! 💬" : "Safety first! 💬");
+        });
 
         setTimeout(() => {
             victimContainer.classList.remove('respawning');
             pushedOffMascot = null;
             interactionState = 'idle';
-            setTimeout(() => { interactionCooldown = false; }, 10000);
-        }, 800);
-    }, 3000);
+            clearSideBubbleMoods();
+            setTimeout(() => { interactionCooldown = false; }, 8000);
+        }, 1000);
+    }
+}
+
+// Auto self rescue by throwing rope off-screen
+function triggerSelfRescue() {
+    if (pushedOffMascot === null) return;
+    rescueState = 'self_rescuing';
+
+    const victim = pushedOffMascot;
+    const getContainer = (id) => {
+        if (id === 'main') return gravityContainer;
+        if (id === 'x') return xMascotContainer;
+        return discordMascotContainer;
+    };
+
+    const victimContainer = getContainer(victim);
+    const saviors = ['main', 'x', 'discord'].filter(m => m !== victim);
+
+    saviors.forEach(s => {
+        if (s === 'main') showQuickMessage("Fine, we'll do it ourselves! 😤🪢", 'angry', 2500);
+        else if (s === 'x') setXBubble("Throwing rope! 🪢", 'rescue-bubble');
+        else if (s === 'discord') setDiscordBubble("Pull! Heave ho! 🏋️🪢", 'rescue-bubble');
+    });
+
+    // Place coordinates off-screen for victim to align rope visual
+    if (victim === 'main') {
+        logoX = groundCenter;
+        logoY = window.innerHeight + 150;
+    } else if (victim === 'x') {
+        xMascotX = groundCenter - 60;
+        xMascotY = window.innerHeight + 150;
+    } else if (victim === 'discord') {
+        discordMascotX = groundCenter + 60;
+        discordMascotY = window.innerHeight + 150;
+    }
+
+    saviors.forEach(s => {
+        createRopeBetween(`self-rescue-${s}`, getContainer(s), victimContainer);
+    });
+    ropeActive = true;
+
+    // Self pull back animation completes after 2.5 seconds
+    setTimeout(() => {
+        if (pushedOffMascot === victim && rescueState === 'self_rescuing') {
+            triggerRescueSuccess(false);
+        }
+    }, 2500);
 }
 
 // --- BEHAVIOR 3: PAGE BOUNDARY RESCUE ---
-// Modify the existing page-boundary stuck to add rescue from X and Discord
 const originalTriggerPageBoundaryStuck = triggerPageBoundaryStuck;
 triggerPageBoundaryStuck = function(fromSlide, toSlide, direction) {
     originalTriggerPageBoundaryStuck(fromSlide, toSlide, direction);
 
     // After 3 seconds, X and Discord notice and try to rescue
     setTimeout(() => {
-        if (!isStuck) return; // Already freed
+        if (!isStuck) return; 
 
         setXBubble("OH NO! They're stuck! 😱 PULL!", 'rescue-bubble');
         setDiscordBubble("We got you! HEAVE! 💪🪢", 'rescue-bubble');
 
-        // Create rescue ropes
         createRopeBetween('x-rescue', xMascotContainer, gravityContainer);
         createRopeBetween('discord-rescue', discordMascotContainer, gravityContainer);
         ropeActive = true;
 
-        // Strain effect after 2 more seconds
         setTimeout(() => {
-            ropeElements.forEach(r => r.classList.add('straining'));
-            setXBubble("PULL HARDER! 🏋️💦", 'rescue-bubble');
-            setDiscordBubble("Almost... got... it! 😤💪", 'rescue-bubble');
+            if (isStuck && ropeElements.length > 0) {
+                ropeElements.forEach(r => r.classList.add('straining'));
+                setXBubble("PULL HARDER! 🏋️💦", 'rescue-bubble');
+                setDiscordBubble("Almost... got... it! 😤💪", 'rescue-bubble');
+            }
         }, 2000);
     }, 3000);
 };
 
-// Clean up ropes when stuck state ends
 const originalBreakThroughWall = breakThroughWall;
 breakThroughWall = function(direction) {
     removeAllRopes();
@@ -2410,38 +2660,13 @@ function removeAllRopes() {
     ropeActive = false;
 }
 
-// --- BEHAVIOR 4: ROPE CAPTURE ---
-// Hover over a mascot for 2+ seconds to capture it
+// --- BEHAVIOR 4: HOVER FOLLOW CAPTURE SYSTEM ---
 function setupRopeCapture() {
-    const mascotContainers = [
-        { el: gravityContainer, id: 'main' },
-        { el: xMascotContainer, id: 'x' },
-        { el: discordMascotContainer, id: 'discord' }
-    ];
-
-    mascotContainers.forEach(({ el, id }) => {
-        if (!el) return;
-        el.addEventListener('mouseenter', () => {
-            if (interactionState !== 'idle' || capturedMascotId) return;
-            hoveredMascotId = id;
-            hoverTimer = setTimeout(() => {
-                if (hoveredMascotId === id && interactionState === 'idle') {
-                    startRopeCapture(id);
-                }
-            }, 2000);
-        });
-        el.addEventListener('mouseleave', () => {
-            if (hoveredMascotId === id && !capturedMascotId) {
-                clearTimeout(hoverTimer);
-                hoveredMascotId = null;
-            }
-        });
-    });
-
     // Double-click to cut rope
     document.addEventListener('dblclick', (e) => {
-        if (!capturedMascotId || !ropeActive) return;
-        // Spawn cut particles
+        if (!activeFollowerId || !ropeActive) return;
+        
+        // Spawn cut particles at click coordinates
         const cutEl = document.createElement('div');
         cutEl.className = 'rope-cut-particle';
         cutEl.textContent = '✂️💥';
@@ -2457,10 +2682,9 @@ function setupRopeCapture() {
 function startRopeCapture(mascotId) {
     if (interactionState !== 'idle') return;
     interactionState = 'rope';
-    capturedMascotId = mascotId;
+    activeFollowerId = mascotId;
     ropeActive = true;
 
-    // Create ropes from other two mascots to captured one
     const getContainer = (id) => {
         if (id === 'main') return gravityContainer;
         if (id === 'x') return xMascotContainer;
@@ -2472,13 +2696,23 @@ function startRopeCapture(mascotId) {
         createRopeBetween(`capture-${otherId}`, getContainer(otherId), getContainer(mascotId));
     });
 
-    // Jealous messages from the others
+    // Dialogue prompts on follow
+    const followMsgs = {
+        main: ["Wheee! I'm flying! ⚔️🤩", "Look at me go! 🚀", "Up we go! ✨"],
+        x: ["Trending on top! 𝕏😎", "To the moon! 🚀𝕏", "We are viral! 📈"],
+        discord: ["Voice chat activated! 🎤", "Ping everyone! 🔔", "Community member joined! 💬🎉"]
+    };
+
     const jealousMsgs = [
-        "HEY! Give them back! 😤",
-        "You're STEALING our friend! 🥺",
+        "HEY! Come back! 😤",
+        "Don't leave us! 🥺",
         "That's OUR buddy! 😡",
-        "UNHAND our comrade! 🪖"
+        "Get down here! 🪢"
     ];
+
+    if (mascotId === 'main') showQuickMessage(followMsgs.main[Math.floor(Math.random() * 3)], 'excited', 3000);
+    else if (mascotId === 'x') setXBubble(followMsgs.x[Math.floor(Math.random() * 3)]);
+    else if (mascotId === 'discord') setDiscordBubble(followMsgs.discord[Math.floor(Math.random() * 3)]);
 
     others.forEach(o => {
         const msg = jealousMsgs[Math.floor(Math.random() * jealousMsgs.length)];
@@ -2489,7 +2723,7 @@ function startRopeCapture(mascotId) {
 
     // Strain ropes after 3 seconds
     setTimeout(() => {
-        if (capturedMascotId) {
+        if (activeFollowerId === mascotId) {
             ropeElements.forEach(r => r.classList.add('straining'));
             others.forEach(o => {
                 if (o === 'x') setXBubble("PULL! We're losing them! 😤🪢");
@@ -2501,15 +2735,15 @@ function startRopeCapture(mascotId) {
 
     // Auto-release after 8 seconds if user doesn't cut
     setTimeout(() => {
-        if (capturedMascotId === mascotId) {
+        if (activeFollowerId === mascotId) {
             endRopeCapture();
         }
     }, 8000);
 }
 
 function endRopeCapture() {
-    const freed = capturedMascotId;
-    capturedMascotId = null;
+    const freed = activeFollowerId;
+    activeFollowerId = null;
     removeAllRopes();
     clearSideBubbleMoods();
 
@@ -2530,7 +2764,7 @@ let cursorNearMascotTimer = null;
 let favoredMascot = null;
 
 function checkJealousyChain() {
-    if (interactionState !== 'idle' || interactionCooldown || currentSlide === 10 || isStuck) return;
+    if (interactionState !== 'idle' || interactionCooldown || currentSlide === 10 || isStuck || activeFollowerId !== null) return;
 
     // Check which mascot cursor is nearest to
     const dists = {
@@ -2541,7 +2775,6 @@ function checkJealousyChain() {
 
     const closest = Object.entries(dists).sort((a, b) => a[1] - b[1])[0];
     if (closest[1] < 80 && closest[0] === favoredMascot) {
-        // Already tracking — handled by timer
         return;
     }
 
@@ -2695,55 +2928,6 @@ function tickInteractions() {
     // Update rope positions if active
     if (ropeActive && ropeElements.length > 0) {
         updateRopePositions();
-    }
-
-    // Apply formation offsets to X and Discord targets (override the simple follow)
-    if (interactionState === 'idle' && !isStuck && pushedOffMascot === null) {
-        const formX = getFormationTarget('x');
-        const formD = getFormationTarget('discord');
-
-        if (xMascotContainer && !isXHovered && capturedMascotId !== 'x') {
-            const xTarget = logoX + formX.x;
-            const yTarget = logoY + formX.y;
-            xMascotX += (xTarget - xMascotX) * 0.06;
-            xMascotY += (yTarget - xMascotY) * 0.06;
-            const sz = 60;
-            xMascotX = Math.max(10, Math.min(window.innerWidth - sz - 10, xMascotX));
-            xMascotY = Math.max(10, Math.min(window.innerHeight - sz - 10, xMascotY));
-            xMascotContainer.style.left = `${xMascotX}px`;
-            xMascotContainer.style.top = `${xMascotY}px`;
-        }
-
-        if (discordMascotContainer && !isDiscordHovered && capturedMascotId !== 'discord') {
-            const dTargetX = logoX + formD.x;
-            const dTargetY = logoY + formD.y;
-            discordMascotX += (dTargetX - discordMascotX) * 0.06;
-            discordMascotY += (dTargetY - discordMascotY) * 0.06;
-            const sz = 60;
-            discordMascotX = Math.max(10, Math.min(window.innerWidth - sz - 10, discordMascotX));
-            discordMascotY = Math.max(10, Math.min(window.innerHeight - sz - 10, discordMascotY));
-            discordMascotContainer.style.left = `${discordMascotX}px`;
-            discordMascotContainer.style.top = `${discordMascotY}px`;
-        }
-    }
-
-    // Captured mascot follows cursor
-    if (capturedMascotId) {
-        const speed = 0.1;
-        if (capturedMascotId === 'main') {
-            targetX = lastCursorX + 20;
-            targetY = lastCursorY + 20;
-        } else if (capturedMascotId === 'x' && xMascotContainer) {
-            xMascotX += (lastCursorX - xMascotX) * speed;
-            xMascotY += (lastCursorY - xMascotY) * speed;
-            xMascotContainer.style.left = `${xMascotX}px`;
-            xMascotContainer.style.top = `${xMascotY}px`;
-        } else if (capturedMascotId === 'discord' && discordMascotContainer) {
-            discordMascotX += (lastCursorX - discordMascotX) * speed;
-            discordMascotY += (lastCursorY - discordMascotY) * speed;
-            discordMascotContainer.style.left = `${discordMascotX}px`;
-            discordMascotContainer.style.top = `${discordMascotY}px`;
-        }
     }
 
     // Check jealousy
