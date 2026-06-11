@@ -810,39 +810,36 @@ pollWidgets.forEach(widget => {
     });
 });
 
-// 2. AetherCrypt Payout Calculator (Slide 1)
-const hackerSlider = document.getElementById('hacker-slider-1');
-const hackerCountLabel = document.getElementById('hacker-count-label-1');
-const pFirst = document.getElementById('p-first-1');
-const pSecond = document.getElementById('p-second-1');
-const pThird = document.getElementById('p-third-1');
-const pRefund = document.getElementById('p-refund-1');
+// 2. Payout Calculators (Slide 1 and Slide 3)
+function bindCalculator(sliderId, labelId, firstId, secondId, thirdId, refundId) {
+    const slider = document.getElementById(sliderId);
+    const label = document.getElementById(labelId);
+    const pFirst = document.getElementById(firstId);
+    const pSecond = document.getElementById(secondId);
+    const pThird = document.getElementById(thirdId);
+    const pRefund = document.getElementById(refundId);
+    
+    if (slider) {
+        slider.addEventListener('input', (e) => {
+            const hackers = parseInt(e.target.value);
+            if (label) label.textContent = hackers.toLocaleString();
+            
+            const prize1 = Math.round(0.75 * hackers);
+            const prize2 = Math.round(0.50 * hackers);
+            const prize3 = Math.round(0.20 * hackers);
+            
+            const refundDevs = Math.floor(0.60 * hackers);
 
-if (hackerSlider) {
-    hackerSlider.addEventListener('input', (e) => {
-        const hackers = parseInt(e.target.value);
-        hackerCountLabel.textContent = hackers.toLocaleString();
-        
-        // Calculate based on user notebook parameters:
-        // 1st: $750 (for 1000 devs), scale linearly -> 0.75 * N
-        // 2nd: $500 (for 1000 devs) -> 0.5 * N
-        // 3rd: $200 (for 1000 devs) -> 0.2 * N
-        // Refund: 60% of devs split into $8, $6, $4 brackets
-        const prize1 = Math.round(0.75 * hackers);
-        const prize2 = Math.round(0.50 * hackers);
-        const prize3 = Math.round(0.20 * hackers);
-        
-        const refundDevs = Math.floor(0.60 * hackers);
-        const r100 = Math.floor(0.10 * hackers);
-        const r200 = Math.floor(0.20 * hackers);
-        const r300 = Math.floor(0.30 * hackers);
-
-        pFirst.textContent = `$${prize1.toLocaleString()}`;
-        pSecond.textContent = `$${prize2.toLocaleString()}`;
-        pThird.textContent = `$${prize3.toLocaleString()}`;
-        pRefund.textContent = `${refundDevs} Devs ($8-$4 back)`;
-    });
+            if (pFirst) pFirst.textContent = `$${prize1.toLocaleString()}`;
+            if (pSecond) pSecond.textContent = `$${prize2.toLocaleString()}`;
+            if (pThird) pThird.textContent = `$${prize3.toLocaleString()}`;
+            if (pRefund) pRefund.textContent = `${refundDevs} Devs ($8-$4 back)`;
+        });
+    }
 }
+
+bindCalculator('hacker-slider-1', 'hacker-count-label-1', 'p-first-1', 'p-second-1', 'p-third-1', 'p-refund-1');
+bindCalculator('hacker-slider-4', 'hacker-count-label-4', 'p-first-4', 'p-second-4', 'p-third-4', 'p-refund-4');
 
 // 3. Double-Blind Rating Sliders (Slide 3 & Slide 5)
 const sliderWidgets = document.querySelectorAll('.interactive-sliders-widget');
