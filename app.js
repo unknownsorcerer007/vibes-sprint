@@ -1518,7 +1518,7 @@ function tickLogoPhysics() {
             logoY += (targetY - logoY) * 0.08;
             
             // Boundaries restriction
-            const size = 60;
+            const size = window.innerWidth < 768 ? 44 : 60;
             logoX = Math.max(10, Math.min(window.innerWidth - size - 10, logoX));
             logoY = Math.max(10, Math.min(window.innerHeight - size - 10, logoY));
         } else {
@@ -1532,12 +1532,13 @@ function tickLogoPhysics() {
         
         // X Mascot Physics
         if (xMascotContainer) {
-            const xTargetX = isXHovered ? xMascotX : logoX - 70;
-            const xTargetY = isXHovered ? xMascotY : logoY + 10;
+            const isMobile = window.innerWidth < 768;
+            const xTargetX = isXHovered ? xMascotX : logoX - (isMobile ? 45 : 70);
+            const xTargetY = isXHovered ? xMascotY : logoY + (isMobile ? 5 : 10);
             xMascotX += (xTargetX - xMascotX) * 0.06;
             xMascotY += (xTargetY - xMascotY) * 0.06;
 
-            const size = 60;
+            const size = isMobile ? 44 : 60;
             xMascotX = Math.max(10, Math.min(window.innerWidth - size - 10, xMascotX));
             xMascotY = Math.max(10, Math.min(window.innerHeight - size - 10, xMascotY));
 
@@ -1547,12 +1548,13 @@ function tickLogoPhysics() {
 
         // Discord Mascot Physics
         if (discordMascotContainer) {
-            const discordTargetX = isDiscordHovered ? discordMascotX : logoX + 70;
-            const discordTargetY = isDiscordHovered ? discordMascotY : logoY + 10;
+            const isMobile = window.innerWidth < 768;
+            const discordTargetX = isDiscordHovered ? discordMascotX : logoX + (isMobile ? 45 : 70);
+            const discordTargetY = isDiscordHovered ? discordMascotY : logoY + (isMobile ? 5 : 10);
             discordMascotX += (discordTargetX - discordMascotX) * 0.06;
             discordMascotY += (discordTargetY - discordMascotY) * 0.06;
 
-            const size = 60;
+            const size = isMobile ? 44 : 60;
             discordMascotX = Math.max(10, Math.min(window.innerWidth - size - 10, discordMascotX));
             discordMascotY = Math.max(10, Math.min(window.innerHeight - size - 10, discordMascotY));
 
@@ -2580,32 +2582,35 @@ function setFormation(mode) {
 function getFormationTarget(mascotId) {
     // Returns {x, y} offset from main mascot based on formation
     const time = Date.now() / 1000;
+    const isMobile = window.innerWidth < 768;
+    const scale = isMobile ? 0.6 : 1.0;
+
     switch (formationMode) {
         case 'line':
-            if (mascotId === 'x') return { x: -80, y: 0 };
-            if (mascotId === 'discord') return { x: 80, y: 0 };
+            if (mascotId === 'x') return { x: -80 * scale, y: 0 };
+            if (mascotId === 'discord') return { x: 80 * scale, y: 0 };
             break;
         case 'orbit':
             if (mascotId === 'x') {
                 return {
-                    x: Math.cos(time * 1.5) * 90,
-                    y: Math.sin(time * 1.5) * 90
+                    x: Math.cos(time * 1.5) * 90 * scale,
+                    y: Math.sin(time * 1.5) * 90 * scale
                 };
             }
             if (mascotId === 'discord') {
                 return {
-                    x: Math.cos(time * 1.5 + Math.PI) * 90,
-                    y: Math.sin(time * 1.5 + Math.PI) * 90
+                    x: Math.cos(time * 1.5 + Math.PI) * 90 * scale,
+                    y: Math.sin(time * 1.5 + Math.PI) * 90 * scale
                 };
             }
             break;
         case 'scatter':
-            if (mascotId === 'x') return { x: -150 + Math.sin(time) * 20, y: -100 + Math.cos(time) * 15 };
-            if (mascotId === 'discord') return { x: 150 + Math.cos(time) * 20, y: 100 + Math.sin(time) * 15 };
+            if (mascotId === 'x') return { x: -150 * scale + Math.sin(time) * 20, y: -100 * scale + Math.cos(time) * 15 };
+            if (mascotId === 'discord') return { x: 150 * scale + Math.cos(time) * 20, y: 100 * scale + Math.sin(time) * 15 };
             break;
         default: // triangle
-            if (mascotId === 'x') return { x: -70, y: 10 };
-            if (mascotId === 'discord') return { x: 70, y: 10 };
+            if (mascotId === 'x') return { x: -70 * scale, y: 10 * scale };
+            if (mascotId === 'discord') return { x: 70 * scale, y: 10 * scale };
     }
     return { x: 0, y: 0 };
 }

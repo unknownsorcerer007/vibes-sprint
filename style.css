@@ -3568,3 +3568,224 @@ body {
 .rating-saved-badge.visible {
     opacity: 1;
 }
+
+/* ========================================================
+   MOBILE RESPONSIVENESS OVERRIDES (Screens <= 768px)
+   ======================================================== */
+@media (max-width: 768px) {
+    /* --- Showcase Controller --- */
+    .showcase-controller {
+        top: 8px;
+        height: 56px;
+        padding: 0 12px;
+        max-width: 95%;
+        border-radius: 28px;
+    }
+    .controller-left .logo-text {
+        display: none; /* Hide subtitle on tiny screens */
+    }
+    .controller-right {
+        display: none !important; /* Hide keyboard hints */
+    }
+    .controller-center {
+        gap: 8px;
+    }
+    .ctrl-btn {
+        width: 32px;
+        height: 32px;
+    }
+    .select-wrapper {
+        padding: 4px 8px;
+    }
+    #design-select {
+        font-size: 11px;
+        max-width: 140px;
+    }
+    .slide-badge {
+        font-size: 9px;
+    }
+    .lp-scrollable {
+        padding-top: 76px; /* Reduced offset */
+    }
+
+    /* --- Global Typographic Scales --- */
+    .lp-hero {
+        padding: 20px 0;
+        margin-bottom: 40px;
+    }
+    .lp-hero h1 {
+        font-size: 28px !important;
+        letter-spacing: -0.5px;
+    }
+    .lp-hero p {
+        font-size: 14px !important;
+    }
+    .hero-actions {
+        flex-direction: column;
+        width: 100%;
+        gap: 8px;
+    }
+    .hero-actions button, .hero-actions a {
+        width: 100%;
+        justify-content: center;
+    }
+    .lp-section {
+        margin-bottom: 48px;
+        padding: 20px 0;
+    }
+    .lp-section h2 {
+        font-size: 22px !important;
+        margin-bottom: 24px;
+    }
+
+    /* --- Mascot Mobile Sizing overrides --- */
+    .gravity-logo-container {
+        width: 44px !important;
+        height: 44px !important;
+    }
+    .gravity-logo-element {
+        width: 44px !important;
+        height: 44px !important;
+    }
+    .gravity-logo-element svg.gravity-logo-icon,
+    .gravity-logo-element i.gravity-logo-icon {
+        font-size: 18px !important;
+        width: 18px !important;
+        height: 18px !important;
+    }
+    .gravity-logo-face {
+        font-size: 10px !important;
+        top: 14px !important;
+    }
+    .gravity-speech-bubble {
+        max-width: 150px !important;
+        padding: 6px 10px !important;
+        font-size: 10px !important;
+        bottom: 54px !important;
+    }
+    .dizzy-stars {
+        font-size: 8px !important;
+        top: -12px !important;
+    }
+
+    /* --- ZenSpace Mobile overrides (Slide 0) --- */
+    .lp-zenspace .feature-grid {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+    }
+    .lp-zenspace .split-layout {
+        grid-template-columns: 1fr !important;
+        gap: 32px !important;
+        text-align: center;
+    }
+    .lp-zenspace .circle-blob {
+        margin: 0 auto;
+        width: 180px;
+        height: 180px;
+    }
+
+    /* --- AetherCrypt Mobile overrides (Slide 1) --- */
+    .lp-aethercrypt .split-layout {
+        grid-template-columns: 1fr !important;
+        gap: 32px !important;
+    }
+    .lp-aethercrypt .prize-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+    }
+    .lp-aethercrypt .calc-card {
+        padding: 20px !important;
+    }
+
+    /* --- NovusSaaS Mobile overrides (Slide 2) --- */
+    .lp-novussaas .feature-row {
+        flex-direction: column !important;
+        gap: 32px !important;
+    }
+    .lp-novussaas .feat-col {
+        width: 100% !important;
+    }
+    .lp-novussaas .pricing-grid {
+        grid-template-columns: 1fr !important;
+        gap: 24px !important;
+    }
+
+    /* --- VeloceFit Mobile overrides (Slide 3) --- */
+    .lp-velocefit .speed-grid {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+    }
+    .lp-velocefit .speed-card {
+        padding: 20px !important;
+    }
+
+    /* --- CaffeineCo Mobile overrides (Slide 4) --- */
+    .lp-caffeineco .payout-split {
+        grid-template-columns: 1fr !important;
+        gap: 32px !important;
+    }
+    .lp-caffeineco .chart-container {
+        height: 180px !important;
+    }
+
+    /* --- NebulaAgency Mobile overrides (Slide 5) --- */
+    .lp-nebula .reviewers-layout {
+        grid-template-columns: 1fr !important;
+        gap: 24px !important;
+    }
+    .lp-nebula .rating-interface {
+        grid-template-columns: 1fr !important;
+        gap: 24px !important;
+    }
+
+    /* --- SentriShield Mobile overrides (Slide 6) --- */
+    .lp-sentrishield .brief-generator-layout {
+        grid-template-columns: 1fr !important;
+        gap: 24px !important;
+    }
+
+    /* --- Edumind Mobile overrides (Slide 7) --- */
+    .lp-edumind .stepper-layout {
+        grid-template-columns: 1fr !important;
+        gap: 24px !important;
+    }
+    .lp-edumind .stepper-buttons {
+        flex-direction: row !important;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px !important;
+    }
+    .lp-edumind .step-btn {
+        width: auto !important;
+        padding: 8px 16px !important;
+    }
+
+    /* --- TerraTravel Mobile overrides (Slide 8) --- */
+    .lp-terratravel .leaderboard-layout {
+        grid-template-columns: 1fr !important;
+        gap: 32px !important;
+    }
+    .lp-terratravel .table-container {
+        overflow-x: auto;
+    }
+
+    /* --- Aerospace Mobile overrides (Slide 9) --- */
+    .lp-aerospace .aerospace-columns {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+    }
+
+    /* --- Review / Feedback Page overrides (Slide 10) --- */
+    .feedback-form-card {
+        width: 95% !important;
+        padding: 24px 16px !important;
+    }
+    .ratings-summary-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+    }
+    .form-row {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+    }
+}

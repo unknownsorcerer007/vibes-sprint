@@ -912,3 +912,63 @@ a:hover { text-decoration: underline; }
   background: #10b981;
   animation: pulse 2s ease-in-out infinite;
 }
+
+/* ============================================================
+   ADMIN MOBILE RESPONSIVENESS OVERRIDES
+   ============================================================ */
+@media (max-width: 900px) {
+  .login-card {
+    width: 95%;
+    padding: 24px;
+  }
+  
+  .dashboard-container {
+    padding: 12px;
+  }
+  
+  .top-bar {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 16px;
+    height: auto;
+  }
+  
+  .top-bar-right {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .tab-nav {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  
+  .tab-btn {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+  
+  .overview-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .grid-2 {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  #ratingsTable, #emailsTable, #feedbackTable, #ratingsDetailTable {
+    overflow-x: auto;
+    width: 100%;
+    display: block;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .data-table {
+    min-width: 650px; /* Force table layout integrity while container scrolls */
+  }
+}
