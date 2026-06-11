@@ -841,33 +841,37 @@ if (hackerSlider) {
     });
 }
 
-// 3. Nebula Double-Blind Rating Sliders (Slide 5)
-const ratingInputs = document.querySelectorAll('.rating-input');
-const calcFinalScore = document.getElementById('calc-final-score');
-
-function calculateRating() {
-    let finalScore = 0;
+// 3. Double-Blind Rating Sliders (Slide 3 & Slide 5)
+const sliderWidgets = document.querySelectorAll('.interactive-sliders-widget');
+sliderWidgets.forEach(widget => {
+    const inputs = widget.querySelectorAll('.rating-input');
+    const scoreDisplay = widget.querySelector('.calc-final-score');
     
-    ratingInputs.forEach(input => {
-        const val = parseInt(input.value);
-        const weight = parseFloat(input.getAttribute('data-weight'));
-        finalScore += val * weight;
+    function calculate() {
+        let finalScore = 0;
+        inputs.forEach(input => {
+            const val = parseInt(input.value);
+            const weight = parseFloat(input.getAttribute('data-weight'));
+            finalScore += val * weight;
+            
+            // Update individual label
+            const row = input.closest('.slider-row');
+            if (row) {
+                const label = row.querySelector('.val-label');
+                label.textContent = `${val}/10`;
+            }
+        });
         
-        // Update individual label
-        const row = input.closest('.slider-row');
-        if (row) {
-            const label = row.querySelector('.val-label');
-            label.textContent = `${val}/10`;
+        if (scoreDisplay) {
+            scoreDisplay.textContent = `${finalScore.toFixed(2)} / 10`;
         }
-    });
-
-    if (calcFinalScore) {
-        calcFinalScore.textContent = `${finalScore.toFixed(2)} / 10`;
     }
-}
-
-ratingInputs.forEach(input => {
-    input.addEventListener('input', calculateRating);
+    
+    inputs.forEach(input => {
+        input.addEventListener('input', calculate);
+    });
+    
+    calculate(); // Initial calculation
 });
 
 // 4. Edumind Badge Stepper (Slide 7)
@@ -937,7 +941,6 @@ if (btnGenerateBrief && briefOutput) {
 
 // Initial Setup
 goToSlide(0);
-calculateRating();
 
 // 6. Share & Earn Link Submission Handler
 const shareButtons = document.querySelectorAll('.share-submit-btn');
