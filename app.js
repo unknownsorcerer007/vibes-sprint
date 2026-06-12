@@ -1491,7 +1491,7 @@ if (xMascotContainer) {
     });
 
     xMascotContainer.addEventListener('click', () => {
-        window.open('https://x.com/', '_blank');
+        window.open('https://x.com/unknown339264', '_blank');
     });
 }
 
