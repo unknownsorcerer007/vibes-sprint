@@ -1340,7 +1340,7 @@ if (btnSubmitFeedback) {
 // ========================================================
 // CTA BUTTONS → DISCORD LINK (Fix 3)
 // ========================================================
-const DISCORD_LINK = 'https://discord.gg/vibebuild'; // Replace with actual Discord invite
+const DISCORD_LINK = 'https://discord.gg/HbE5FUaW6'; // Replace with actual Discord invite
 
 const ctaButtons = document.querySelectorAll('.btn-main, .btn-neon, .btn-primary, .btn-orbit-main, .btn-gradient-action, .btn-glass, .btn-warm-cta, .btn-solid');
 ctaButtons.forEach(btn => {
