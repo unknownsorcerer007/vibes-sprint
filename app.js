@@ -33,7 +33,7 @@ if (typeof VB !== 'undefined' && VB.init) {
 
 // STATE & CONFIG
 let currentSlide = 0;
-const totalSlides = 11;
+const totalSlides = document.querySelectorAll('.slide').length || 1;
 
 // DOM ELEMENTS (SLIDER)
 const sliderContainer = document.getElementById('slider-container');
@@ -643,21 +643,29 @@ function goToSlide(index) {
     currentSlide = index;
 
     // Transition container horizontally
-    sliderContainer.style.transform = `translateX(calc(-100vw * ${currentSlide}))`;
+    if (sliderContainer) {
+        sliderContainer.style.transform = `translateX(calc(-100vw * ${currentSlide}))`;
+    }
 
     // Update UI Elements
-    slideBadge.textContent = `${(currentSlide + 1).toString().padStart(2, '0')} / ${totalSlides}`;
-    designSelect.value = currentSlide;
+    if (slideBadge) {
+        slideBadge.textContent = `${(currentSlide + 1).toString().padStart(2, '0')} / ${totalSlides}`;
+    }
+    if (designSelect) {
+        designSelect.value = currentSlide;
+    }
 
     // Toggle button disabled states
-    btnPrev.disabled = (currentSlide === 0);
-    btnNext.disabled = (currentSlide === totalSlides - 1);
-    
-    // Style buttons on disabled state
-    btnPrev.style.opacity = (currentSlide === 0) ? '0.4' : '1';
-    btnPrev.style.pointerEvents = (currentSlide === 0) ? 'none' : 'auto';
-    btnNext.style.opacity = (currentSlide === totalSlides - 1) ? '0.4' : '1';
-    btnNext.style.pointerEvents = (currentSlide === totalSlides - 1) ? 'none' : 'auto';
+    if (btnPrev) {
+        btnPrev.disabled = (currentSlide === 0);
+        btnPrev.style.opacity = (currentSlide === 0) ? '0.4' : '1';
+        btnPrev.style.pointerEvents = (currentSlide === 0) ? 'none' : 'auto';
+    }
+    if (btnNext) {
+        btnNext.disabled = (currentSlide === totalSlides - 1);
+        btnNext.style.opacity = (currentSlide === totalSlides - 1) ? '0.4' : '1';
+        btnNext.style.pointerEvents = (currentSlide === totalSlides - 1) ? 'none' : 'auto';
+    }
 
     // Track slide direction for page-boundary stuck
     const slideDirection = index > previousSlide ? 'forward' : 'backward';
@@ -708,17 +716,88 @@ function goToSlide(index) {
 }
 
 // Button Events
-btnPrev.addEventListener('click', () => {
-    goToSlide(currentSlide - 1);
-});
+if (btnPrev) {
+    btnPrev.addEventListener('click', () => {
+        goToSlide(currentSlide - 1);
+    });
+}
 
-btnNext.addEventListener('click', () => {
-    goToSlide(currentSlide + 1);
-});
+if (btnNext) {
+    btnNext.addEventListener('click', () => {
+        goToSlide(currentSlide + 1);
+    });
+}
 
 // Dropdown Change Event
-designSelect.addEventListener('change', (e) => {
-    goToSlide(parseInt(e.target.value));
+if (designSelect) {
+    designSelect.addEventListener('change', (e) => {
+        goToSlide(parseInt(e.target.value));
+    });
+}
+
+// ── EMAIL NEWSLETTER SIGNUP HANDLER ──────────────────
+document.addEventListener('DOMContentLoaded', () => {
+    const signupContainers = document.querySelectorAll('.email-signup-container');
+    signupContainers.forEach(container => {
+        const emailInput = container.querySelector('.email-input');
+        const submitBtn = container.querySelector('.email-submit-btn');
+        if (!emailInput || !submitBtn) return;
+
+        submitBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const email = emailInput.value.trim();
+            if (!email) {
+                showVBToast("Please enter your email.", "error");
+                return;
+            }
+            // Basic email validation regex
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showVBToast("Please enter a valid email address.", "error");
+                return;
+            }
+
+            // Disable UI during submission
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Securing...";
+            emailInput.disabled = true;
+
+            try {
+                if (typeof VB !== 'undefined' && VB.saveEmailSignup) {
+                    const res = await VB.saveEmailSignup(email, null, currentSlide);
+                    if (res.success) {
+                        submitBtn.textContent = "Secured!";
+                        submitBtn.style.background = "#22c55e"; // green for success
+                        showVBToast("Early access secured! Welcome aboard.", "success");
+                        // Store email locally
+                        try {
+                            localStorage.setItem('vibebuild_user_email', email);
+                        } catch (_) {}
+                    } else if (res.duplicate) {
+                        submitBtn.textContent = "Secured!";
+                        submitBtn.style.background = "#22c55e";
+                        showVBToast("You are already registered!", "success");
+                    } else {
+                        // Re-enable on failure
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = "Secure Spot";
+                        emailInput.disabled = false;
+                        showVBToast(`Error: ${res.error || "Unable to save"}`, "error");
+                    }
+                } else {
+                    submitBtn.textContent = "Secured (Demo)";
+                    submitBtn.style.background = "#22c55e";
+                    showVBToast("Supabase is not configured (Running offline mode).", "success");
+                }
+            } catch (err) {
+                console.error("[EmailSignup] Error during submission:", err);
+                submitBtn.disabled = false;
+                submitBtn.textContent = "Secure Spot";
+                emailInput.disabled = false;
+                showVBToast("An unexpected error occurred. Please try again.", "error");
+            }
+        });
+    });
 });
 
 // Keyboard Navigation

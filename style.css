@@ -164,8 +164,8 @@ body {
 .slider-container {
     display: flex;
     height: 100%;
-    /* Width will be set dynamically or defaults to 1100vw */
-    width: 1100vw;
+    /* Width is set to 100vw for single slide */
+    width: 100vw;
     transition: var(--transition-slide);
 }
 
