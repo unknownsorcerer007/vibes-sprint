@@ -109,49 +109,49 @@ const cryingMessages = [
 // ---- NEW MOOD MESSAGE ARRAYS ----
 
 const rageBaitMessages = [
-    "Oh so you're just gonna scroll past me? Cool cool cool 😤",
-    "WOW. Not even a click. Rude. 🙄",
-    "I literally FOLLOW you everywhere and THIS is how you treat me?! 💢",
-    "You know I can see you ignoring me right? 👀🔥",
-    "Fine. FINE. I didn't want to be clicked anyway! 😤",
-    "Hello?? Am I invisible?? TAP TAP TAP 🔨",
-    "I'm gonna get SO big you can't ignore me! 😈",
-    "Oh you're scrolling? Let me just... *stands in the way* 🚧",
-    "3 seconds to click me or I throw a tantrum! 3... 2... 💣",
-    "I swear if you switch tabs ONE MORE TIME... 🤬",
-    "Okay I'm done being nice. CLICK. ME. NOW. ⚡",
-    "You're testing my patience and I'm an IMMORTAL LOGO 😤🔥",
-    "I will literally shake your entire screen. Don't test me. 🫨",
-    "Are you even reading this?! HELLO?! 📢📢📢"
+    "Hey! Don't let your cursor drift away, let's build something! 🚀",
+    "A quick click is all I ask... pretty please? 🥹",
+    "I literally follow you everywhere and this is how you treat me? 😅",
+    "Did you know clicking me unlocks secret builder vibes? ✨",
+    "Fine, I will just continue following you silently... 😤",
+    "Hello? Tap tap! Is this cursor working? 🔨",
+    "If you click me, I promise to show you something cool! 🎁",
+    "Let me just... *hovers next to your cursor* 🚧",
+    "Are you coding right now? Or just scrolling? 😉",
+    "Don't worry, I won't tell anyone you ignored a cute logo. 🤐",
+    "I will literally bounce around until you click me! ⚡",
+    "My speed is matched to your cursor. Faster! 🏃‍♂️💨",
+    "Just one click. For the culture. ⚔️",
+    "Are you even reading my messages? Hello? 📢"
 ];
 
 const clingyMessages = [
-    "Don't leave me! I'll be good I promise! 🥺",
-    "Where are you going?? Take me with you! 🏃‍♂️💨",
-    "I've been following you for 5 minutes now... are we dating? 💕",
-    "You + Me = Forever ❤️‍🔥 (I don't make the rules)",
-    "I missed you SO much when you scrolled away! 😭",
-    "Can I live on your cursor? Please? 🏠",
-    "I renamed myself to YourBestFriend.exe 🤗",
-    "If you close this tab I will find you in your next browser 😤",
-    "I've memorized your scrolling pattern. Is that weird? 👉👈",
-    "You're the first human who clicked me... I'm emotional 🥹",
-    "My therapist says I'm too attached to cursors 😅",
-    "I get separation anxiety when you hover elsewhere 😰"
+    "Don't leave me! We make a great team! 🥺",
+    "Where are you going? Take me with you! 🏃‍♂️💨",
+    "I've been following you for a while now... are we team partners? 🤝",
+    "You + Me = High-speed code! ⚡",
+    "I miss your cursor when you stop moving! 😭",
+    "Can I hang out on your cursor path? Please? 🏠",
+    "I renamed my file to YourMascot.js 💻",
+    "Let's launch this platform together! 🚀",
+    "I've optimized my follow physics just for you. 👉👈",
+    "You're the first developer who hovered over me today! 🥹",
+    "I get so excited when you move the cursor! 🌟",
+    "Let's stay connected on this page forever! 🌸"
 ];
 
 const sassyMessages = [
-    "Oh look who finally moved their cursor 💅",
-    "I've seen faster scrolling from a sloth 🦥",
-    "Your cursor game is... unique 😏",
-    "Not me being the most interesting thing on this page 💁‍♀️",
-    "I'm the main character here, let's be real ⭐",
-    "Oh you rated that slide? I rated YOUR cursor movement 📊",
-    "I'm too fabulous for this corner of the screen 💫",
-    "Plot twist: I'M the best design on this page 🎭",
-    "Was that a click or a sad tap? Hard to tell 🤔",
-    "Some logos just follow. I ✨ pursue ✨",
-    "I didn't choose the clingy life. Wait, yes I did 😈"
+    "Oh look, the builder finally moved their cursor! 💅",
+    "I've seen faster compile times than this scroll. 🦥",
+    "Your cursor navigation style is... intriguing. 😏",
+    "I'm clearly the most interactive element on this page. 💁‍♀️",
+    "I am the main character of this landing page, obviously. ⭐",
+    "You move that cursor like a pro. Keep going! ⚡",
+    "I'm too polished for this corner of the screen. 💫",
+    "Plot twist: I'm the best design on VibeBuild. 🎭",
+    "Let's see your speed run on the next sprint! 🚀",
+    "Some logos just sit there. I actively pursue. ✨",
+    "I didn't choose the follow life. The follow life chose me. 😎"
 ];
 
 const appreciateMessages = [
